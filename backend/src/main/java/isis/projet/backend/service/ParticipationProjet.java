@@ -1,9 +1,5 @@
 package isis.projet.backend.service;
 
-import isis.projet.backend.dao.ParticipationRepository;
-import isis.projet.backend.dao.PersonneRepository;
-import isis.projet.backend.dao.ProjetRepository;
-import isis.projet.backend.entity.Participation;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
