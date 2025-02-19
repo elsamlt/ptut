@@ -1,21 +1,71 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import {useAdministrateur} from "@/composables/administrateur.js";
+
+function isAdministrator(to, from) {
+  const user = useAdministrateur();
+
+  if (user) return from;
+}
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/',
-      name: 'home',
-      component: HomeView,
+      path: "/",
+      component: () => import("../layouts/MainLayout.vue"),
+      children: [
+        { path: "", component: () => import("../views/IndexPage.vue") },
+        {
+          path: "films",
+          component: () => import("../views/FilmsView.vue"),
+        },
+        {
+          path: "films",
+          children: [
+            {
+              path: ":filmId",
+              component: () => import("../views/DetailsFilmsView.vue"),
+            },
+          ],
+        },
+        {
+          path: "about",
+          component: () => import("../views/AboutView.vue"),
+        },
+      ],
     },
     {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AboutView.vue'),
+      path: "/admin",
+      component: () => import("../layouts/MainLayout.vue"),
+      /*children: [
+        {
+          path: "",
+          component: () => import("../views/admin/IndexPage.vue"),
+          beforeEnter: [isAdministrator],
+          children: [
+            {
+              path: "enterprise",
+              component: () => import("pages/admin/EnterprisePage.vue"),
+              beforeEnter: [isAdministrator],
+            },
+            {
+              path: "organisations",
+              component: () => import("pages/admin/OrganisationsPage.vue"),
+              beforeEnter: [isAdministrator],
+            },
+            {
+              path: "services",
+              component: () => import("pages/admin/ServicesPage.vue"),
+              beforeEnter: [isAdministrator],
+            },
+            {
+              path: "users",
+              component: () => import("pages/admin/UsersPage.vue"),
+              beforeEnter: [isAdministrator],
+            },
+          ],
+        },
+      ],*/
     },
   ],
 })

@@ -1,85 +1,77 @@
-<script setup>
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">Les projets</RouterLink>
-      </nav>
-    </div>
-  </header>
-
-  <RouterView />
+  <router-view />
 </template>
 
-<style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
-}
+<script setup>
+import { RouterLink, RouterView } from 'vue-router';
+import { onMounted } from "vue";
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
+/*const setUserInfo = async (token) => {
+  try {
+    const config = {
+      headers: { Authorization: `Bearer ${token}` },
+    };
 
-nav {
-  width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
-}
+    const query = qs.stringify({
+      populate: ['role', 'enterprise', 'enterprise.logo', "photo", "organisations", "services"],
+    }, {
+      encodeValuesOnly: true,
+    })
 
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
+    const res = await api.get(`/api/users/me?${query}`, config);
+    useUserStore().user = res.data
 
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
+    if (useUserStore().user.role.name === 'SuperAdmin' && !useUserStore().user.enterprise){
+      updateUser()
+    }
 
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
+    localStorage.setItem("user", JSON.stringify(res.data));
 
-nav a:first-of-type {
-  border: 0;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
+    return true;
+  } catch (error) {
+    throw error;
   }
 }
-</style>
+
+const getExpDate = (token) => {
+  const payload = token.split(".")[1];
+  const decode = JSON.parse(window.atob(payload));
+  return decode.exp;
+}
+
+const isAuthenticated = async () => {
+  try {
+    const token = localStorage.getItem("jwt");
+    let expirationDate = 7;
+
+    if (token) {
+      const exp = getExpDate(token);
+      let current_time = new Date().valueOf() / 1000;
+
+      expirationDate = (exp - current_time) / 60 / 60 / 24;
+
+      await setUserInfo(token)
+
+    }
+
+    if (!token || expirationDate < 1) {
+      throw "Session expired";
+    }
+
+  } catch (error) {
+    throw error;
+  }
+}
+
+onMounted(async () => {
+  const isAuth = await isAuthenticated();
+  if (isAuth) {
+    const token = localStorage.getItem("jwt");
+    await setUserInfo(token);
+  } else {
+    return
+  }
+});*/
+</script>
+
+
