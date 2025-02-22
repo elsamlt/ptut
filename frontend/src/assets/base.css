@@ -1,4 +1,4 @@
-/* color palette from <https://github.com/vuejs/theme> */
+/* color palette */
 :root {
   --vt-c-white: #ffffff;
   --vt-c-white-soft: #f8f8f8;
@@ -19,21 +19,41 @@
   --vt-c-text-light-2: rgba(60, 60, 60, 0.66);
   --vt-c-text-dark-1: var(--vt-c-white);
   --vt-c-text-dark-2: rgba(235, 235, 235, 0.64);
+
+  --color-primary-dark: rgb(47, 13, 115);   /* #2f0d73 */
+  --color-primary: rgb(124, 80, 220);       /* #7c50de */
+  --color-secondary: rgb(172, 84, 199);     /* #ac54c7 */
+  --color-accent: rgb(245, 105, 96);        /* #f56960 */
+
+  /* Font */
+  --bebas-font: "Bebas Neue", serif;
+  --bebas-weight: 400;
+  --bebas-style: normal;
+
+  --be-vietnam-font: "Be Vietnam Pro", serif;
+  --be-vietnam-extralight-weight: 200;
+  --be-vietnam-medium-weight: 500;
+  --be-vietnam-style: normal;
 }
 
 /* semantic color variables for this project */
 :root {
-  --color-background: var(--vt-c-white);
-  --color-background-soft: var(--vt-c-white-soft);
-  --color-background-mute: var(--vt-c-white-mute);
+  --color-background: var(--vt-c-black);
+  --color-background-white: var(--vt-c-white-soft);
 
-  --color-border: var(--vt-c-divider-light-2);
-  --color-border-hover: var(--vt-c-divider-light-1);
+  --color-button: var(--color-primary);
+  --color-button-inactif: var(--color-primary-dark);
 
-  --color-heading: var(--vt-c-text-light-1);
-  --color-text: var(--vt-c-text-light-1);
+  --color-text-dark: var(--vt-c-black);
+  --color-text: var(--vt-c-white);
 
-  --section-gap: 160px;
+  --section-gap: 100px;
+
+  --font-heading: var(--bebas-font);
+  --font-heading-weight: var(--bebas-weight);
+  --font-text: var(--be-vietnam-font);
+  --font-text-weight: var(--be-vietnam-extralight-weight);
+  --font-text-title-weight: var(--be-vietnam-medium-weight);
 }
 
 /* Pour s'adapter au mode sombre de l'utilisateur
@@ -68,21 +88,18 @@ body {
     color 0.5s,
     background-color 0.5s;
   line-height: 1.6;
-  font-family:
-    Inter,
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    Roboto,
-    Oxygen,
-    Ubuntu,
-    Cantarell,
-    'Fira Sans',
-    'Droid Sans',
-    'Helvetica Neue',
-    sans-serif;
-  font-size: 15px;
+  font-family: "Bebas Neue", serif;
+  font-weight: var(--font-heading-weight);
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+p {
+  font-family: "Be Vietnam Pro", serif;
+  font-weight: var(--font-text-weight);
+}
+
+strong {
+  font-weight: var(--font-text-title-weight);
 }
