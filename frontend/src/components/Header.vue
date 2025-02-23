@@ -1,45 +1,68 @@
 <template>
   <v-app-bar class="custom-app-bar d-flex justify-center" flat>
-    <div class="d-flex justify-space-between align-center custom-div">
-      <!-- Logo à gauche -->
-      <router-link to="/" >
-        <v-btn icon>
-          <img :src="logo"/>
-        </v-btn>
-      </router-link>
+    <v-container fluid>
+      <v-row align="center" justify="space-between" no-gutters>
+        <!-- Logo à gauche -->
+        <v-col cols="auto">
+          <router-link to="/">
+            <v-btn icon>
+              <img :src="logo" />
+            </v-btn>
+          </router-link>
+        </v-col>
 
-      <div>
-        <!-- Liens de navigation -->
-        <router-link to="/" >
-          <v-btn>accueil</v-btn>
-        </router-link>
-        <router-link to="/films">
-          <v-btn>films</v-btn>
-        </router-link>
-        <router-link to="/about">
-          <v-btn>à propos</v-btn>
-        </router-link>
-      </div>
+        <!-- Boutons de navigation (Desktop) -->
+        <v-col class="d-none d-md-flex justify-center">
+          <router-link to="/">
+            <v-btn>Accueil</v-btn>
+          </router-link>
+          <router-link to="/films">
+            <v-btn>Films</v-btn>
+          </router-link>
+          <router-link to="/about">
+            <v-btn>À propos</v-btn>
+          </router-link>
+        </v-col>
 
+        <!-- Icône de connexion -->
+        <v-col cols="auto" class="d-none d-md-flex">
+          <router-link to="/admin">
+            <v-btn class="btn" size="40px">
+              <v-icon class="icon">mdi-lock</v-icon>
+            </v-btn>
+          </router-link>
+        </v-col>
 
-      <!-- Icône de connexion à droite -->
-      <router-link to="/admin">
-        <v-btn class="btn" size="40px">
-          <v-icon class="icon">mdi-lock</v-icon>
-        </v-btn>
-      </router-link>
-    </div>
+        <!-- Icône du menu burger (Mobile) -->
+        <v-col cols="auto" class="d-md-none">
+          <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
+        </v-col>
+      </v-row>
+    </v-container>
   </v-app-bar>
+
+  <!-- Menu latéral pour mobile -->
+  <v-navigation-drawer v-model="drawer" temporary>
+    <v-list>
+      <v-list-item to="/" @click="drawer = false">Accueil</v-list-item>
+      <v-list-item to="/films" @click="drawer = false">Films</v-list-item>
+      <v-list-item to="/about" @click="drawer = false">À propos</v-list-item>
+      <v-list-item to="/admin" @click="drawer = false">
+        <v-icon left size="15px">mdi-lock</v-icon> Admin
+      </v-list-item>
+    </v-list>
+  </v-navigation-drawer>
 </template>
 
 <script setup>
+import { ref } from 'vue';
 import logo from '@/assets/logo.png';
 
+const drawer = ref(false);
 </script>
 
 <style scoped>
-
-.btn{
+.btn {
   background-color: var(--color-button);
   color: var(--color-text);
   border-radius: 50px;
@@ -47,24 +70,20 @@ import logo from '@/assets/logo.png';
 }
 
 .btn:hover .icon {
-  transform: scale(0.8); /* Réduit la taille de l'icône à 80% */
+  transform: scale(0.8);
 }
 
 .custom-app-bar {
   border-radius: 50px;
   background-color: var(--color-background-white);
   height: 50px;
+  max-width: calc(100% - 20px); /* Enlève la marge pour centrer */
+  margin: 10px; /* Centre le conteneur avec 20px de marge en haut et en bas */
+  text-align: center; /* Centre le contenu du header si c'est du texte */
 }
 
-.custom-div{
-  width: 100%;
-  margin-left: 20px;
-  margin-right: 20px;
-}
-
-img{
+img {
   max-height: 40px;
   max-width: 40px;
 }
-
 </style>
