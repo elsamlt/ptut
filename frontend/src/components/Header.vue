@@ -1,6 +1,6 @@
 <template>
-  <v-app-bar class="custom-app-bar" flat>
-    <div class="d-flex justify-space-between align-center" style="width: 100%; margin-left: 20px; margin-right: 20px;">
+  <v-app-bar class="custom-app-bar d-flex justify-center" flat>
+    <div class="d-flex justify-space-between align-center custom-div">
       <!-- Logo à gauche -->
       <router-link to="/" >
         <v-btn icon>
@@ -52,8 +52,14 @@ import logo from '@/assets/logo.png';
 
 .custom-app-bar {
   border-radius: 50px;
-  margin: 10px;
   background-color: var(--color-background-white);
+  height: 50px;
+}
+
+.custom-div{
+  width: 100%;
+  margin-left: 20px;
+  margin-right: 20px;
 }
 
 img{

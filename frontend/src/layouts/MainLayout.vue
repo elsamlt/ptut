@@ -13,8 +13,8 @@ import Footer from "@/components/Footer.vue";
 
 <style scoped>
 .header {
-  max-width: calc(100% - 40px); /* Enlève la marge pour centrer */
-  margin: 20px; /* Centre le conteneur avec 20px de marge en haut et en bas */
+  max-width: calc(100% - 20px); /* Enlève la marge pour centrer */
+  margin: 10px; /* Centre le conteneur avec 20px de marge en haut et en bas */
   text-align: center; /* Centre le contenu du header si c'est du texte */
 }
 </style>
