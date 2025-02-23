@@ -26,7 +26,7 @@
 
         <!-- Icône de connexion -->
         <v-col cols="auto" class="d-none d-md-flex">
-          <router-link to="/admin">
+          <router-link to="/admin/films">
             <v-btn class="btn" size="40px">
               <v-icon class="icon">mdi-lock</v-icon>
             </v-btn>
@@ -47,7 +47,7 @@
       <v-list-item to="/" @click="drawer = false">Accueil</v-list-item>
       <v-list-item to="/films" @click="drawer = false">Films</v-list-item>
       <v-list-item to="/about" @click="drawer = false">À propos</v-list-item>
-      <v-list-item to="/admin" @click="drawer = false">
+      <v-list-item to="/admin/films" @click="drawer = false">
         <v-icon left size="15px">mdi-lock</v-icon> Admin
       </v-list-item>
     </v-list>

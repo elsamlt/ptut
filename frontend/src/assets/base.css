@@ -39,7 +39,7 @@
 /* semantic color variables for this project */
 :root {
   --color-background: var(--vt-c-black);
-  --color-background-white: var(--vt-c-white-soft);
+  --color-background-white: var(--vt-c-white);
 
   --color-button: var(--color-primary);
   --color-button-inactif: var(--color-primary-dark);
@@ -80,7 +80,7 @@
   font-weight: normal;
 }
 
-body {
+/*body {
   min-height: 100vh;
   color: var(--color-text);
   background: var(--color-background);
@@ -93,6 +93,13 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}*/
+body {
+  color: var(--color-text);
+  background: var(--color-background);
+  font-family: "Bebas Neue", serif;
+  font-weight: var(--font-heading-weight);
+  margin: 70px 10px 20px 10px;
 }
 
 p {
