@@ -69,7 +69,7 @@ const props = defineProps({ film: Object });
 const emit = defineEmits(["edit", "cancel"]);
 
 // Cloner l'objet film pour éviter de modifier directement la prop
-const film = ref({ ...props.film });
+//const film = ref({ ...props.film });
 
 // Fonction de soumission
 const submitFilm = () => {
