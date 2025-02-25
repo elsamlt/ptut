@@ -1,12 +1,176 @@
 <template>
-  <ParticipantsCard/>
+  <v-container v-if="!showEditPerson && !showAddPerson">
+    <!--<ParticipantsCard v-for="(person, index) in listPersons" :key="person.id" :person="person" :index="index" @edit="openEditForm(selectedPerson)" @delete="handlerDelete(selectedPerson)"/>-->
+    <ParticipantsCard @edit="openEditForm(selectedPerson)" @delete="handlerDelete(selectedPerson)"/>
+  </v-container>
+  <v-container v-if="showAddPerson">
+    <AddParticipant @add="handlePersonAdded" @closeForm="showAddPerson = false"/>
+  </v-container>
+  <v-container v-if="showEditPerson">
+    <EditParticipant :person="selectedPerson" @edit="handlePersonEdit" @cancel="showEditPerson = false" />
+  </v-container>
+
+  <!-- Bouton flottant pour ajouter un participant -->
+  <v-btn v-if="!showAddPerson" class="btn add-btn" size="40px">
+    <v-icon class="icon" @click="showAddPerson = true; selectedPerson = null;">mdi-plus</v-icon>
+  </v-btn>
+
+  <!-- Dialog de confirmation -->
+  <v-dialog v-model="dialogAdd" max-width="400px">
+    <v-card>
+      <v-card-text> Le participant a été ajouté avec succès ! </v-card-text>
+      <v-card-actions>
+        <v-btn color="green" text @click="dialogAdd = false">OK</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+
+  <v-dialog v-model="dialogDelete" max-width="400px">
+    <v-card>
+      <v-card-text> Le participant été supprimé avec succès ! </v-card-text>
+      <v-card-actions>
+        <v-btn color="green" text @click="dialogDelete = false">OK</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script setup>
 
 import ParticipantsCard from "@/components/admin/ParticipantsCard.vue";
+import EditParticipant from "@/components/admin/EditParticipant.vue";
+import AddParticipant from "@/components/admin/AddParticipant.vue";
+
+import { ref, onMounted, reactive } from "vue";
+
+const url = "";
+const listPersons = reactive([]);
+
+const dialogAdd = ref(false);
+const dialogDelete = ref(false);
+const dialogEdit = ref(false);
+
+const showEditPerson = ref(false);
+const showAddPerson = ref(false);
+
+const selectedPerson = ref(null);
+
+const openEditForm = (person) => {
+  selectedPerson.value = { ...person }; // Cloner pour éviter la modification directe
+  showEditPerson.value = true;
+};
+
+/**
+ * Récupérer les participants depuis l'API
+ */
+function fetchPersons() {
+  fetch(url)
+    .then((response) => response.json())
+    .then((dataJSON) => {
+      listPersons.splice(0, listPersons.length, ...dataJSON);
+    })
+    .catch((error) =>
+      console.error("Erreur lors de la récupération des partcipants :", error),
+    );
+}
+
+/**
+ * Sélectionner un participant et afficher ses détails
+ */
+function fetchPersonDetail(person) {
+  fetch(`${url}/${person.id}`)
+    .then((response) => response.json())
+    .then((dataJSON) => {
+      selectedPerson.value = dataJSON;
+      showAddPerson.value = false;
+    })
+    .catch((error) =>
+      console.error("Erreur lors de la récupération des participants :", error),
+    );
+}
+
+/**
+ * Ajouter un nouveau participant via API
+ */
+const handlePersonAdded = (newPerson) => {
+  // Ajouter le participant via l'API
+  fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      nom: newPerson.nom,
+      prenom: newPerson.prenom,
+      pdp: newPerson.pdp,
+    }),
+  })
+    .then((response) => response.json())
+    .then(() => {
+      fetchPersons(); // Rafraîchir la liste après l'ajout
+      // Afficher la popup de confirmation
+      dialogAdd.value = true;
+      showAddPerson.value = false;
+    })
+    .catch((error) =>
+      console.error("Erreur lors de l'ajout du participant :", error),
+    );
+};
+
+/**
+ * Supprimer un participant via API
+ */
+function handlerDelete(person) {
+  fetch(`${url}/${person.id}`, { method: "DELETE" })
+    .then((response) => {
+      if (response.ok) fetchPersons();
+      dialogDelete.value = true;
+      selectedPerson.value = null;
+    })
+    .catch((error) => console.error("Erreur lors de la suppression :", error));
+}
+
+/**
+ * Modifier un participant comme faite via API
+ */
+const handlePersonEdit = (updatedPerson) => {
+  fetch(`${url}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      nom: updatedPerson.nom,
+      prenom: updatedPerson.prenom,
+      pdp: updatedPerson.pdp,
+    }),
+  })
+    .then((response) => response.json())
+    .then(() => {
+      fetchPersonDetail(updatedPerson);
+      dialogEdit.value = true; // Afficher le message de confirmation
+      showEditPerson.value = false;
+    })
+    .catch((error) => console.error("Erreur lors de la mise à jour :", error));
+};
+
+// Charger les participants au montage
+onMounted(fetchPersons);
 </script>
 
 <style scoped>
+/* Bouton flottant */
+.add-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+}
 
+.btn {
+  background-color: var(--color-button);
+  color: var(--color-text);
+  border-radius: 50px;
+  box-shadow: inset 0 0 5px rgba(255, 255, 255, 0.6);
+  margin-right: 10px;
+}
+
+.btn:hover .icon {
+  transform: scale(0.8);
+}
 </style>

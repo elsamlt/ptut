@@ -53,7 +53,7 @@
         <v-row class="mt-4">
           <v-col cols="12" class="d-flex justify-end">
             <v-btn class="mr-2" @click="closeForm">Annuler</v-btn>
-            <v-btn class="btn" @click="submitFilm">Ajouter</v-btn>
+            <v-btn class="btn" @click="submitFilm">Enregistrer</v-btn>
           </v-col>
         </v-row>
       </v-card>

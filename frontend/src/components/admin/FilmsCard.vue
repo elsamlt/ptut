@@ -41,7 +41,6 @@ const editFilm = () => {
 <style scoped>
 /* Carte du film */
 .film-card {
-  padding: 7px;
   margin-top: 20px;
 }
 

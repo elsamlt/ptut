@@ -1,6 +1,7 @@
 <template>
   <!-- Liste des films -->
   <v-container v-if="!showEditFilm && !showAddFilm">
+    <!--<FilmsCard v-for="(film, index) in listFilms" :key="film.id" :film="film" :index="index" @edit="openEditForm(selectedFilm)" @delete="handlerDelete(selectedFilm)"/>-->
     <FilmsCard @edit="openEditForm(selectedFilm)" @delete="handlerDelete(selectedFilm)"/>
   </v-container>
   <v-container v-if="showAddFilm">
@@ -8,11 +9,6 @@
   </v-container>
   <v-container v-if="showEditFilm">
     <EditFilm :film="selectedFilm" @edit="handleFilmEdit" @cancel="showEditFilm = false" />
-    <EditMed
-      :med="selectedMed"
-      @edit="handleMedEdit"
-      @cancel="showEditMed = false"
-    />
   </v-container>
 
   <!-- Bouton flottant pour ajouter un film -->
