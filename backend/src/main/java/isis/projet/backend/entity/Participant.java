@@ -16,7 +16,7 @@ public class Participant {
     private int idParticipant;
     private String nom;
     private String prenom;
-    private String urlPhoto;
+    private String pdp;
 
     /*@ManyToMany(mappedBy = "participants")
     private List<Film> films;*/

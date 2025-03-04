@@ -15,7 +15,7 @@ public class Image {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idImage;
     private String nom;
-    private String urlImage;
+    private String img;
 
     @ManyToOne
     @JoinColumn(name = "idFilm")
