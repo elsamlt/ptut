@@ -8,11 +8,11 @@
         <span class="text-h6">2023</span>
       </v-col>
       <v-col cols="auto">
-        <v-btn class="btn" size="40px">
-          <v-icon class="icon" @click="deleteFilm">mdi-delete</v-icon>
+        <v-btn class="btn" size="40px" @click="deleteFilm">
+          <v-icon class="icon">mdi-delete</v-icon>
         </v-btn>
-        <v-btn class="btn" size="40px">
-          <v-icon class="icon" @click="editFilm">mdi-pencil</v-icon>
+        <v-btn class="btn" size="40px"  @click="editFilm">
+          <v-icon class="icon">mdi-pencil</v-icon>
         </v-btn>
       </v-col>
     </v-row>

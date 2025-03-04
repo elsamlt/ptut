@@ -12,8 +12,8 @@
   </v-container>
 
   <!-- Bouton flottant pour ajouter un film -->
-  <v-btn v-if="!showAddFilm" class="btn add-btn" size="40px">
-    <v-icon class="icon" @click="showAddFilm = true; selectedFilm = null;">mdi-plus</v-icon>
+  <v-btn v-if="!showAddFilm" class="btn add-btn" size="40px" @click="showAddFilm = true; selectedFilm = null;">
+    <v-icon class="icon">mdi-plus</v-icon>
   </v-btn>
 
   <!-- Dialog de confirmation -->
