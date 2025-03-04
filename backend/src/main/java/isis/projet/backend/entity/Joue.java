@@ -6,7 +6,6 @@ import lombok.*;
 @Getter
 @Setter
 @NoArgsConstructor
-@RequiredArgsConstructor
 @ToString
 
 @Entity
@@ -14,12 +13,11 @@ import lombok.*;
 public class Joue {
     @EmbeddedId
     private JoueId id;
-
     private String role;
 
     @ManyToOne
-    @MapsId("filmId")
-    @JoinColumn(name = "film_id")
+    @MapsId("idFilm")
+    @JoinColumn(name = "idFilm")
     private Film film;
 
     @ManyToOne

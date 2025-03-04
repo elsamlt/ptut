@@ -1,23 +1,6 @@
-INSERT INTO PROJET (ID, NOM, DEBUT, FIN) VALUES
-    (default, 'Projet 1 (en cours)', '2025-01-01', NULL), -- code 1
-    (default, 'Projet 2 (terminé)', '2024-12-01', '2024-12-31'), -- code 2
-    (default, 'Projet 3 (en cours)', '2024-11-01', NULL); -- code 3
-
-INSERT INTO PERSONNE(MATRICULE, NOM, PRENOM, POSTE, SUPERIEUR_MATRICULE) VALUES
-    (default, 'Doe', 'John', 'CEO', NULL), -- matricule 1
-    (default, 'Reagan', 'Jane', 'Manager', 1), -- matricule 2
-    (default, 'Carter', 'Alice', 'System Engineer', 1), -- matricule 3
-    (default, 'Truman', 'Bob', 'Developper', 2), -- matricule 4
-    (default, 'Roosevelt', 'Eve', 'Analyst', 2); -- matricule 5
-
-INSERT INTO PARTICIPATION(ROLE, POURCENTAGE, PROJET_ID, PERSONNE_MATRICULE) VALUES
-    ('Chef de projet', 0.2, 1, 2), -- participation 1
-    ('Front-End Developper', 0.3, 1, 3), -- participation 2
-    ('Back-End Developper', 0.2, 1, 4), -- participation 3
-    ('Tester', 0.4, 1, 5), -- participation 4
-    ('Chef de projet', 0.4, 2, 2), -- participation 5
-    ('Front-End Developper', 0.3, 2, 3), -- participation 6
-    ('Back-End Developper', 0.2, 2, 4), -- participation 7
-    ('Analyst', 0.4, 2, 5), -- participation 8
-    ('Chef de projet', 0.1, 3, 2), -- participation 9
-    ('Front-End developper', 0.3, 3, 3); -- participation 10
+INSERT INTO Film (idFilm, titre, synopsis, genre, annee, duree, affiche, urlFilm, urlBA)
+VALUES
+    (1, 'Sketch FIE4 Promo 2022', 'Un sketch réalisé par la promo FIE4 2022', 'Comédie', 2021, '15min08', NULL, ' ', NULL),
+    (2, 'The Hospital 1', 'Premier volet de The Hospital', 'Comédie', 2023, '13min54', NULL, ' ', NULL),
+    (3, 'The Hospital 3', 'Troisième volet de The Hospital', 'Comédie', 2024, '14min28', 'thehospital3.jpg', 'https://www.youtube.com/watch?v=VnQgzH-UTtw&t=2s&ab_channel=EnsavCastres2023', NULL),
+    (4, 'The Hospital 4', 'Quatrième volet de The Hospital', 'Comédie', 2025, '15min08', 'thehospital4.jpg', 'https://www.youtube.com/watch?v=Pi0mE6bBwxw&t=2s&ab_channel=ENSAVCastres24-25', NULL);

@@ -6,7 +6,6 @@ import lombok.*;
 @Getter
 @Setter
 @NoArgsConstructor
-@RequiredArgsConstructor
 @ToString
 
 @Entity
@@ -19,7 +18,7 @@ public class Image {
     private String urlImage;
 
     @ManyToOne
-    @JoinColumn(name = "film_id")
+    @JoinColumn(name = "idFilm")
     private Film film;
 
     // Getters et setters

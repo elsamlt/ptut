@@ -6,7 +6,6 @@ import lombok.*;
 @Getter
 @Setter
 @NoArgsConstructor
-@RequiredArgsConstructor
 @ToString
 
 @Entity
@@ -19,8 +18,8 @@ public class Participant {
     private String prenom;
     private String urlPhoto;
 
-    @ManyToMany(mappedBy = "participants")
-    private List<Film> films;
+    /*@ManyToMany(mappedBy = "participants")
+    private List<Film> films;*/
 
     // Getters et setters
 }
