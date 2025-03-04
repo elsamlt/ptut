@@ -6,7 +6,8 @@
 import { RouterLink, RouterView } from 'vue-router';
 import { onMounted } from "vue";
 
-/*const setUserInfo = async (token) => {
+/*const setUserInfo = async (token)
+ => {
   try {
     const config = {
       headers: { Authorization: `Bearer ${token}` },
