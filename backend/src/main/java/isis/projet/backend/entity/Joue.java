@@ -6,25 +6,23 @@ import lombok.*;
 @Getter
 @Setter
 @NoArgsConstructor
-@RequiredArgsConstructor
 @ToString
 
 @Entity
 @Table(name = "joue")
 public class Joue {
-    @EmbeddedId
-    private JoueId id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Clé primaire auto-générée
+    private Long idJoue;
 
     private String role;
 
     @ManyToOne
-    @MapsId("filmId")
-    @JoinColumn(name = "film_id")
+    @JoinColumn(name = "film_id", nullable = false) // Relier à Film
     private Film film;
 
     @ManyToOne
-    @MapsId("participantId")
-    @JoinColumn(name = "participant_id")
+    @JoinColumn(name = "participant_id", nullable = false) // Relier à Participant
     private Participant participant;
 
     // Getters et setters

@@ -9,12 +9,14 @@ import lombok.*;
 @ToString
 
 @Entity
-@Table(name = "administrateurs")
-public class Admin {
+@Table(name = "actualites")
+public class Actualite {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idAdmin;
-    private String email;
-    private String password;
+    private int idActu;
 
+    @Column(nullable = false)
+    private String lien;
+
+    // Getters et setters sont générés par Lombok
 }

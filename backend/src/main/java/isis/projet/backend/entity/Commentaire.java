@@ -6,7 +6,6 @@ import lombok.*;
 @Getter
 @Setter
 @NoArgsConstructor
-@RequiredArgsConstructor
 @ToString
 
 @Entity
@@ -18,7 +17,7 @@ public class Commentaire {
     private String description;
 
     @ManyToOne
-    @JoinColumn(name = "film_id")
+    @JoinColumn(name = "idFilm")
     private Film film;
 
     // Getters et setters

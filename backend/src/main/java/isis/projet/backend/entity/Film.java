@@ -10,7 +10,6 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-@RequiredArgsConstructor
 @ToString
 
 @Entity
@@ -22,11 +21,11 @@ public class Film {
     private String titre;
     private String synopsis;
     private String genre;
-    private Date annee;
-    private int duree;
+    private int annee;
+    private String duree;
+    private String affiche;
     private String urlFilm;
-    private String urlBandeAnnonce;
-    private String urlImage;
+    private String urlBA;
 
     @OneToMany(mappedBy = "film", cascade = CascadeType.ALL)
     private List<Commentaire> commentaires;
@@ -34,13 +33,13 @@ public class Film {
     @OneToMany(mappedBy = "film", cascade = CascadeType.ALL)
     private List<Anecdote> anecdotes;
 
-    @ManyToMany
+    /*@ManyToMany
     @JoinTable(
             name = "film_participant",
             joinColumns = @JoinColumn(name = "film_id"),
             inverseJoinColumns = @JoinColumn(name = "participant_id")
     )
-    private List<Participant> participants;
+    private List<Participant> participants;*/
 
     // Getters et setters
 }

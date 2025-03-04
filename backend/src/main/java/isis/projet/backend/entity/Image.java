@@ -6,7 +6,6 @@ import lombok.*;
 @Getter
 @Setter
 @NoArgsConstructor
-@RequiredArgsConstructor
 @ToString
 
 @Entity
@@ -16,10 +15,10 @@ public class Image {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idImage;
     private String nom;
-    private String urlImage;
+    private String img;
 
     @ManyToOne
-    @JoinColumn(name = "film_id")
+    @JoinColumn(name = "idFilm")
     private Film film;
 
     // Getters et setters

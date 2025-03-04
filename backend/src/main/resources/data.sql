@@ -1,23 +1,115 @@
-INSERT INTO PROJET (ID, NOM, DEBUT, FIN) VALUES
-    (default, 'Projet 1 (en cours)', '2025-01-01', NULL), -- code 1
-    (default, 'Projet 2 (terminé)', '2024-12-01', '2024-12-31'), -- code 2
-    (default, 'Projet 3 (en cours)', '2024-11-01', NULL); -- code 3
+INSERT INTO Films (titre, synopsis, genre, annee, duree, affiche, url_film, urlBA)
+VALUES
+    ('Sketch FIE4 Promo 2022', 'Un sketch réalisé par la promo FIE4 2022', 'Comédie', 2021, '15min08', NULL, '', NULL),
+    ('The Hospital 1', 'Premier volet de The Hospital', 'Comédie', 2023, '13min54', NULL, '', NULL),
+    ('The Hospital 3', 'Troisième volet de The Hospital', 'Comédie', 2024, '14min28', 'thehospital3.jpg', '', NULL),
+    ('The Hospital 4', 'Quatrième volet de The Hospital', 'Comédie', 2025, '15min08', 'thehospital4.jpg','', NULL);
 
-INSERT INTO PERSONNE(MATRICULE, NOM, PRENOM, POSTE, SUPERIEUR_MATRICULE) VALUES
-    (default, 'Doe', 'John', 'CEO', NULL), -- matricule 1
-    (default, 'Reagan', 'Jane', 'Manager', 1), -- matricule 2
-    (default, 'Carter', 'Alice', 'System Engineer', 1), -- matricule 3
-    (default, 'Truman', 'Bob', 'Developper', 2), -- matricule 4
-    (default, 'Roosevelt', 'Eve', 'Analyst', 2); -- matricule 5
+INSERT INTO Participants (nom, prenom, pdp) VALUES
+                                                ('DUPUY', 'Emma', NULL),
+                                                ('SALVAN', 'Emma', NULL),
+                                                ('DON', 'Marie-Laure', NULL),
+                                                ('SADGAL', 'Rania', NULL),
+                                                ('BARBOT', 'Mattéo', NULL),
+                                                ('CABANES', 'Ulysse', NULL),
+                                                ('GOETSCHEL', 'Numa', NULL),
+                                                ('VICHET', 'Victoria', NULL),
+                                                ('CHANAL', 'Marie', NULL),
+                                                ('LEONE', 'Julie', NULL),
+                                                ('FAUCHER', 'Ruby', NULL),
+                                                ('MARTY', 'Morgan', NULL),
+                                                ('CANAVY', 'Marisol', NULL),
+                                                ('HENRY', 'Camille', NULL),
+                                                ('ROGERS', 'Nelson', NULL),
+                                                ('ABITBOL', 'Lucas', NULL),
+                                                ('AIT YOUSEF', 'Wassim', NULL),
+                                                ('DELESTRE', 'Clémence', NULL),
+                                                ('REGHEM', 'Romain', NULL),
+                                                ('MAJID', 'Saif', NULL),
+                                                ('BOUILLET', 'Benjamin', NULL),
+                                                ('JOVIGNOT', 'Noah', NULL),
+                                                ('CUISOT', 'Mallory', NULL),
+                                                ('GOBIN', 'Rémi', NULL),
+                                                ('LARTOT', 'Alexis', NULL),
+                                                ('BESSE', 'Vincent', NULL),
+                                                ('MERCIER', 'Lara', NULL),
+                                                ('BRUNET', 'Enora', NULL),
+                                                ('SAHAGUIAN', 'Solan', NULL),
+                                                ('DORTE', 'Romain', NULL),
+                                                ('VIEILLARD', 'Antoine', NULL),
+                                                ('LAHMIDI', 'Soukaïna', NULL),
+                                                ('CHAUBET', 'Paul', NULL),
+                                                ('MASSIAS', 'Paul', NULL),
+                                                ('JOLIVET', 'Anaëlle', NULL),
+                                                ('BONNAFOUS', 'Arnaud', NULL),
+                                                ('MATTONE', 'Elsa', NULL),
+                                                ('DELMAS', 'Léo', NULL),
+                                                ('ORTEGA', 'Paul', NULL),
+                                                ('AYMARD', 'Marion', NULL),
+                                                ('KESKIN', 'Defne', NULL),
+                                                ('HAJJAM', 'Ikhlass', NULL),
+                                                ('EVRARD', 'Damien', NULL),
+                                                ('RAYNAL', 'Mathilde', NULL),
+                                                ('VILLEDIEU', 'Baptiste', NULL),
+                                                ('LASSERVARIE', 'Gabin', NULL),
+                                                ('BOURDARIAS', 'Cléa', NULL),
+                                                ('ACHER', 'Solène', NULL),
+                                                ('BOLZAN', 'Lucie', NULL),
+                                                ('ZIDOUR', 'Chérine', NULL),
+                                                ('ELIE', 'Antoine', NULL),
+                                                ('GATIEN', 'Grégory', NULL),
+                                                ('RENUCCI', 'Chloé', NULL),
+                                                ('KUBALE', 'Magdalena', NULL),
+                                                ('YAGUIYAN', 'Arnaud', NULL),
+                                                ('GATIEN', 'Grégory', NULL),
+                                                ('ACHER', 'Solène', NULL),
+                                                ('TAISNE', 'Lucas', NULL),
+                                                ('SOSSEY ALAOUI', 'Léopold', NULL),
+                                                ('LEROY', 'Guillaume', NULL),
+                                                ('BOUDRIGA', 'Sarra', NULL),
+                                                ('TOUJENI', 'Imen', NULL),
+                                                ('MEHL-PALMIE', 'Matis', NULL),
+                                                ('DELBOS', 'Lucille', NULL),
+                                                ('DUPE', 'Cassandra', NULL),
+                                                ('COURREDE', 'Félix', NULL),
+                                                ('REZOUKI', 'Rokaya', NULL),
+                                                ('O’NEILL', 'Kevin', NULL),
+                                                ('LOCK-FAT', 'Amélie', NULL),
+                                                ('BAAZAOUI', 'Chaima', NULL),
+                                                ('LIPOVAC', 'Noémi', NULL),
+                                                ('AUBER', 'Colline', NULL),
+                                                ('TOTI', 'Mathis', NULL),
+                                                ('BERLABI', 'Ellee', NULL),
+                                                ('ORTEGA', 'Zafiro', NULL),
+                                                ('BONIN', 'Lenny', NULL),
+                                                ('RIGAUD', 'Toinou', NULL),
+                                                ('DE MONTEVY', 'Agathe', NULL),
+                                                ('CHAUVEL', 'Justine', NULL),
+                                                ('LAUDE', 'Camille', NULL),
+                                                ('GROSJEAN', 'Alexandre', NULL),
+                                                ('LEVENT', 'Romaine', NULL),
+                                                ('CHANAL', 'Laura', NULL),
+                                                ('SUBIRA', 'Emma', NULL),
+                                                ('GRUEL', 'Alexis', NULL),
+                                                ('BARTHE', 'Emma', NULL),
+                                                ('BONNIN', 'Lenny', NULL),
+                                                ('TOTI', 'Mathis', NULL),
+                                                ('SZCZEPANSKI', 'Neo', NULL);
 
-INSERT INTO PARTICIPATION(ROLE, POURCENTAGE, PROJET_ID, PERSONNE_MATRICULE) VALUES
-    ('Chef de projet', 0.2, 1, 2), -- participation 1
-    ('Front-End Developper', 0.3, 1, 3), -- participation 2
-    ('Back-End Developper', 0.2, 1, 4), -- participation 3
-    ('Tester', 0.4, 1, 5), -- participation 4
-    ('Chef de projet', 0.4, 2, 2), -- participation 5
-    ('Front-End Developper', 0.3, 2, 3), -- participation 6
-    ('Back-End Developper', 0.2, 2, 4), -- participation 7
-    ('Analyst', 0.4, 2, 5), -- participation 8
-    ('Chef de projet', 0.1, 3, 2), -- participation 9
-    ('Front-End developper', 0.3, 3, 3); -- participation 10
+INSERT INTO Commentaires (description, id_film) VALUES
+                                                                 ('Un excellent film avec une intrigue captivante.', 1),
+                                                                 ('Les acteurs ont fait un travail remarquable.', 2);
+
+INSERT INTO Images (img, id_film) VALUES
+                                             ('path/to/image1.jpg', 1),
+                                             ('path/to/image2.jpg', 2);
+
+INSERT INTO Administrateurs (email, password) VALUES ('admin@example.com', 'password123');
+
+INSERT INTO Actualites (lien) VALUES
+                                  ('http://example.com/news1'),
+                                  ('http://example.com/news2');
+
+INSERT INTO Moments (titre, nom_img, description) VALUES
+                                                       ('Première du film', 'premiere.jpg', 'La première du film a eu lieu hier soir.'),
+                                                       ('Tournage terminé', 'tournage.jpg', 'Le tournage du film s''est terminé avec succès.');
