@@ -66,6 +66,7 @@ import { ref, defineProps, defineEmits } from "vue";
 
 // Récupérer les props
 const props = defineProps({ film: Object });
+//console.log(props.film)
 const emit = defineEmits(["edit", "cancel"]);
 
 // Cloner l'objet film pour éviter de modifier directement la prop

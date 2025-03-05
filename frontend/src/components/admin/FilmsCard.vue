@@ -5,7 +5,7 @@
         <v-img src="https://via.placeholder.com/50" class="film-image"></v-img>
       </v-col>
       <v-col>
-        <span class="text-h6">2023</span>
+        <span class="text-h6">{{film.titre}}</span>
       </v-col>
       <v-col cols="auto">
         <v-btn class="btn" size="40px" @click="deleteFilm">

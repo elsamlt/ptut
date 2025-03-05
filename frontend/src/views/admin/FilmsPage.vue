@@ -1,8 +1,8 @@
 <template>
   <!-- Liste des films -->
   <v-container v-if="!showEditFilm && !showAddFilm">
-    <!--<FilmsCard v-for="(film, index) in listFilms" :key="film.id" :film="film" :index="index" @edit="openEditForm(selectedFilm)" @delete="handlerDelete(selectedFilm)"/>-->
-    <FilmsCard @edit="openEditForm(selectedFilm)" @delete="handlerDelete(selectedFilm)"/>
+    <FilmsCard v-for="(film, index) in listFilms" :key="film.id" :film="film" :index="index" @edit="openEditForm(selectedFilm)" :film="film"
+               @delete="handlerDelete(selectedFilm)"/>
   </v-container>
   <v-container v-if="showAddFilm">
     <AddFilm @add="handleFilmAdded" @closeForm="showAddFilm = false"/>
@@ -52,7 +52,7 @@
 
   import { ref, onMounted, reactive } from "vue";
 
-  const url = "";
+  const url = "http://localhost:8989/api/films";
   const listFilms = reactive([]);
 
   const dialogAdd = ref(false);
@@ -66,6 +66,7 @@
 
   const openEditForm = (film) => {
     selectedFilm.value = { ...film }; // Cloner pour éviter la modification directe
+    console.log(selectedFilm.value)
     showEditFilm.value = true;
   };
 
@@ -76,7 +77,7 @@
     fetch(url)
       .then((response) => response.json())
       .then((dataJSON) => {
-        listFilms.splice(0, listFilms.length, ...dataJSON);
+        listFilms.splice(0, listFilms.length, ...dataJSON._embedded.films);
       })
       .catch((error) =>
         console.error("Erreur lors de la récupération des films :", error),
