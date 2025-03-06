@@ -1,7 +1,28 @@
 <template>
+  <v-row class="d-flex align-center mt-1 gap-x-4">
+    <v-row class="d-flex align-center gap-x-4">
+      <p>Afficher les participants de :</p>
+      <v-col cols="4">
+        <v-select class="select" v-model="selected" :item-props="itemProps" :items="items" density="compact"></v-select>
+      </v-col>
+    </v-row>
+    <v-col cols="3">
+      <v-text-field
+        v-model="searchQuery"
+        label="Rechercher un participant..."
+        variant="outlined"
+        prepend-inner-icon="mdi-magnify"
+      ></v-text-field>
+    </v-col>
+  </v-row>
   <v-container v-if="!showEditPerson && !showAddPerson">
-    <!--<ParticipantsCard v-for="(person, index) in listPersons" :key="person.id" :person="person" :index="index" @edit="openEditForm(selectedPerson)" @delete="handlerDelete(selectedPerson)"/>-->
-    <ParticipantsCard @edit="openEditForm(selectedPerson)" @delete="handlerDelete(selectedPerson)"/>
+    <ParticipantsCard v-for="(person, index) in listPersons" :key="person.id" :person="person" :index="index" @edit="openEditForm(selectedPerson)" @delete="handlerDelete(selectedPerson)"/>
+    <!-- Pagination controls -->
+    <v-row justify="center" class="mt-4">
+      <v-btn :disabled="currentPage === 1" @click="prevPage">Précédent</v-btn>
+      <span class="mx-3">Page {{ currentPage }} / {{ totalPages }}</span>
+      <v-btn :disabled="currentPage === totalPages" @click="nextPage">Suivant</v-btn>
+    </v-row>
   </v-container>
   <v-container v-if="showAddPerson">
     <AddParticipant @add="handlePersonAdded" @closeForm="showAddPerson = false"/>
@@ -41,10 +62,12 @@ import ParticipantsCard from "@/components/admin/ParticipantsCard.vue";
 import EditParticipant from "@/components/admin/EditParticipant.vue";
 import AddParticipant from "@/components/admin/AddParticipant.vue";
 
-import { ref, onMounted, reactive } from "vue";
+import { ref, onMounted, reactive, computed } from "vue";
 
-const url = "";
-const listPersons = reactive([]);
+const url = "/api/participants";
+const listPersons = ref([]);
+const totalPages = ref(1);
+const currentPage = ref(1);
 
 const dialogAdd = ref(false);
 const dialogDelete = ref(false);
@@ -63,16 +86,42 @@ const openEditForm = (person) => {
 /**
  * Récupérer les participants depuis l'API
  */
-function fetchPersons() {
+/*function fetchPersons() {
   fetch(url)
     .then((response) => response.json())
     .then((dataJSON) => {
-      listPersons.splice(0, listPersons.length, ...dataJSON);
+      console.log(dataJSON)
+      listPersons.splice(0, listPersons.length, ...dataJSON._embedded.participants);
     })
     .catch((error) =>
       console.error("Erreur lors de la récupération des partcipants :", error),
     );
-}
+}*/
+const fetchPersons = (page = 1, size = 4) => {
+  fetch(`${url}?page=${page - 1}&size=${size}`)  // L'API commence les pages à 0
+    .then(response => response.json())
+    .then(dataJSON => {
+      console.log("Données récupérées :", dataJSON);
+      listPersons.value = dataJSON._embedded?.participants || [];
+      totalPages.value = dataJSON.page?.totalPages || 1;
+    })
+    .catch(error => console.error("Erreur lors de la récupération des participants :", error));
+};
+
+// Fonction pour changer de page
+const prevPage = () => {
+  if (currentPage.value > 1) {
+    currentPage.value--;
+    fetchPersons(currentPage.value);
+  }
+};
+
+const nextPage = () => {
+  if (currentPage.value < totalPages.value) {
+    currentPage.value++;
+    fetchPersons(currentPage.value);
+  }
+};
 
 /**
  * Sélectionner un participant et afficher ses détails
@@ -172,5 +221,13 @@ onMounted(fetchPersons);
 
 .btn:hover .icon {
   transform: scale(0.8);
+}
+
+.d-flex{
+  margin: 5px;
+}
+
+.select{
+  margin-top: 20px;
 }
 </style>

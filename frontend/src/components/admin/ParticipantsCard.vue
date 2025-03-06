@@ -1,21 +1,4 @@
 <template>
-  <v-row class="d-flex align-center mt-1 gap-x-4">
-    <v-row class="d-flex align-center gap-x-4">
-      <p>Afficher les participants de :</p>
-      <v-col cols="4">
-        <v-select class="select" v-model="selected" :item-props="itemProps" :items="items" density="compact"></v-select>
-      </v-col>
-    </v-row>
-    <v-col cols="3">
-      <v-text-field
-        v-model="searchQuery"
-        label="Rechercher un participant..."
-        variant="outlined"
-        prepend-inner-icon="mdi-magnify"
-      ></v-text-field>
-    </v-col>
-  </v-row>
-
   <v-card class="participants-card">
     <v-row align="center">
       <v-col cols="2">
@@ -23,8 +6,8 @@
         <v-img src="https://via.placeholder.com/50" class="film-image"></v-img>
       </v-col>
       <v-col>
-        <span class="text-h6">Nom</span>
-        <span class="text-h6">Prénom</span>
+        <span class="text-h6">{{ person.nom }}</span>
+        <span class="text-h6">{{ person.prenom }}</span>
         <p>Role</p>
       </v-col>
       <v-col cols="auto">
@@ -63,16 +46,10 @@ const editPerson = () => {
 </script>
 
 <style scoped>
- .d-flex{
-   margin: 5px;
- }
-
- .select{
-   margin-top: 20px;
- }
 
  .participants-card{
    padding: 10px;
+   margin-bottom: 20px;
  }
 
  .btn {
@@ -85,5 +62,9 @@ const editPerson = () => {
 
  .btn:hover .icon {
    transform: scale(0.8);
+ }
+
+ .text-h6{
+   margin-right: 10px;
  }
 </style>
