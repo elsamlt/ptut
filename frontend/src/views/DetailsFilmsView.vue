@@ -1,16 +1,20 @@
 <template>
   <div>
+    <div class="affiche-film">
+      <img :src="film.affiche" alt="Affiche du film" />
+    </div>
+
     <h1>{{ film.titre }}</h1>
     <p class="annee">{{ film.annee }}</p>
     <p class="type">{{ film.genre }}</p>
     <p class="duree">{{ film.duree }}</p>
     <p class="resume">{{ film.synopsis }}</p>
 
-    <!-- Container pour les boutons -->
     <div class="Boutton">
       <button @click="regarderFilm">REGARDER</button>
       <button @click="voirBandeAnnonce">BANDE D'ANNONCE</button>
     </div>
+
 
     <h2>Acteurs</h2>
     <div class="acteurs">
@@ -26,6 +30,7 @@
       <button class="bouton-rond" @click="nextPostProd">&#8594;</button>
     </div>
 
+
     <h2>Equipe de tournage</h2>
     <div class="equipe_tournage">
       <p v-for="(equipe, index) in film.equipeTournage" :key="index">{{ equipe.nom }} {{ equipe.prenom }}</p>
@@ -33,8 +38,11 @@
       <button class="bouton-rond" @click="nextEquipe">&#8594;</button>
     </div>
 
+
     <h2>Anecdotes</h2>
     <p v-for="(anecdote, index) in anecdotes" :key="index">{{ anecdote.texte }}</p>
+
+
 
     <h2>Images exclusives du tournage</h2>
     <div class="carousel">
@@ -42,11 +50,12 @@
       <button class="bouton-rond" @click="previousImage">&#8592;</button>
       <button class="bouton-rond" @click="nextImage">&#8594;</button>
 
-      <!-- Affichage des images du tournage dans un carrousel -->
+
       <div class="images-tournage">
         <img v-for="(image, index) in currentImages" :key="index" :src="image.url" alt="Image de tournage" class="image-tournage" />
       </div>
     </div>
+
 
     <h2>Commentaires</h2>
     <div class="commentaires">
@@ -87,9 +96,9 @@ export default {
     this.fetchImages(this.filmId);
   },
   computed: {
-    // Calculer les images actuelles à afficher dans le carrousel
+
     currentImages() {
-      const imagesPerPage = 5;  // Afficher 5 images à la fois
+      const imagesPerPage = 5;
       return this.images.slice(this.currentImageIndex, this.currentImageIndex + imagesPerPage);
     }
   },
@@ -160,12 +169,12 @@ export default {
       console.log("Regarder le film");
     },
 
-    // Fonction pour "Voir la bande annonce" (ajouter votre logique ici)
+
     voirBandeAnnonce() {
       console.log("Voir la bande annonce");
     },
 
-    // Fonctions pour naviguer dans les images
+
     nextImage() {
       if (this.currentImageIndex + 5 < this.images.length) {
         this.currentImageIndex += 5;
@@ -178,7 +187,7 @@ export default {
       }
     },
 
-    // Fonctions de navigation pour les acteurs, post-prod, et équipe
+
     previousActeurs() {
       console.log("Acteurs précédent");
     },
@@ -276,19 +285,29 @@ p {
   background-color: #5A52E5;
 }
 
-.acteurs, .post_prod, .equipe_tournage {
+/* Affiche du film fixée en haut */
+.affiche-film {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 300px;
+  background-color: #333;
   display: flex;
-  align-items: center;
   justify-content: center;
-  flex-wrap: wrap;
-  gap: 20px;
-  margin: 20px 0;
+  align-items: center;
+  z-index: 10;
 }
 
-.acteurs p, .post_prod p, .equipe_tournage p {
-  text-align: center;
-  margin: 0;
-  font-size: 1rem;
+.affiche-film img {
+  max-height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+/* Décalage du contenu pour laisser de l'espace sous l'affiche fixe */
+div {
+  padding-top: 350px; /* Marge supérieure pour éviter que l'affiche ne cache le contenu */
 }
 
 .carousel {
