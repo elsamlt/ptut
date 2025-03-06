@@ -5,16 +5,10 @@
         <v-row class="d-flex align-center">
           <!-- Image -->
           <v-col cols="12" md="2" class="d-flex flex-column align-center">
-            <!--<img v-if="film.affiche" src="./Capture.png" height="150"/>-->
-            <!--<img v-if="film.affiche" :src="film.affiche" height="150" class="mt-2"/>-->
-            <v-file-input
-              label="Télécharger une image"
-              accept="image/*"
-              prepend-icon="mdi-camera"
-              @change="previewImage"
-            ></v-file-input>
+            <img v-if="film.affiche" :src="`/img/${film.affiche}`" height="150" class="mt-2"/>
             <v-row>
-              <v-btn class="mt-2" icon="mdi-download" variant="text"></v-btn>
+              <v-btn class="mt-2" icon="mdi-download" variant="text" @click="triggerFileInput"></v-btn>
+              <input type="file" ref="fileInput" style="display: none" @change="handleFileUpload" />
               <v-btn @click="deleteImage" class="mt-2" color="red-lighten-2" icon="mdi-delete" variant="text"></v-btn>
             </v-row>
           </v-col>
@@ -23,27 +17,27 @@
           <v-col cols="12" md="10">
             <v-row>
               <v-col cols="12" md="6">
-                <v-text-field label="Titre" v-model="film.titre" required></v-text-field>
+                <v-text-field class="text-input" label="Titre" v-model="film.titre" required></v-text-field>
               </v-col>
               <v-col cols="12" md="6">
-                <v-text-field label="Année de sortie" v-model="film.annee" required></v-text-field>
+                <v-text-field class="text-input" label="Année de sortie" v-model="film.annee" required></v-text-field>
               </v-col>
               <v-col cols="12" md="6">
-                <v-text-field label="Genre" v-model="film.genre" required></v-text-field>
+                <v-text-field class="text-input" label="Genre" v-model="film.genre" required></v-text-field>
               </v-col>
               <v-col cols="12" md="6">
-                <v-text-field label="Durée" v-model="film.duree" required></v-text-field>
+                <v-text-field class="text-input" label="Durée" v-model="film.duree" required></v-text-field>
               </v-col>
             </v-row>
 
-            <v-textarea label="Synopsis" v-model="film.synopsis" auto-grow required></v-textarea>
+            <v-textarea class="text-input" label="Synopsis" v-model="film.synopsis" auto-grow required></v-textarea>
 
             <v-row>
               <v-col cols="12" md="6">
-                <v-text-field label="Lien du film" v-model="film.urlFilm" required></v-text-field>
+                <v-text-field class="text-input" label="Lien du film" v-model="film.urlFilm" required></v-text-field>
               </v-col>
               <v-col cols="12" md="6">
-                <v-text-field label="Lien de la bande d’annonce" v-model="film.urlBA"></v-text-field>
+                <v-text-field class="text-input" label="Lien de la bande d’annonce" v-model="film.urlBA"></v-text-field>
               </v-col>
             </v-row>
           </v-col>
@@ -61,16 +55,16 @@
   </v-container>
 </template>
 
-<script>
+<script setup>
 import { ref, defineProps, defineEmits } from "vue";
 
 // Récupérer les props
 const props = defineProps({ film: Object });
-//console.log(props.film)
 const emit = defineEmits(["edit", "cancel"]);
 
 // Cloner l'objet film pour éviter de modifier directement la prop
-//const film = ref({ ...props.film });
+const film = ref({ ...props.film });
+const fileInput = ref(null);
 
 // Fonction de soumission
 const submitFilm = () => {
@@ -83,6 +77,13 @@ const submitFilm = () => {
 // Annuler et fermer le formulaire
 const closeForm = () => {
   emit("cancel");
+};
+
+// Ouvrir la boîte de dialogue pour sélectionner un fichier
+const triggerFileInput = () => {
+  if (fileInput.value) {
+    fileInput.value.click();
+  }
 };
 
 // Gestion de l'upload d'image

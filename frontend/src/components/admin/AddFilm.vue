@@ -5,16 +5,10 @@
         <v-row class="d-flex align-center">
           <!-- Image -->
           <v-col cols="12" md="2" class="d-flex flex-column align-center">
-            <!--<img v-if="film.affiche" src="./Capture.png" height="150"/>-->
-            <!--<img v-if="film.affiche" :src="film.affiche" height="150" class="mt-2"/>-->
-            <v-file-input
-              label="Télécharger une image"
-              accept="image/*"
-              prepend-icon="mdi-camera"
-              @change="previewImage"
-            ></v-file-input>
+            <img v-if="film.affiche" :src="film.affiche" height="100" class="mt-2"/>
             <v-row>
-              <v-btn class="mt-2" icon="mdi-download" variant="text"></v-btn>
+              <v-btn class="mt-2" icon="mdi-download" variant="text" @click="triggerFileInput"></v-btn>
+              <input type="file" ref="fileInput" style="display: none" @change="handleFileUpload" />
               <v-btn @click="deleteImage" class="mt-2" color="red-lighten-2" icon="mdi-delete" variant="text"></v-btn>
             </v-row>
           </v-col>
@@ -64,9 +58,8 @@
 <script setup>
 import { ref, defineProps, defineEmits } from "vue";
 
-const emit = defineEmits(["eventAdd", "closeForm"]);
-
-const photo = ref(null);
+const emit = defineEmits(["add", "closeForm"]);
+const fileInput = ref(null);
 
 const film = ref({
   titre: "",
@@ -74,7 +67,7 @@ const film = ref({
   genre: "",
   annee: "",
   duree: "",
-  affiche: photo,
+  affiche: null,
   urlFilm: "",
   urlBA: "",
 });
@@ -82,7 +75,7 @@ const film = ref({
 // Soumettre le film
 const submitFilm = () => {
   emit("add", film.value);
-  console.log(film.value.affiche);
+  console.log("Film ajouté :", film.value);
 
   // Remise à zéro après ajout
   film.value = {
@@ -97,28 +90,35 @@ const submitFilm = () => {
   };
 };
 
-// Annuler et enlever le texte rempli
+// Annuler et fermer le formulaire
 const closeForm = () => {
   emit("closeForm");
 };
 
+// Supprimer l'image
 const deleteImage = () => {
-  photo.value = null;
   film.value.affiche = null;
 };
 
+// Ouvrir la boîte de dialogue pour sélectionner un fichier
+const triggerFileInput = () => {
+  if (fileInput.value) {
+    fileInput.value.click();
+  }
+};
+
+// Gestion de l'upload d'image
 const handleFileUpload = (event) => {
   const file = event.target.files[0];
-  if (!file) return; // Si l'utilisateur annule la sélection du fichier, on ne fait rien
-  // FileReader est un objet JavaScript permettant de lire le contenu d'un fichier
-  // de manière asynchrone.
+  if (!file) return;
+
   const reader = new FileReader();
   reader.onload = () => {
-    // definir le traitement asynchrone du contenu du fichier
-    photo.value = reader.result; // --> convertit le contenu du fichier en base64
+    film.value.affiche = reader.result; // Mettre à jour la prop affiche avec l'image en base64
   };
-  reader.readAsDataURL(file); // lance la lecture du fichier et donc la conversion en base64
+  reader.readAsDataURL(file);
 };
+
 </script>
 
 <style scoped>

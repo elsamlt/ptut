@@ -12,6 +12,9 @@ a,
   padding: 3px;
 }
 
+.text-input {
+  font-family: var(--font-text) !important;
+}
 
 
 /*@media (min-width: 1024px) {

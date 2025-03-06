@@ -1,7 +1,7 @@
 <template>
   <!-- Liste des films -->
   <v-container v-if="!showEditFilm && !showAddFilm">
-    <FilmsCard v-for="(film, index) in listFilms" :key="film.id" :film="film" :index="index" @edit="openEditForm(selectedFilm)" :film="film"
+    <FilmsCard v-for="(film, index) in listFilms" :key="film.id" :index="index" @edit="openEditForm(film)" :film="film"
                @delete="handlerDelete(selectedFilm)"/>
   </v-container>
   <v-container v-if="showAddFilm">
@@ -12,7 +12,7 @@
   </v-container>
 
   <!-- Bouton flottant pour ajouter un film -->
-  <v-btn v-if="!showAddFilm" class="btn add-btn" size="40px" @click="showAddFilm = true; selectedFilm = null;">
+  <v-btn v-if="!showAddFilm && !showEditFilm" class="btn add-btn" size="40px" @click="showAddFilm = true; selectedFilm = null;">
     <v-icon class="icon">mdi-plus</v-icon>
   </v-btn>
 
@@ -52,7 +52,7 @@
 
   import { ref, onMounted, reactive } from "vue";
 
-  const url = "http://localhost:8989/api/films";
+  const url = "/api/films";
   const listFilms = reactive([]);
 
   const dialogAdd = ref(false);
@@ -66,7 +66,6 @@
 
   const openEditForm = (film) => {
     selectedFilm.value = { ...film }; // Cloner pour éviter la modification directe
-    console.log(selectedFilm.value)
     showEditFilm.value = true;
   };
 
@@ -129,6 +128,64 @@
         console.error("Erreur lors de l'ajout du film :", error),
       );
   };
+
+  /*const handleFilmAdded = async (newFilm) => {
+    //console.log("ok")
+    let imagePath = "";
+
+    if (newFilm.affiche instanceof File) {
+      // L'utilisateur a ajouté une nouvelle image
+      const formData = new FormData();
+      formData.append("image", newFilm.affiche);
+
+      try {
+        const response = await fetch(url, {
+          method: "POST",
+          body: formData,
+        });
+
+        const data = await response.json();
+        if (data.success) {
+          imagePath = `/img/${data.filename}`; // Stocke le chemin de l'image
+        } else {
+          console.error("Erreur lors de l'envoi de l'image");
+          return;
+        }
+      } catch (error) {
+        console.error("Erreur lors de l'upload de l'image :", error);
+        return;
+      }
+    } else {
+      // L'utilisateur n'a pas ajouté d'image, on garde l'affiche existante
+      imagePath = newFilm.affiche || "";
+    }
+
+    // Envoi des données du film après l'upload de l'image
+    fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        titre: newFilm.titre,
+        synopsis: newFilm.synopsis,
+        genre: newFilm.genre,
+        annee: newFilm.annee,
+        duree: newFilm.duree,
+        affiche: imagePath, // On envoie le chemin au lieu de l'image elle-même
+        urlFilm: newFilm.urlFilm,
+        urlBA: newFilm.urlBA,
+      }),
+    })
+      .then((response) => response.json())
+      .then(() => {
+        fetchFilms(); // Rafraîchir la liste après l'ajout
+        dialogAdd.value = true;
+        showAddFilm.value = false;
+      })
+      .catch((error) =>
+        console.error("Erreur lors de l'ajout du film :", error)
+      );
+  };*/
+
 
   /**
    * Supprimer un film via API

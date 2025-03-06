@@ -2,7 +2,10 @@
   <v-card class="film-card">
     <v-row align="center">
       <v-col cols="2">
-        <v-img src="https://via.placeholder.com/50" class="film-image"></v-img>
+        <v-img v-if="film.affiche" :src="`/img/${film.affiche}`" class="film-image" alt="Affiche du film">
+          <!-- Afficher l'image si elle existe -->
+        </v-img>
+        <v-icon v-else class="film-image icon-placeholder" color="grey lighten-2">mdi-camera</v-icon>
       </v-col>
       <v-col>
         <span class="text-h6">{{film.titre}}</span>
@@ -25,7 +28,6 @@ import { defineProps, defineEmits } from "vue";
 const props = defineProps({
   film: Object,
 });
-
 // Emitteur d'événements
 const emit = defineEmits(["delete", "edit"]);
 
@@ -48,6 +50,7 @@ const editFilm = () => {
 .film-image {
   width: 50px;
   height: 75px;
+  margin-left: 20px;
 }
 
 .btn {
