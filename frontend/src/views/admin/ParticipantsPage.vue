@@ -1,5 +1,5 @@
 <template>
-  <v-row class="d-flex align-center mt-1 gap-x-4">
+  <v-row v-if="!showEditPerson && !showAddPerson" class="d-flex align-center mt-1 gap-x-4">
     <v-row class="d-flex align-center gap-x-4">
       <p>Afficher les participants de :</p>
       <v-col cols="4">
@@ -32,8 +32,8 @@
   </v-container>
 
   <!-- Bouton flottant pour ajouter un participant -->
-  <v-btn v-if="!showAddPerson" class="btn add-btn" size="40px">
-    <v-icon class="icon" @click="showAddPerson = true; selectedPerson = null;">mdi-plus</v-icon>
+  <v-btn v-if="!showEditPerson && !showAddPerson" class="btn add-btn" size="40px" @click="showAddPerson = true; selectedPerson = null;">
+    <v-icon class="icon">mdi-plus</v-icon>
   </v-btn>
 
   <!-- Dialog de confirmation -->

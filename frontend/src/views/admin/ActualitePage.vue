@@ -2,7 +2,7 @@
   <!-- Liste des actualité -->
   <v-container v-if="!showEditActu && !showAddActu" class="d-flex flex-column align-center">
     <v-row class="gap">
-      <!--<ActualiteCard v-for="(actu, index) in listActu" :key="actu.id" :actu="actu" :index="index" @edit="openEditForm(selectedFilm)" @delete="handlerDelete(selectedFilm)"/>-->
+      <ActualiteCard v-for="(actu, index) in listActu" :key="actu.id" :actu="actu" :index="index" @edit="openEditForm(selectedFilm)" @delete="handlerDelete(selectedFilm)"/>
       <ActualiteCard @edit="openEditForm(selectedActu)" @delete="handlerDelete(selectedActu)"/>
     </v-row>
   </v-container>
@@ -14,8 +14,8 @@
   </v-container>
 
   <!-- Bouton flottant pour ajouter une actualité -->
-  <v-btn v-if="!showAddActu" class="btn add-btn" size="40px">
-    <v-icon class="icon" @click="showAddActu = true; selectedActu = null;">mdi-plus</v-icon>
+  <v-btn v-if="!showEditActu && !showAddActu" class="btn add-btn" size="40px" @click="showAddActu = true; selectedActu = null;">
+    <v-icon class="icon">mdi-plus</v-icon>
   </v-btn>
 
   <!-- Dialog de confirmation -->
@@ -45,11 +45,10 @@ import AddActualite from "@/components/admin/AddActualite.vue";
 
 import { ref, onMounted, reactive } from "vue";
 
-const url = "";
+const url = "/api/actualites";
 const listActu = reactive([]);
 
 const dialogAdd = ref(false);
-const dialogDelete = ref(false);
 const dialogEdit = ref(false);
 
 const showEditActu = ref(false);
@@ -69,7 +68,8 @@ function fetchActu() {
   fetch(url)
     .then((response) => response.json())
     .then((dataJSON) => {
-      listActu.splice(0, listActu.length, ...dataJSON);
+      listActu.splice(0, listActu.length, ...dataJSON._embedded.actualites);
+      console.log(listActu)
     })
     .catch((error) =>
       console.error("Erreur lors de la récupération des actualités :", error),

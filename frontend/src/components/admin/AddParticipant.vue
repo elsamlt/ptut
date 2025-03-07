@@ -29,7 +29,7 @@
                 <v-text-field label="Prénom" v-model="person.nom" required></v-text-field>
               </v-col>
               <v-col cols="6">
-                <v-text-field label="Role" v-model="film.genre" required></v-text-field>
+                <v-text-field label="Role" v-model="person.genre" required></v-text-field>
               </v-col>
               <v-col cols="6">
                 <v-select class="select" v-model="selected" :item-props="itemProps" :items="items" label="Film"></v-select>

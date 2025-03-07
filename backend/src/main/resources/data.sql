@@ -109,8 +109,9 @@ INSERT INTO Images (img, id_film) VALUES
 INSERT INTO Administrateurs (email, password) VALUES ('admin@example.com', 'password123');
 
 INSERT INTO Actualites (lien) VALUES
-                                  ('http://example.com/news1'),
-                                  ('http://example.com/news2');
+                                  ('https://www.youtube.com/watch?v=njgNtDXYPzs'),
+                                  ('https://www.youtube.com/watch?v=zZRFJyzFgJQ'),
+                                  ('https://www.youtube.com/watch?v=2Wu3Q_TyUnw&t=2s');
 
 INSERT INTO Moments (titre, nom_img, description) VALUES
                                                        ('Première du film', 'premiere.jpg', 'La première du film a eu lieu hier soir.'),

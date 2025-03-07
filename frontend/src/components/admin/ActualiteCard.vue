@@ -18,7 +18,7 @@
 </template>
 
 <script setup>
-import { ref, defineProps, defineEmits } from "vue";
+import { ref, defineProps, defineEmits, watch } from "vue";
 
 const props = defineProps({
   actu: Object,
@@ -31,16 +31,28 @@ const editActu = () => {
   emit("edit", props.actu); // Envoie le médicament au parent
 };
 
-const youtubeUrl = ref("https://www.youtube.com/watch?v=xik-y0xlpZ0&list=RDxik-y0xlpZ0&start_radio=1"); // Stocke l'URL de YouTube
 const embedUrl = ref(""); // Stocke l'URL pour l'iframe
 
-const regex = /(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&]+)/;
-const match = youtubeUrl.value.match(regex);
-if (match && match[1]) {
-  embedUrl.value = `https://www.youtube.com/embed/${match[1]}`;
-} else {
-  embedUrl.value = "";
-}
+// Fonction pour mettre à jour `embedUrl`
+const updateEmbedUrl = (lien) => {
+  if (!lien) {
+    embedUrl.value = ""; // Ne rien afficher si le lien est vide
+    return;
+  }
+
+  const regex = /(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&]+)/;
+  const match = lien.match(regex);
+  if (match && match[1]) {
+    embedUrl.value = `https://www.youtube.com/embed/${match[1]}`;
+  } else {
+    embedUrl.value = lien; // Si ce n'est pas YouTube, utiliser le lien tel quel
+  }
+};
+
+// Watch pour détecter les changements de `actu.lien`
+watch(() => props.actu?.lien, (newLien) => {
+  updateEmbedUrl(newLien);
+}, { immediate: true }); // Exécuter immédiatement au montage du composant
 </script>
 
 <style scoped>
@@ -54,6 +66,7 @@ if (match && match[1]) {
   justify-content: center;
   align-items: center;
   margin-bottom: 10px;
+  margin-top: 20px;
 }
 
 /* Conteneur de l'iframe pour s'adapter */

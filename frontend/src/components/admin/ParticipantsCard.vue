@@ -11,11 +11,11 @@
         <p>Role</p>
       </v-col>
       <v-col cols="auto">
-        <v-btn class="btn" size="40px">
-          <v-icon class="icon" @click="deletePerson">mdi-delete</v-icon>
+        <v-btn class="btn" size="40px" @click="deletePerson">
+          <v-icon class="icon">mdi-delete</v-icon>
         </v-btn>
-        <v-btn class="btn" size="40px">
-          <v-icon class="icon" @click="editPerson">mdi-pencil</v-icon>
+        <v-btn class="btn" size="40px" @click="editPerson">
+          <v-icon class="icon">mdi-pencil</v-icon>
         </v-btn>
       </v-col>
     </v-row>
