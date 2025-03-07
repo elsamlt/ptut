@@ -66,6 +66,11 @@ const emit = defineEmits(["edit", "cancel"]);
 const film = ref({ ...props.film });
 const fileInput = ref(null);
 
+// Supprimer l'image
+const deleteImage = () => {
+  film.value.affiche = null;
+};
+
 // Fonction de soumission
 const submitFilm = () => {
   if (film.value.photo == props.film.photo) {

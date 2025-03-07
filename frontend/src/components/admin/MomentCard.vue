@@ -3,7 +3,7 @@
     <v-card class="card-container d-flex" >
       <!-- Image à gauche -->
       <v-img
-        src="https://via.placeholder.com/300x200"
+          :src="`/img/${moment.nomImg}`"
         height="100%"
         width="300"
         class="image-left"
@@ -16,13 +16,13 @@
           {{ moment.titre }}
         </v-card-title>
         <v-card-subtitle class="text-body-1">
-          Voici une description brève du moment. Vous pouvez ajouter plus de détails ici selon vos besoins.
+          {{moment.description}}
         </v-card-subtitle>
 
         <!-- Boutons -->
         <v-col cols="auto">
-          <v-btn class="btn" size="40px">
-            <v-icon class="icon" @click="editMoment">mdi-pencil</v-icon>
+          <v-btn class="btn" size="40px" @click="editMoment">
+            <v-icon class="icon">mdi-pencil</v-icon>
           </v-btn>
         </v-col>
       </div>
@@ -36,7 +36,7 @@ import { defineProps, defineEmits } from "vue";
 const props = defineProps({
   moment: Object,
 });
-console.log(props.moment)
+//console.log(props.moment)
 // Emitteur d'événements
 const emit = defineEmits(["edit"]);
 

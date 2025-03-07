@@ -2,8 +2,7 @@
   <!-- Liste des actualité -->
   <v-container v-if="!showEditActu && !showAddActu" class="d-flex flex-column align-center">
     <v-row class="gap">
-      <ActualiteCard v-for="(actu, index) in listActu" :key="actu.id" :actu="actu" :index="index" @edit="openEditForm(selectedFilm)" @delete="handlerDelete(selectedFilm)"/>
-      <ActualiteCard @edit="openEditForm(selectedActu)" @delete="handlerDelete(selectedActu)"/>
+      <ActualiteCard v-for="(actu, index) in listActu" :key="actu.id" :actu="actu" :index="index" @edit="openEditForm(actu)" @delete="handlerDelete(selectedFilm)"/>
     </v-row>
   </v-container>
   <v-container v-if="showAddActu">
@@ -69,7 +68,6 @@ function fetchActu() {
     .then((response) => response.json())
     .then((dataJSON) => {
       listActu.splice(0, listActu.length, ...dataJSON._embedded.actualites);
-      console.log(listActu)
     })
     .catch((error) =>
       console.error("Erreur lors de la récupération des actualités :", error),

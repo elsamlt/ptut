@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-text-field
+    <v-text-field class="text-input"
       v-model="youtubeUrl"
       label="Lien YouTube"
       placeholder="Colle le lien ici"

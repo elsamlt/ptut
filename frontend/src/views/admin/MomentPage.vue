@@ -1,6 +1,6 @@
 <template>
   <v-container v-if="!showEditMoment && !showAddMoment">
-    <MomentCard v-for="(moment, index) in listMoment" :key="moment.id" :moment="moment" :index="index" @edit="openEditForm(selectedMoment)"/>
+    <MomentCard v-for="(moment, index) in listMoment" :key="moment.id" :moment="moment" :index="index" @edit="openEditForm(moment)"/>
   </v-container>
   <v-container v-if="showAddMoment">
     <AddMoment @add="handleMomentAdded" @closeForm="showAddMoment = false"/>
@@ -10,8 +10,8 @@
   </v-container>
 
   <!-- Bouton flottant pour ajouter un moment -->
-  <v-btn v-if="!showAddMoment" class="btn add-btn" size="40px">
-    <v-icon class="icon" @click="showAddMoment = true; selectedMoment = null;">mdi-plus</v-icon>
+  <v-btn v-if="!showEditMoment && !showAddMoment" class="btn add-btn" size="40px" @click="showAddMoment = true; selectedMoment = null;">
+    <v-icon class="icon">mdi-plus</v-icon>
   </v-btn>
 
   <!-- Dialog de confirmation -->
@@ -138,7 +138,7 @@ const handleMomentEdit = (updatedMoment) => {
 };
 
 // Charger le moment au montage
-onMounted(fetchMoments());
+onMounted(fetchMoments);
 </script>
 
 <style scoped>
