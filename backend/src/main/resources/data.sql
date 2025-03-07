@@ -114,8 +114,7 @@ INSERT INTO Actualites (lien) VALUES
                                   ('https://www.youtube.com/watch?v=2Wu3Q_TyUnw&t=2s');
 
 INSERT INTO Moments (titre, nom_img, description) VALUES
-                                                       ('Première du film', 'premiere.jpg', 'La première du film a eu lieu hier soir.'),
-                                                       ('Tournage terminé', 'tournage.jpg', 'Le tournage du film s''est terminé avec succès.');
+                                                       ('Première du film', 'premiere.jpg', 'La première du film a eu lieu hier soir.');
 
 INSERT INTO joue (FILM_ID, PARTICIPANT_ID, ROLE) VALUES
                                                      (1, 1, 'Acteur'),

@@ -1,6 +1,6 @@
 <template>
   <v-container v-if="!showEditMoment && !showAddMoment">
-    <MomentCard @edit="openEditForm(selectedMoment)"/>
+    <MomentCard v-for="(moment, index) in listMoment" :key="moment.id" :moment="moment" :index="index" @edit="openEditForm(selectedMoment)"/>
   </v-container>
   <v-container v-if="showAddMoment">
     <AddMoment @add="handleMomentAdded" @closeForm="showAddMoment = false"/>
@@ -41,8 +41,9 @@ import MomentCard from "@/components/admin/MomentCard.vue";
 
 import { ref, onMounted, reactive } from "vue";
 import FilmsCard from "@/components/admin/FilmsCard.vue";
+import ParticipantsCard from "@/components/admin/ParticipantsCard.vue";
 
-const url = "";
+const url = "/api/moments";
 const listMoment = reactive([]);
 
 const dialogAdd = ref(false);
@@ -54,10 +55,8 @@ const showAddMoment = ref(false);
 const selectedMoment = ref(null);
 
 const openEditForm = (moment) => {
-  console.log("r")
   selectedMoment.value = { ...moment }; // Cloner pour éviter la modification directe
   showEditMoment.value = true;
-  console.log(showEditMoment.value)
 };
 
 /**
@@ -67,7 +66,8 @@ function fetchMoments() {
   fetch(url)
     .then((response) => response.json())
     .then((dataJSON) => {
-      listMoment.splice(0, listMoment.length, ...dataJSON);
+      listMoment.splice(0, listMoment.length, ...dataJSON._embedded?.moments);
+      console.log(listMoment)
     })
     .catch((error) =>
       console.error("Erreur lors de la récupération des moments :", error),

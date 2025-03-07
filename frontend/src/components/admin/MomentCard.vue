@@ -13,7 +13,7 @@
       <!-- Contenu à droite -->
       <div class="content px-5 py-3">
         <v-card-title class="text-h5 font-weight-bold">
-          Titre du Moment
+          {{ moment.titre }}
         </v-card-title>
         <v-card-subtitle class="text-body-1">
           Voici une description brève du moment. Vous pouvez ajouter plus de détails ici selon vos besoins.
@@ -36,12 +36,11 @@ import { defineProps, defineEmits } from "vue";
 const props = defineProps({
   moment: Object,
 });
-
+console.log(props.moment)
 // Emitteur d'événements
 const emit = defineEmits(["edit"]);
 
 const editMoment = () => {
-  console.log("o")
   emit("edit", props.moment); // Envoie le médicament au parent
 };
 </script>
