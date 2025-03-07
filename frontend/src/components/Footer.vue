@@ -1,54 +1,37 @@
 <template>
   <v-footer class="custom-footer d-flex justify-center" padless>
-    <v-container fluid>
-      <v-row align="center" justify="space-between" no-gutters>
+      <v-row align="center" justify="space-between" no-gutters style="padding-top: 10px">
         <!-- Logo de l'école à gauche (redirige vers le site de l'école) -->
-        <v-col cols="auto">
+        <v-col>
           <a href="https://isis.univ-jfc.fr/" target="_blank" rel="noopener noreferrer">
-            <v-btn icon>
-              <img :src="logo" alt="Logo École" />
-            </v-btn>
+            <img :src="logo" alt="Logo École" />
           </a>
         </v-col>
 
         <!-- Liens de navigation -->
-        <v-col class="d-none d-md-flex justify-center">
-          <router-link to="/">
-            <v-btn>Accueil</v-btn>
-          </router-link>
-          <router-link to="/films">
-            <v-btn>Films</v-btn>
-          </router-link>
-          <router-link to="/about">
-            <v-btn>À propos</v-btn>
-          </router-link>
+        <v-col>
+          <router-link class="a" to="/">Accueil</router-link>
+          <router-link class="a" to="/films">Films</router-link>
+          <router-link class="a" to="/about">À propos</router-link>
+          <a class="a" href="https://isis.univ-jfc.fr/mentions-legales" target="_blank" rel="noopener noreferrer">Mentions légales</a>
         </v-col>
 
         <!-- Réseaux sociaux -->
-        <v-col cols="auto" class="d-flex align-center">
+        <v-col >
           <a href="https://www.instagram.com/isis_ingenieur/" target="_blank" rel="noopener noreferrer">
-            <v-btn icon>
-              <v-icon class="social-icon">mdi-instagram</v-icon>
-            </v-btn>
+            <v-icon class="social-icon">mdi-instagram</v-icon>
           </a>
           <a href="https://www.linkedin.com/school/ecole-dingenieurs-isis/posts/?feedView=all" target="_blank" rel="noopener noreferrer">
-            <v-btn icon>
-              <v-icon class="social-icon">mdi-linkedin</v-icon>
-            </v-btn>
+            <v-icon class="social-icon">mdi-linkedin</v-icon>
           </a>
           <a href="https://www.facebook.com/isis.castres/?locale=fr_FR" target="_blank" rel="noopener noreferrer">
-            <v-btn icon>
-              <v-icon class="social-icon">mdi-facebook</v-icon>
-            </v-btn>
+            <v-icon class="social-icon">mdi-facebook</v-icon>
           </a>
           <a href="https://x.com/isis_ingenieur" target="_blank" rel="noopener noreferrer">
-            <v-btn icon>
-              <v-icon class="social-icon">mdi-twitter</v-icon>
-            </v-btn>
+            <v-icon class="social-icon">mdi-twitter</v-icon>
           </a>
         </v-col>
       </v-row>
-    </v-container>
   </v-footer>
 </template>
 
@@ -67,6 +50,16 @@ import logo from '@/assets/logo.png';
   position: fixed;
   bottom: 0;
   left: 0;
+  padding: 0;
+}
+
+.a{
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
+.a:hover {
+  color: var(--color-primary);
 }
 
 img {
