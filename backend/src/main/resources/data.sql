@@ -225,3 +225,6 @@ INSERT INTO joue (FILM_ID, PARTICIPANT_ID, ROLE) VALUES
                                                      (4, 83, 'Making of'),                -- Laura CHANAL
                                                      (4, 75, 'Making of');                -- Zafiro ORTEGA
 
+INSERT INTO Anecdotes (description, id_film, id_participant) VALUES
+                                                                          ('Une scène a été tournée en une seule prise.', 1, 1),
+                                                                          ('Les acteurs ont improvisé certaines répliques.', 2, 2);
