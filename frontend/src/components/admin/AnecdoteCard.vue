@@ -1,7 +1,9 @@
 <template>
-  <v-card class="participants-card">
+  <v-card class="anecdotes-card">
     <v-row align="center">
-      <v-col cols="1">
+      <v-col cols="2">
+        <v-icon>mdi-account</v-icon>
+        <v-img src="https://via.placeholder.com/50" class="film-image"></v-img>
       </v-col>
       <v-col>
         <span class="text-h6">film</span>
@@ -45,7 +47,7 @@ const editAnecdote = () => {
 
 <style scoped>
 
-.participants-card{
+.anecdotes-card{
   padding: 10px;
   margin-bottom: 20px;
 }
