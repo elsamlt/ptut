@@ -3,75 +3,46 @@
 </template>
 
 <script setup>
-import { RouterLink, RouterView } from 'vue-router';
 import { onMounted } from "vue";
+import { useRouter } from "vue-router";
 
-/*const setUserInfo = async (token) => {
-  try {
-    const config = {
-      headers: { Authorization: `Bearer ${token}` },
-    };
-
-    const query = qs.stringify({
-      populate: ['role', 'enterprise', 'enterprise.logo', "photo", "organisations", "services"],
-    }, {
-      encodeValuesOnly: true,
-    })
-
-    const res = await api.get(`/api/users/me?${query}`, config);
-    useUserStore().user = res.data
-
-    if (useUserStore().user.role.name === 'SuperAdmin' && !useUserStore().user.enterprise){
-      updateUser()
-    }
-
-    localStorage.setItem("user", JSON.stringify(res.data));
-
-    return true;
-  } catch (error) {
-    throw error;
-  }
-}
+const router = useRouter();
 
 const getExpDate = (token) => {
-  const payload = token.split(".")[1];
-  const decode = JSON.parse(window.atob(payload));
-  return decode.exp;
-}
+  try {
+    const payload = token.split(".")[1];
+    const decoded = JSON.parse(atob(payload));
+    return decoded.exp;
+  } catch (error) {
+    console.error("Erreur lors du décodage du token :", error);
+    return null;
+  }
+};
 
 const isAuthenticated = async () => {
-  try {
-    const token = localStorage.getItem("jwt");
-    let expirationDate = 7;
+  return new Promise((resolve, reject) => {
+    try {
+      const token = localStorage.getItem("jwt");
+      if (!token) throw new Error("Aucun token trouvé");
 
-    if (token) {
       const exp = getExpDate(token);
-      let current_time = new Date().valueOf() / 1000;
+      if (!exp) throw new Error("Token invalide");
 
-      expirationDate = (exp - current_time) / 60 / 60 / 24;
+      const currentTime = Date.now() / 1000;
+      if (exp < currentTime) throw new Error("Session expirée");
 
-      await setUserInfo(token)
-
+      resolve(true);
+    } catch (error) {
+      console.warn("Authentification échouée :", error.message);
+      localStorage.removeItem("jwt");
+      reject(error);
     }
+  });
+};
 
-    if (!token || expirationDate < 1) {
-      throw "Session expired";
-    }
-
-  } catch (error) {
-    throw error;
-  }
-}
-
-onMounted(async () => {
-  const isAuth = await isAuthenticated();
-  if (isAuth) {
-    const token = localStorage.getItem("jwt");
-    await setUserInfo(token);
-  } else {
-    return
-  }
-});*/
+onMounted(() => {
+  isAuthenticated();
+});
 </script>
 
 

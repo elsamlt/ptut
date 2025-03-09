@@ -106,7 +106,7 @@ INSERT INTO Images (img, id_film) VALUES
                                              ('path/to/image1.jpg', 1),
                                              ('path/to/image2.jpg', 2);
 
-INSERT INTO Administrateurs (email, password) VALUES ('admin@example.com', 'password123');
+INSERT INTO ADMINISTRATEURS (email, password) VALUES ('admin@example.com', '$2a$10$bI4I1CZSy93e425U9zGVoOY7vbB1gevrHAaqHWG0TYpJ.08dx5.Ey');
 
 INSERT INTO Actualites (lien) VALUES
                                   ('https://www.youtube.com/watch?v=njgNtDXYPzs'),

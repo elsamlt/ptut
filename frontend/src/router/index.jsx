@@ -1,10 +1,17 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import {useAdministrateur} from "@/composables/administrateur.js";
 
-function isAdministrator(to, from) {
+function isAdministrator(to, from, next) {
   const user = useAdministrateur();
 
-  if (user) return from;
+  if (user) {
+    return next(); // Continuer vers la route demandée
+  } else {
+    return next({
+      path: '/login',
+      query: { redirect: to.fullPath }
+    });
+  }
 }
 
 const router = createRouter({
@@ -74,7 +81,7 @@ const router = createRouter({
     },
     {
       path: "/login",
-      component: () => import("@/layouts/LoginLayout.vue"),
+      component: () => import("@/layouts/MainLayout.vue"),
       children: [
         { path: "", component: () => import("@/views/login/LoginPage.vue") },
       ],
