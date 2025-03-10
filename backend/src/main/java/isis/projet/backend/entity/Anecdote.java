@@ -20,5 +20,9 @@ public class Anecdote {
     @JoinColumn(name = "idFilm")
     private Film film;
 
+    @ManyToOne
+    @JoinColumn(name = "idParticipant")
+    private Participant participant;
+
     // Getters et setters
 }

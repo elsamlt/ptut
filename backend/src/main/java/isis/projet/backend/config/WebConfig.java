@@ -13,4 +13,3 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedOrigins("http://localhost:5176")
                 .allowedMethods("*");
     }
-}
