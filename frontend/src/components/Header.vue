@@ -4,11 +4,11 @@
       <v-row align="center" justify="space-between" no-gutters>
         <!-- Logo à gauche -->
         <v-col cols="auto">
-          <router-link to="/">
+          <a href="https://isis.univ-jfc.fr/" target="_blank" rel="noopener noreferrer">
             <v-btn icon>
               <img :src="logo" />
             </v-btn>
-          </router-link>
+          </a>
         </v-col>
 
         <!-- Boutons de navigation (Desktop) -->
