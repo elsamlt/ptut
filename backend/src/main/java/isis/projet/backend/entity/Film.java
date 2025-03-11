@@ -33,13 +33,5 @@ public class Film {
     @OneToMany(mappedBy = "film", cascade = CascadeType.ALL)
     private List<Anecdote> anecdotes;
 
-    /*@ManyToMany
-    @JoinTable(
-            name = "film_participant",
-            joinColumns = @JoinColumn(name = "film_id"),
-            inverseJoinColumns = @JoinColumn(name = "participant_id")
-    )
-    private List<Participant> participants;*/
-
     // Getters et setters
 }

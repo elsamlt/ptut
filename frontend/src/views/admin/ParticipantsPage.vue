@@ -3,7 +3,7 @@
     <v-row class="d-flex align-center gap-x-4">
       <p>Afficher les participants de :</p>
       <v-col cols="4">
-        <v-select class="select" v-model="selected" :item-props="itemProps" :items="items" density="compact"></v-select>
+        <v-select class="select" v-model="selectedFilm" :items="AllOption" item-value="idFilm" item-title="titre" density="compact"></v-select>
       </v-col>
     </v-row>
     <v-col cols="3">
@@ -78,6 +78,14 @@ const showAddPerson = ref(false);
 
 const selectedPerson = ref(null);
 
+const listFilms = ref([]);
+const selectedFilm = ref(null);
+
+const AllOption = computed(() => [
+  { idFilm: null, titre: 'Tous les films' },  // Option "Tous les films"
+  ...listFilms.value, // Les films récupérés
+]);
+
 const openEditForm = (person) => {
   selectedPerson.value = { ...person }; // Cloner pour éviter la modification directe
   showEditPerson.value = true;
@@ -107,6 +115,20 @@ const fetchPersons = (page = 1, size = 4) => {
     })
     .catch(error => console.error("Erreur lors de la récupération des participants :", error));
 };
+
+/**
+ * Récupérer les films depuis l'API
+ */
+function fetchFilms() {
+  fetch('/api/films')
+    .then((response) => response.json())
+    .then((dataJSON) => {
+      listFilms.value = dataJSON._embedded.films || [];
+    })
+    .catch((error) =>
+      console.error("Erreur lors de la récupération des films :", error),
+    );
+}
 
 // Fonction pour changer de page
 const prevPage = () => {
@@ -201,6 +223,11 @@ const handlePersonEdit = (updatedPerson) => {
 
 // Charger les participants au montage
 onMounted(fetchPersons);
+// Charger les films au montage
+onMounted(() => {
+  fetchFilms();
+  //fetchCommentairesByFilm(null);
+});
 </script>
 
 <style scoped>
