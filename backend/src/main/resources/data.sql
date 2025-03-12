@@ -2,8 +2,8 @@ INSERT INTO Films (titre, synopsis, genre, annee, duree, affiche, url_film, urlB
 VALUES
     ('Sketch FIE4 Promo 2022', 'Un sketch réalisé par la promo FIE4 2022', 'Comédie', 2021, '15min08', NULL, '', NULL),
     ('The Hospital 1', 'Premier volet de The Hospital', 'Comédie', 2023, '13min54', NULL, '', NULL),
-    ('The Hospital 3', 'Troisième volet de The Hospital', 'Comédie', 2024, '14min28', 'thehospital3.jpg', '', NULL),
-    ('The Hospital 4', 'Quatrième volet de The Hospital', 'Comédie', 2025, '15min08', 'thehospital4.jpg','', NULL);
+    ('The Hospital 3', 'Troisième volet de The Hospital', 'Comédie', 2024, '14min28', '/img/thehospital3.jpg', '', NULL),
+    ('The Hospital 4', 'Quatrième volet de The Hospital', 'Comédie', 2025, '15min08', '/img/thehospital4.jpg','', NULL);
 
 INSERT INTO Participants (nom, prenom, pdp) VALUES
                                                 ('DUPUY', 'Emma', NULL),

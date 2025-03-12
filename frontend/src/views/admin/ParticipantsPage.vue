@@ -18,11 +18,11 @@
   <v-container v-if="!showEditPerson && !showAddPerson">
     <ParticipantsCard v-for="(person, index) in listPersons" :key="person.id" :person="person" :index="index" @edit="openEditForm(selectedPerson)" @delete="handlerDelete(selectedPerson)"/>
     <!-- Pagination controls -->
-    <v-row justify="center" class="mt-4">
+    <!--<v-row justify="center" class="mt-4">
       <v-btn :disabled="currentPage === 1" @click="prevPage">Précédent</v-btn>
       <span class="mx-3">Page {{ currentPage }} / {{ totalPages }}</span>
       <v-btn :disabled="currentPage === totalPages" @click="nextPage">Suivant</v-btn>
-    </v-row>
+    </v-row>-->
   </v-container>
   <v-container v-if="showAddPerson">
     <AddParticipant @add="handlePersonAdded" @closeForm="showAddPerson = false"/>
@@ -62,12 +62,12 @@ import ParticipantsCard from "@/components/admin/ParticipantsCard.vue";
 import EditParticipant from "@/components/admin/EditParticipant.vue";
 import AddParticipant from "@/components/admin/AddParticipant.vue";
 
-import { ref, onMounted, reactive, computed } from "vue";
+import { ref, onMounted, reactive, computed, watch } from "vue";
 
 const url = "/api/participants";
 const listPersons = ref([]);
-const totalPages = ref(1);
-const currentPage = ref(1);
+//const totalPages = ref(1);
+//const currentPage = ref(1);
 
 const dialogAdd = ref(false);
 const dialogDelete = ref(false);
@@ -94,18 +94,33 @@ const openEditForm = (person) => {
 /**
  * Récupérer les participants depuis l'API
  */
-/*function fetchPersons() {
+function fetchPersons() {
   fetch(url)
     .then((response) => response.json())
     .then((dataJSON) => {
       console.log(dataJSON)
-      listPersons.splice(0, listPersons.length, ...dataJSON._embedded.participants);
+      listPersons.value = dataJSON._embedded.participants || [];
     })
     .catch((error) =>
       console.error("Erreur lors de la récupération des partcipants :", error),
     );
-}*/
-const fetchPersons = (page = 1, size = 4) => {
+}
+
+function fetchPersonsByFilm(filmId) {
+  if (filmId === null) {
+    // Si "Tous les films" est sélectionné, on récupère tous les participants
+    fetchPersons();
+  } else {
+    // Sinon, on récupère les participants du film spécifique
+    fetch(`/api/joues/search/findByFilm_IdFilm?idFilm=${filmId}`)
+      .then(response => response.json())
+      .then(dataJSON => {
+        listPersons.value = dataJSON._embedded.joues.participant.href || [];
+      })
+      .catch(error => console.error("Erreur lors de la récupération des participants :", error));
+  }
+}
+/*const fetchPersons = (page = 1, size = 4) => {
   fetch(`${url}?page=${page - 1}&size=${size}`)  // L'API commence les pages à 0
     .then(response => response.json())
     .then(dataJSON => {
@@ -114,7 +129,7 @@ const fetchPersons = (page = 1, size = 4) => {
       totalPages.value = dataJSON.page?.totalPages || 1;
     })
     .catch(error => console.error("Erreur lors de la récupération des participants :", error));
-};
+};*/
 
 /**
  * Récupérer les films depuis l'API
@@ -221,12 +236,16 @@ const handlePersonEdit = (updatedPerson) => {
     .catch((error) => console.error("Erreur lors de la mise à jour :", error));
 };
 
+// Observer le changement de film sélectionné
+watch(selectedFilm, (newFilmId) => {
+  fetchPersonsByFilm(newFilmId);
+});
+
 // Charger les participants au montage
-onMounted(fetchPersons);
 // Charger les films au montage
 onMounted(() => {
   fetchFilms();
-  //fetchCommentairesByFilm(null);
+  fetchPersonsByFilm(null);
 });
 </script>
 

@@ -5,7 +5,7 @@
         <v-row class="d-flex align-center">
           <!-- Image -->
           <v-col cols="12" md="2" class="d-flex flex-column align-center">
-            <img v-if="film.affiche" :src="`/img/${film.affiche}`" height="150" class="mt-2"/>
+            <img v-if="film.affiche" :src="`${film.affiche}`" height="150" class="mt-2"/>
             <v-row>
               <v-btn class="mt-2" icon="mdi-download" variant="text" @click="triggerFileInput"></v-btn>
               <input type="file" ref="fileInput" style="display: none" @change="handleFileUpload" />
