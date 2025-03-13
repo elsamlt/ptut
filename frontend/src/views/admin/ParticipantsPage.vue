@@ -3,7 +3,7 @@
     <v-row class="d-flex align-center gap-x-4">
       <p>Afficher les participants de :</p>
       <v-col cols="4">
-        <v-select class="select" v-model="selected" :item-props="itemProps" :items="items" density="compact"></v-select>
+        <v-select class="select" v-model="selectedFilm" :items="AllOption" item-value="idFilm" item-title="titre" density="compact"></v-select>
       </v-col>
     </v-row>
     <v-col cols="3">
@@ -16,12 +16,14 @@
     </v-col>
   </v-row>
   <v-container v-if="!showEditPerson && !showAddPerson">
-    <ParticipantsCard v-for="(person, index) in listPersons" :key="person.id" :person="person" :index="index" @edit="openEditForm(selectedPerson)" @delete="handlerDelete(selectedPerson)"/>
+    <ParticipantsCard v-for="(person, index) in listPersons" :key="person.id" :person="person" :index="index" @edit="openEditForm(person)" @delete="handlerDelete(person)"/>
     <!-- Pagination controls -->
     <v-row justify="center" class="mt-4">
-      <v-btn :disabled="currentPage === 1" @click="prevPage">Précédent</v-btn>
-      <span class="mx-3">Page {{ currentPage }} / {{ totalPages }}</span>
-      <v-btn :disabled="currentPage === totalPages" @click="nextPage">Suivant</v-btn>
+      <v-pagination
+        v-model="currentPage"
+        :length="totalPages"
+        :total-visible="5"
+      ></v-pagination>
     </v-row>
   </v-container>
   <v-container v-if="showAddPerson">
@@ -62,12 +64,14 @@ import ParticipantsCard from "@/components/admin/ParticipantsCard.vue";
 import EditParticipant from "@/components/admin/EditParticipant.vue";
 import AddParticipant from "@/components/admin/AddParticipant.vue";
 
-import { ref, onMounted, reactive, computed } from "vue";
+import { ref, onMounted, reactive, computed, watch } from "vue";
 
 const url = "/api/participants";
 const listPersons = ref([]);
-const totalPages = ref(1);
+const itemsPerPage = 4;
 const currentPage = ref(1);
+
+const totalPages = ref(1);
 
 const dialogAdd = ref(false);
 const dialogDelete = ref(false);
@@ -78,6 +82,14 @@ const showAddPerson = ref(false);
 
 const selectedPerson = ref(null);
 
+const listFilms = ref([]);
+const selectedFilm = ref(null);
+
+const AllOption = computed(() => [
+  { idFilm: null, titre: 'Tous les films' },  // Option "Tous les films"
+  ...listFilms.value, // Les films récupérés
+]);
+
 const openEditForm = (person) => {
   selectedPerson.value = { ...person }; // Cloner pour éviter la modification directe
   showEditPerson.value = true;
@@ -86,42 +98,46 @@ const openEditForm = (person) => {
 /**
  * Récupérer les participants depuis l'API
  */
-/*function fetchPersons() {
-  fetch(url)
-    .then((response) => response.json())
-    .then((dataJSON) => {
-      console.log(dataJSON)
-      listPersons.splice(0, listPersons.length, ...dataJSON._embedded.participants);
-    })
-    .catch((error) =>
-      console.error("Erreur lors de la récupération des partcipants :", error),
-    );
-}*/
-const fetchPersons = (page = 1, size = 4) => {
-  fetch(`${url}?page=${page - 1}&size=${size}`)  // L'API commence les pages à 0
+const fetchPersons = (page = 1) => {
+  fetch(`${url}?page=${page - 1}&size=${itemsPerPage}`) // L’API commence les pages à 0
     .then(response => response.json())
     .then(dataJSON => {
-      console.log("Données récupérées :", dataJSON);
       listPersons.value = dataJSON._embedded?.participants || [];
       totalPages.value = dataJSON.page?.totalPages || 1;
     })
     .catch(error => console.error("Erreur lors de la récupération des participants :", error));
 };
 
-// Fonction pour changer de page
-const prevPage = () => {
-  if (currentPage.value > 1) {
-    currentPage.value--;
-    fetchPersons(currentPage.value);
-  }
-};
 
-const nextPage = () => {
-  if (currentPage.value < totalPages.value) {
-    currentPage.value++;
-    fetchPersons(currentPage.value);
+function fetchPersonsByFilm(filmId, page = 1) {
+  if (filmId === null) {
+    fetchPersons(page);
+  } else {
+    fetch(`/api/joues/search/findByFilm_IdFilm?idFilm=${filmId}&page=${page - 1}&size=${itemsPerPage}`)
+      .then(response => response.json())
+      .then(dataJSON => {
+        listPersons.value = dataJSON._embedded?.joues;
+        //listPersons.value = dataJSON._embedded?.joues.map(j => j.participant) || [];
+        console.log(listPersons)
+        totalPages.value = dataJSON.page?.totalPages || 1;
+      })
+      .catch(error => console.error("Erreur lors de la récupération des participants :", error));
   }
-};
+}
+
+/**
+ * Récupérer les films depuis l'API
+ */
+function fetchFilms() {
+  fetch('/api/films')
+    .then((response) => response.json())
+    .then((dataJSON) => {
+      listFilms.value = dataJSON._embedded.films || [];
+    })
+    .catch((error) =>
+      console.error("Erreur lors de la récupération des films :", error),
+    );
+}
 
 /**
  * Sélectionner un participant et afficher ses détails
@@ -136,6 +152,20 @@ function fetchPersonDetail(person) {
     .catch((error) =>
       console.error("Erreur lors de la récupération des participants :", error),
     );
+}
+
+// Fonction pour récupérer l'ID du participant à partir du lien
+async function getParticipantId(url) {
+  try {
+    // Faire la requête pour récupérer les données du participant
+    const response = await fetch(url);
+    const participantData = await response.json();
+
+    // Retourner l'ID du participant
+    return participantData.idParticipant;
+  } catch (error) {
+    console.error('Erreur lors de la récupération de l\'ID du participant:', error);
+  }
 }
 
 /**
@@ -199,8 +229,25 @@ const handlePersonEdit = (updatedPerson) => {
     .catch((error) => console.error("Erreur lors de la mise à jour :", error));
 };
 
+// Observer le changement de film sélectionné
+watch(selectedFilm, (newFilmId) => {
+  fetchPersonsByFilm(newFilmId);
+});
+
+watch(currentPage, (newPage) => {
+  if (selectedFilm.value === null) {
+    fetchPersons(newPage);
+  } else {
+    fetchPersonsByFilm(selectedFilm.value, newPage);
+  }
+});
+
 // Charger les participants au montage
-onMounted(fetchPersons);
+// Charger les films au montage
+onMounted(() => {
+  fetchFilms();
+  fetchPersonsByFilm(null);
+});
 </script>
 
 <style scoped>

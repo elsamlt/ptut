@@ -146,7 +146,7 @@ onMounted(fetchMoments);
 /* Bouton flottant */
 .add-btn {
   position: fixed;
-  bottom: 20px;
+  bottom: 70px;
   right: 20px;
 }
 

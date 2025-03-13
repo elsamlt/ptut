@@ -26,27 +26,28 @@
   <v-row class="mt-4">
     <v-col cols="12" class="d-flex justify-end">
       <v-btn class="mr-2" @click="closeForm">Annuler</v-btn>
-      <v-btn class="btn" @click="submitActu">Ajouter</v-btn>
+      <v-btn class="btn" @click="submitActu">Enregistrer</v-btn>
     </v-col>
   </v-row>
 </template>
 
 <script setup>
-import { ref, defineProps, defineEmits } from "vue";
+import { ref, defineProps, defineEmits, watch, onMounted  } from "vue";
 
 // Récupérer les props
-const props = defineProps({ film: Object });
+const props = defineProps({ actu: Object });
 const emit = defineEmits(["edit", "cancel"]);
 
-// Cloner l'objet film pour éviter de modifier directement la prop
-//const film = ref({ ...props.film });
+// Cloner l'objet actualité pour éviter de modifier directement la prop
+const actu = ref({ ...props.actu });
 
 // Fonction de soumission
 const submitActu = () => {
-  if (film.value.photo == props.film.photo) {
-    film.value.photo = props.film.photo; // photo initiale
+  if (actu.value.photo == props.actu.photo) {
+    actu.value.photo = props.actu.photo; // photo initiale
   }
-  emit("edit", film.value);
+  console.log(actu.value)
+  emit("edit", actu.value);
 };
 
 // Annuler et fermer le formulaire
@@ -60,13 +61,13 @@ const handleFileUpload = (event) => {
   if (!file) return;
   const reader = new FileReader();
   reader.onload = () => {
-    film.value.photo = reader.result;
+    actu.value.photo = reader.result;
   };
   reader.readAsDataURL(file);
 };
 
-const youtubeUrl = ref(""); // Stocke l'URL de YouTube
-const embedUrl = ref(""); // Stocke l'URL pour l'iframe
+const youtubeUrl = ref(actu.value.lien || "");
+const embedUrl = ref("");
 
 // Fonction pour transformer l'URL YouTube en embed
 const generateEmbedUrl = () => {
@@ -78,6 +79,17 @@ const generateEmbedUrl = () => {
     embedUrl.value = "";
   }
 };
+
+// Regarde si l'URL YouTube change et met à jour l'embed
+watch(youtubeUrl, (newVal) => {
+  actu.value.lien = newVal;
+  generateEmbedUrl();
+});
+
+// Exécute la génération de l'iframe lors du montage
+onMounted(() => {
+  generateEmbedUrl();
+});
 </script>
 
 <style scoped>
