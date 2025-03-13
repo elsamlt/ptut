@@ -2,7 +2,7 @@
   <v-card class="film-card">
     <v-row align="center">
       <v-col cols="2">
-        <v-img v-if="film.affiche" :src="`/img/${film.affiche}`" class="film-image" alt="Affiche du film">
+        <v-img v-if="film.affiche" :src="`${film.affiche}`" class="film-image" alt="Affiche du film">
           <!-- Afficher l'image si elle existe -->
         </v-img>
         <v-icon v-else class="film-image icon-placeholder" color="grey lighten-2">mdi-camera</v-icon>

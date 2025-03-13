@@ -75,7 +75,6 @@ const film = ref({
 // Soumettre le film
 const submitFilm = () => {
   emit("add", film.value);
-  console.log("Film ajouté :", film.value);
 
   // Remise à zéro après ajout
   film.value = {

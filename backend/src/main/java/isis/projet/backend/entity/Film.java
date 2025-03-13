@@ -1,10 +1,7 @@
-//package com.example.demo.model;
 package isis.projet.backend.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -27,19 +24,15 @@ public class Film {
     private String urlFilm;
     private String urlBA;
 
-    @OneToMany(mappedBy = "film", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "film", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Commentaire> commentaires;
 
-    @OneToMany(mappedBy = "film", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "film", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Anecdote> anecdotes;
 
-    /*@ManyToMany
-    @JoinTable(
-            name = "film_participant",
-            joinColumns = @JoinColumn(name = "film_id"),
-            inverseJoinColumns = @JoinColumn(name = "participant_id")
-    )
-    private List<Participant> participants;*/
+    @OneToMany(mappedBy = "film", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Joue> joueList; // Ajout de la relation avec JOUE
 
-    // Getters et setters
+    @OneToMany(mappedBy = "film", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Image> images;
 }
