@@ -3,7 +3,7 @@
     <h2 class="titre">EN CE MOMENT</h2>
     <div v-for="(moment, index) in listMoment" :key="moment.id" :class="layoutClass" class="layout">
       <div class="image-container">
-        <img :src="`/img/${moment.nomImg}`" alt="Actualité en ce moment" />
+        <img :src="`${moment.nomImg}`" alt="Actualité en ce moment" />
       </div>
       <div class="content">
         <h3>{{ moment.titre }}</h3>
