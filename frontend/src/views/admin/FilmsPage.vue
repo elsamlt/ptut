@@ -2,7 +2,7 @@
   <!-- Liste des films -->
   <v-container v-if="!showEditFilm && !showAddFilm">
     <FilmsCard v-for="(film, index) in listFilms" :key="film.id" :index="index" @edit="openEditForm(film)" :film="film"
-               @delete="handlerDelete(selectedFilm)"/>
+               @delete="handlerDelete(film)"/>
   </v-container>
   <v-container v-if="showAddFilm">
     <AddFilm @add="handleFilmAdded" @closeForm="showAddFilm = false"/>
@@ -164,7 +164,7 @@
    * Supprimer un film via API
    */
   function handlerDelete(film) {
-    fetch(`${url}/${film.id}`, { method: "DELETE" })
+    fetch(`${url}/${film.idFilm}`, { method: "DELETE" })
       .then((response) => {
         if (response.ok) fetchFilms();
         dialogDelete.value = true;
@@ -174,27 +174,58 @@
   }
 
   /**
-   * Modifier un film comme faite via API
+   * Modifier un film comme fait via API
    */
-  const handleFilmEdit = (updatedFilm) => {
-    fetch(`${url}`, {
+  const handleFilmEdit = async (updatedFilm) => {
+    let filmData = { ...updatedFilm };
+
+    // Vérifier si l'affiche est un Data URL (base64)
+    if (updatedFilm.affiche && updatedFilm.affiche.startsWith("data:")) {
+      // Convertir le base64 en Blob
+      const response = await fetch(updatedFilm.affiche);
+      const blob = await response.blob();
+      const file = new File([blob], "image.jpg", { type: "image/jpeg" });
+
+      // Créer un FormData pour l'upload
+      const formData = new FormData();
+      formData.append("file", file);
+
+      try {
+        // Uploader l'image
+        const uploadResponse = await fetch("/api/files/upload", {
+          method: "POST",
+          body: formData,
+        });
+
+        if (!uploadResponse.ok) {
+          throw new Error("Erreur lors de l'upload de l'image");
+        }
+
+        const uploadData = await uploadResponse.text();
+        const fileUrlMatch = uploadData.match(/\/img\/[^"'}]+/);
+        const fileUrl = fileUrlMatch ? fileUrlMatch[0] : "";
+
+        // Remplacer l'affiche base64 par l'URL obtenue
+        filmData.affiche = fileUrl;
+      } catch (error) {
+        console.error("Erreur lors de l'upload de l'image :", error);
+        return;
+      }
+    }
+
+    // Envoyer la requête de mise à jour
+    fetch(`${url}/${updatedFilm.idFilm}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        titre: updatedFilm.titre,
-        synopsis: updatedFilm.synopsis,
-        genre: updatedFilm.genre,
-        annee: updatedFilm.annee,
-        duree: updatedFilm.duree,
-        affiche: updatedFilm.affiche,
-        urlFilm: updatedFilm.urlFilm,
-        urlBA: updatedFilm.urlBA,
-      }),
+      body: JSON.stringify(filmData),
     })
-      .then((response) => response.json())
+      .then((response) => {
+        if (!response.ok) throw new Error("Erreur lors de la mise à jour");
+        return response.json();
+      })
       .then(() => {
-        fetchFilmDetail(updatedFilm);
-        dialogEdit.value = true; // Afficher le message de confirmation
+        fetchFilms(); // Rafraîchir la liste après l'édition
+        dialogEdit.value = true; // Afficher confirmation
         showEditFilm.value = false;
       })
       .catch((error) => console.error("Erreur lors de la mise à jour :", error));

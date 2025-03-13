@@ -73,8 +73,8 @@ const deleteImage = () => {
 
 // Fonction de soumission
 const submitFilm = () => {
-  if (film.value.photo == props.film.photo) {
-    film.value.photo = props.film.photo; // photo initiale
+  if (film.value.affiche == props.film.affiche) {
+    film.value.affiche = props.film.affiche; // Conserve l'image initiale si pas modifiée
   }
   emit("edit", film.value);
 };
@@ -97,7 +97,7 @@ const handleFileUpload = (event) => {
   if (!file) return;
   const reader = new FileReader();
   reader.onload = () => {
-    film.value.photo = reader.result;
+    film.value.affiche = reader.result;
   };
   reader.readAsDataURL(file);
 };
