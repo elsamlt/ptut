@@ -1,9 +1,9 @@
 INSERT INTO Films (titre, synopsis, genre, annee, duree, affiche, url_film, urlBA)
 VALUES
     ('Sketch FIE4 Promo 2022', 'Un sketch réalisé par la promo FIE4 2022', 'Comédie', 2021, '15min08', NULL, '', NULL),
-    ('The Hospital 1', 'Premier volet de The Hospital', 'Comédie', 2023, '13min54', NULL, '', NULL),
-    ('The Hospital 3', 'Troisième volet de The Hospital', 'Comédie', 2024, '14min28', '/img/thehospital3.jpg', '', NULL),
-    ('The Hospital 4', 'Quatrième volet de The Hospital', 'Comédie', 2025, '15min08', '/img/thehospital4.jpg','', NULL);
+    ('The Hospital 1', 'Premier volet de The Hospital', 'Comédie', 2022, '13min54', NULL, '', NULL),
+    ('The Hospital 3', 'Troisième volet de The Hospital', 'Comédie', 2023, '14min28', '/images/thehospital3.jpg', '', NULL),
+    ('The Hospital 4', 'Quatrième volet de The Hospital', 'Comédie', 2024, '15min08', '/images/thehospital4.jpg','', NULL);
 
 INSERT INTO Participants (nom, prenom, pdp) VALUES
                                                 ('DUPUY', 'Emma', NULL),
@@ -63,7 +63,7 @@ INSERT INTO Participants (nom, prenom, pdp) VALUES
                                                 ('YAGUIYAN', 'Arnaud', NULL),
                                                 ('GATIEN', 'Grégory', NULL),
                                                 ('ACHER', 'Solène', NULL),
-                                                ('TAISNE', 'Lucas', NULL),
+                                                ('TAISNE', 'Lucas', '/images/lucastaisne.jpg'),
                                                 ('SOSSEY ALAOUI', 'Léopold', NULL),
                                                 ('LEROY', 'Guillaume', NULL),
                                                 ('BOUDRIGA', 'Sarra', NULL),
@@ -103,8 +103,13 @@ INSERT INTO Commentaires (description, id_film) VALUES
                                                                  ('Les acteurs ont fait un travail remarquable.', 2);
 
 INSERT INTO Images (img, id_film) VALUES
-                                             ('path/to/image1.jpg', 1),
-                                             ('path/to/image2.jpg', 2);
+                                             ('/images/tournage.jpg', 4),
+                                             ('/images/tournage2.jpg', 4),
+                                             ('/images/CHL.jpg', 4),
+                                             ('/images/accueil.jpg', 4),
+                                             ('/images/CHL2.jpg', 4),
+                                             ('/images/reflexion.jpg', 4),
+                                             ('/images/backstage.jpg', 4);
 
 INSERT INTO ADMINISTRATEURS (email, password) VALUES ('admin@example.com', '$2a$10$bI4I1CZSy93e425U9zGVoOY7vbB1gevrHAaqHWG0TYpJ.08dx5.Ey');
 
@@ -227,4 +232,8 @@ INSERT INTO joue (FILM_ID, PARTICIPANT_ID, ROLE) VALUES
 
 INSERT INTO Anecdotes (description, id_film, id_participant) VALUES
                                                                           ('Une scène a été tournée en une seule prise.', 1, 1),
-                                                                          ('Les acteurs ont improvisé certaines répliques.', 2, 2);
+                                                                          ('Les acteurs ont improvisé certaines répliques.', 2, 2),
+                                                                          ('Je me suis viandé dans un vase quand j''ai été figurant lors du tournage de la séquence 10 (la séquence d''apocalypse dans l''hôpital). Je me suis partiellement cassé l''ongle à cause de ça x)', 4, 85),
+                                                                          ('Après le tournage, nous nous sommes rendus compte que des fichiers/rushs ont tout bonnement disparu (au moins deux tiers d''une des deux caméras). On était dégoûtés.. ça représentait des heures de tournages qui s''étaient envolés.', 4, 58),
+                                                                          ('Le tournage s''est vraiment bien passé, nous avons tout bouclé en une journée et nous n''avons pas arrêté haha. ', 4, 58);
+

@@ -41,7 +41,7 @@ public class FileUploadController {
 
             // Retourne l'URL d'accès au fichier
             String fileUrl = "/img/" + fileName;
-            return ResponseEntity.status(HttpStatus.OK).body("Fichier téléchargé avec succès : " + fileUrl);
+            return ResponseEntity.status(HttpStatus.OK).body("{\"fileUrl\":\"" + fileUrl + "\"}");
 
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de l'upload du fichier.");
