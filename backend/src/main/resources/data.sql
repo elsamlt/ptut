@@ -114,7 +114,7 @@ INSERT INTO Actualites (lien) VALUES
                                   ('https://www.youtube.com/watch?v=2Wu3Q_TyUnw&t=2s');
 
 INSERT INTO Moments (titre, nom_img, description) VALUES
-                                                       ('Première du film', 'premiere.jpg', 'La première du film a eu lieu hier soir.');
+                                                       ('Bonne année !', 'premiere.jpg', 'Toute l’équipe d’ISIS vous présente ses meilleurs vœux pour 2025, une année placée sous le signe de la transformation ! Nous avons hâte de vous dévoiler l’ensemble de ce nouveau projet qui incarne notre vision et nos valeurs résolument engagées pour l''avenir');
 
 INSERT INTO joue (FILM_ID, PARTICIPANT_ID, ROLE) VALUES
                                                      (1, 1, 'Acteur'),
