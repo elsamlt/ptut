@@ -2,7 +2,7 @@
   <!-- Liste des actualité -->
   <v-container v-if="!showEditActu && !showAddActu" class="d-flex flex-column align-center">
     <v-row class="gap">
-      <ActualiteCard v-for="(actu, index) in listActu" :key="actu.id" :actu="actu" :index="index" @edit="openEditForm(actu)" @delete="handlerDelete(selectedFilm)"/>
+      <ActualiteCard v-for="(actu, index) in listActu" :key="actu.id" :actu="actu" :index="index" @edit="openEditForm(actu)"/>
     </v-row>
   </v-container>
   <v-container v-if="showAddActu">
@@ -67,7 +67,7 @@ function fetchActu() {
   fetch(url)
     .then((response) => response.json())
     .then((dataJSON) => {
-      listActu.splice(0, listActu.length, ...dataJSON._embedded.actualites);
+      listActu.splice(0, listActu.length, ...dataJSON);
     })
     .catch((error) =>
       console.error("Erreur lors de la récupération des actualités :", error),
@@ -117,7 +117,7 @@ const handleActuAdded = (newActu) => {
  * Modifier une actualité comme faite via API
  */
 const handleActuEdit = (updatedActu) => {
-  fetch(`${url}`, {
+  fetch(`${url}/${updatedActu.idActu}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -126,7 +126,7 @@ const handleActuEdit = (updatedActu) => {
   })
     .then((response) => response.json())
     .then(() => {
-      fetchActuDetail(updatedActu);
+      fetchActu();
       dialogEdit.value = true; // Afficher le message de confirmation
       showEditActu.value = false;
     })
@@ -145,7 +145,7 @@ onMounted(fetchActu);
 /* Bouton flottant */
 .add-btn {
   position: fixed;
-  bottom: 20px;
+  bottom: 70px;
   right: 20px;
 }
 

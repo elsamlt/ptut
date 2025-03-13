@@ -80,15 +80,6 @@ function fetchFilms() {
     );
 }
 
-/*function handlerDelete(com) {
-  fetch(`${url}/${com.id}`, { method: "DELETE" })
-    .then((response) => {
-      if (response.ok) fetchCommentaires();
-      dialogDelete.value = true;
-      selectedCom.value = null;
-    })
-    .catch((error) => console.error("Erreur lors de la suppression :", error));
-}*/
 /**
  * Supprimer un commentaire via API
  */

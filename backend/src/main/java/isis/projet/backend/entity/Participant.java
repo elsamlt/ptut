@@ -2,6 +2,7 @@ package isis.projet.backend.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import java.util.List;
 
 @Getter
 @Setter
@@ -18,8 +19,8 @@ public class Participant {
     private String prenom;
     private String pdp;
 
-    /*@ManyToMany(mappedBy = "participants")
-    private List<Film> films;*/
+    @OneToMany(mappedBy = "participant")
+    private List<Joue> filmsJoues;
 
     // Getters et setters
 }
