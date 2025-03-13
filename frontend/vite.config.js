@@ -22,11 +22,15 @@ export default defineConfig({
   },
   // Utile uniquement quand oon utilise le serveur de développement node
   server: {
-    proxy: { // On redirige toutes les requêtes au backend vers le serveur de développement java
-      '/api': { // L'API REST autogénérée, correspond à la config du backend spring.data.rest.base-path dans application.properties
-        target: 'http://localhost:8989', // correspond à la config du backend server.port dans application.properties
+    proxy: {
+      '/api': {
+        target: 'http://localhost:8989', // Serveur backend
         changeOrigin: true,
       },
+      '/img': {
+        target: 'http://localhost:8989', // Proxy pour les images
+        changeOrigin: true,
+      }
     },
   },
 })

@@ -2,8 +2,10 @@
   <v-card class="participants-card">
     <v-row align="center">
       <v-col cols="2">
-        <v-icon>mdi-account</v-icon>
-        <v-img src="https://via.placeholder.com/50" class="film-image"></v-img>
+        <img v-if="person.pdp" :src="`${person.pdp}`" class="person-image" alt="Photo de profil du participant">
+          <!-- Afficher l'image si elle existe -->
+        </img>
+        <v-icon v-else class="icon-placeholder" color="grey lighten-2">mdi-camera</v-icon>
       </v-col>
       <v-col>
         <span class="text-h6">{{ person.nom }}</span>
@@ -52,6 +54,14 @@ const editPerson = () => {
    margin-bottom: 20px;
  }
 
+ .person-image {
+   width: 40px; /* Définir la taille de l'image */
+   height: 40px; /* Définir la hauteur pour que l'image soit carrée */
+   border-radius: 50%; /* Rendre l'image ronde */
+   object-fit: cover; /* Assurer que l'image s'adapte sans distorsion */
+   margin-left: 20px;
+ }
+
  .btn {
    background-color: var(--color-button);
    color: var(--color-text);
@@ -66,5 +76,9 @@ const editPerson = () => {
 
  .text-h6{
    margin-right: 10px;
+ }
+
+ .icon-placeholder{
+   margin-left: 30px;
  }
 </style>
