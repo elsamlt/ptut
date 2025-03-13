@@ -1,5 +1,5 @@
 <template>
-
+  <Moment layout="horizontal" />
 </template>
 
 <script setup>
