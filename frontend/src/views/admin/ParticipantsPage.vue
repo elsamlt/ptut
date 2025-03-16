@@ -126,9 +126,6 @@ function fetchPersonsByFilm(filmId, page = 1) {
 
         // Récupérer les infos de pagination
         totalPages.value = dataJSON.page?.totalPages || 1;
-        currentPage.value= 1;
-
-        console.log(listPersons);
       })
       .catch(error => console.error("Erreur lors de la récupération des participants :", error));
   }
