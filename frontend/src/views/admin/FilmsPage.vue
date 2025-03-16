@@ -84,21 +84,6 @@
   }
 
   /**
-   * Sélectionner un film et afficher ses détails
-   */
-  function fetchFilmDetail(film) {
-    fetch(`${url}/${film.id}`)
-      .then((response) => response.json())
-      .then((dataJSON) => {
-        selectedFilm.value = dataJSON;
-        showAddFilm.value = false;
-      })
-      .catch((error) =>
-        console.error("Erreur lors de la récupération des films :", error),
-      );
-  }
-
-  /**
    * Ajouter un nouveau film via API
    */
   const handleFilmAdded = async (newFilm) => {

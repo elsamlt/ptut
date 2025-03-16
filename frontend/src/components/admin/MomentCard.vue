@@ -3,7 +3,7 @@
     <v-card class="card-container d-flex" >
       <!-- Image à gauche -->
       <v-img
-          :src="`/img/${moment.nomImg}`"
+          :src="`${moment.nomImg}`"
         height="100%"
         width="300"
         class="image-left"
