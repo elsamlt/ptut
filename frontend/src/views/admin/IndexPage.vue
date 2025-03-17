@@ -107,7 +107,7 @@ const currentTitle = computed(() => {
   width: 3px; /* Épaisseur du séparateur */
   background-color: var(--color-button);
   border: none; /* Supprime la bordure par défaut */
-  height: 100vh; /* Fait toute la hauteur de l'écran */
-
+  height: auto; /* Fait toute la hauteur de l'écran */
+  min-height: 100vh;
 }
 </style>

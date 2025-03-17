@@ -17,27 +17,27 @@
           <v-col cols="12" md="10">
             <v-row>
               <v-col cols="12" md="6">
-                <v-text-field label="Titre" v-model="film.titre" required></v-text-field>
+                <v-text-field class="text-input" label="Titre" v-model="film.titre" required></v-text-field>
               </v-col>
               <v-col cols="12" md="6">
-                <v-text-field label="Année de sortie" v-model="film.annee" required></v-text-field>
+                <v-text-field class="text-input" label="Année de sortie" v-model="film.annee" required></v-text-field>
               </v-col>
               <v-col cols="12" md="6">
-                <v-text-field label="Genre" v-model="film.genre" required></v-text-field>
+                <v-text-field class="text-input" label="Genre" v-model="film.genre" required></v-text-field>
               </v-col>
               <v-col cols="12" md="6">
-                <v-text-field label="Durée" v-model="film.duree" required></v-text-field>
+                <v-text-field class="text-input" label="Durée" v-model="film.duree" required></v-text-field>
               </v-col>
             </v-row>
 
-            <v-textarea label="Synopsis" v-model="film.synopsis" auto-grow required></v-textarea>
+            <v-textarea class="text-input" label="Synopsis" v-model="film.synopsis" auto-grow required></v-textarea>
 
             <v-row>
               <v-col cols="12" md="6">
-                <v-text-field label="Lien du film" v-model="film.urlFilm" required></v-text-field>
+                <v-text-field class="text-input" label="Lien du film" v-model="film.urlFilm" required></v-text-field>
               </v-col>
               <v-col cols="12" md="6">
-                <v-text-field label="Lien de la bande d’annonce" v-model="film.urlBA"></v-text-field>
+                <v-text-field class="text-input" label="Lien de la bande d’annonce" v-model="film.urlBA"></v-text-field>
               </v-col>
             </v-row>
           </v-col>
