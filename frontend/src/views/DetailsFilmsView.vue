@@ -17,30 +17,26 @@
       <h2 class="section-title">Acteurs</h2>
       <div class="acteurs">
         <button class="bouton-rond">&#8592;</button>
-        <p>Nom/prenom</p>
-        <p>Nom/prenom</p>
-        <p>Nom/prenom</p>
-        <p>Nom/prenom</p>
+        <p v-for="acteur in acteurs" :key="acteur.id">{{ acteur.nom }} {{ acteur.prenom }}</p>
         <button class="bouton-rond">&#8594;</button>
       </div>
 
       <h2 class="section-title">Post-Production</h2>
       <div class="post_prod">
         <button class="bouton-rond">&#8592;</button>
-        <p>Nom/prenom</p>
-        <p>Nom/prenom</p>
+        <p v-for="postProd in postProductions" :key="postProd.id">{{ postProd.nom }} {{ postProd.prenom }}</p>
         <button class="bouton-rond">&#8594;</button>
       </div>
 
       <h2 class="section-title">Equipe de tournage</h2>
       <div class="equipe_tournage">
         <button class="bouton-rond">&#8592;</button>
-        <p>Nom/prenom</p>
+        <p v-for="equipe in equipeTournage" :key="equipe.id">{{ equipe.nom }} {{ equipe.prenom }}</p>
         <button class="bouton-rond">&#8594;</button>
       </div>
 
       <h2 class="section-title">Anecdotes</h2>
-      <p class="film-info">Voici une anecdote intéressante</p>
+      <p class="film-info" v-for="anecdote in anecdotes" :key="anecdote.id">{{ anecdote.texte }}</p>
 
       <h2 class="section-title">Images exclusives du tournage</h2>
       <div class="carousel">
@@ -65,39 +61,51 @@ import { useRoute } from 'vue-router'
 const API_URL = 'http://localhost:8989/api/films'
 const selectedFilm = ref({})
 const isLoading = ref(true)
+const acteurs = ref([])
+const postProductions = ref([])
+const equipeTournage = ref([])
+const anecdotes = ref([])
 const route = useRoute()
 
-async function fetchFilmDetail(filmId) {
+async function getData(endpoint) {
   try {
-    const response = await fetch(`${API_URL}/${filmId}`)
+    const response = await fetch(endpoint);
     if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`)
+      throw new Error(`HTTP error! Status: ${response.status}`);
     }
-    const dataJSON = await response.json()
-    selectedFilm.value = dataJSON
+    return await response.json();
   } catch (error) {
-    console.error("Erreur lors de la récupération du film :", error)
-  } finally {
-    isLoading.value = false
+    console.error(`Erreur lors de la récupération des données depuis ${endpoint} :`, error);
+    return null;
   }
+}
+
+async function getFilmDetail(filmId) {
+  isLoading.value = true;
+  selectedFilm.value = await getData(`${API_URL}/${filmId}`) || {};
+  acteurs.value = await getData(`${API_URL}/${filmId}/acteurs`) || [];
+  postProductions.value = await getData(`${API_URL}/${filmId}/postproduction`) || [];
+  equipeTournage.value = await getData(`${API_URL}/${filmId}/equipe`) || [];
+  anecdotes.value = await getData(`${API_URL}/${filmId}/anecdotes`) || [];
+  isLoading.value = false;
 }
 
 function watchFilm() {
   if (selectedFilm.value?.urlFilm?.trim()) {
-    window.location.href = selectedFilm.value.urlFilm
+    window.location.href = selectedFilm.value.urlFilm;
   }
 }
 
 function watchTrailer() {
   if (selectedFilm.value?.urlBA?.trim()) {
-    window.location.href = selectedFilm.value.urlBA
+    window.location.href = selectedFilm.value.urlBA;
   }
 }
 
 onMounted(() => {
-  const filmId = route.params.filmId
-  fetchFilmDetail(filmId)
-})
+  const filmId = route.params.filmId;
+  getFilmDetail(filmId);
+});
 </script>
 
 <style scoped>
