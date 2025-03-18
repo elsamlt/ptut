@@ -44,7 +44,7 @@ function fetchMoments() {
   fetch(url)
     .then((response) => response.json())
     .then((dataJSON) => {
-      listMoment.splice(0, listMoment.length, ...dataJSON._embedded?.moments);
+      listMoment.splice(0, listMoment.length, ...dataJSON);
       console.log(listMoment)
     })
     .catch((error) =>

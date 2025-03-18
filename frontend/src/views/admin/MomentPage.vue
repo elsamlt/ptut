@@ -66,23 +66,7 @@ function fetchMoments() {
   fetch(url)
     .then((response) => response.json())
     .then((dataJSON) => {
-      listMoment.splice(0, listMoment.length, ...dataJSON._embedded?.moments);
-      console.log(listMoment)
-    })
-    .catch((error) =>
-      console.error("Erreur lors de la récupération des moments :", error),
-    );
-}
-
-/**
- * Sélectionner un momet et afficher ses détails
- */
-function fetchMomentDetail(moment) {
-  fetch(`${url}/${moment.id}`)
-    .then((response) => response.json())
-    .then((dataJSON) => {
-      selectedMoment.value = dataJSON;
-      showAddMoment.value = false;
+      listMoment.splice(0, listMoment.length, ...dataJSON);
     })
     .catch((error) =>
       console.error("Erreur lors de la récupération des moments :", error),
@@ -92,22 +76,59 @@ function fetchMomentDetail(moment) {
 /**
  * Ajouter un nouveau moment via API
  */
-const handleMomentAdded = (newMoment) => {
+const handleMomentAdded = async (newMoment) => {
+  let momentData = { ...newMoment };
+
+  // Vérifier si nomImg est un Data URL (base64)
+  if (newMoment.nomImg && newMoment.nomImg.startsWith('data:')) {
+    try {
+      // Convertir le base64 en blob
+      const response = await fetch(newMoment.nomImg);
+      const blob = await response.blob();
+      const file = new File([blob], "moment.jpg", { type: "image/jpeg" });
+
+      // Créer un FormData pour l'upload
+      const formData = new FormData();
+      formData.append('file', file);
+
+      // Uploader l'image au serveur
+      const uploadResponse = await fetch('/api/files/upload', {
+        method: 'POST',
+        body: formData
+      });
+
+      if (!uploadResponse.ok) {
+        throw new Error("Erreur lors de l'upload de l'image");
+      }
+
+      const uploadData = await uploadResponse.text();
+
+      // Extraire uniquement le chemin de l'image avec une regex
+      const fileUrlMatch = uploadData.match(/\/img\/[^"'}]+/);
+      const fileUrl = fileUrlMatch ? fileUrlMatch[0] : '';
+
+      // Remplacer le base64 par le chemin de l'image
+      momentData.nomImg = fileUrl;
+    } catch (error) {
+      console.error("Erreur lors de l'upload de l'image :", error);
+      return;
+    }
+  }
+
   // Ajouter le moment via l'API
   fetch(url, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      titre: newMoment.titre,
-      nomImg: newMoment.nomImg,
-      description: newMoment.description,
+      titre: momentData.titre,
+      nomImg: momentData.nomImg,
+      description: momentData.description,
     }),
   })
     .then((response) => response.json())
     .then(() => {
       fetchMoments(); // Rafraîchir la liste après l'ajout
-      // Afficher la popup de confirmation
-      dialogAdd.value = true;
+      dialogAdd.value = true; // Afficher la popup de confirmation
       showAddMoment.value = false;
     })
     .catch((error) =>
@@ -118,24 +139,61 @@ const handleMomentAdded = (newMoment) => {
 /**
  * Modifier un moment comme faite via API
  */
-const handleMomentEdit = (updatedMoment) => {
-  fetch(`${url}`, {
+const handleMomentEdit = async (updatedMoment) => {
+  let momentData = { ...updatedMoment };
+
+  // Vérifier si nomImg est un Data URL (base64)
+  if (updatedMoment.nomImg && updatedMoment.nomImg.startsWith("data:")) {
+    try {
+      // Convertir le base64 en blob
+      const response = await fetch(updatedMoment.nomImg);
+      const blob = await response.blob();
+      const file = new File([blob], "moment.jpg", { type: "image/jpeg" });
+
+      // Créer un FormData pour l'upload
+      const formData = new FormData();
+      formData.append("file", file);
+
+      // Uploader l'image au serveur
+      const uploadResponse = await fetch("/api/files/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!uploadResponse.ok) {
+        throw new Error("Erreur lors de l'upload de l'image");
+      }
+
+      const uploadData = await uploadResponse.text();
+      const fileUrlMatch = uploadData.match(/\/img\/[^"'}]+/);
+      const fileUrl = fileUrlMatch ? fileUrlMatch[0] : "";
+
+      // Remplacer le base64 par l'URL de l'image
+      momentData.nomImg = fileUrl;
+    } catch (error) {
+      console.error("Erreur lors de l'upload de l'image :", error);
+      return;
+    }
+  }
+
+  // Envoyer la requête de mise à jour
+  fetch(`${url}/${updatedMoment.idMoment}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      titre: updatedMoment.titre,
-      nomImg: updatedMoment.nomImg,
-      description: updatedMoment.description,
-    }),
+    body: JSON.stringify(momentData),
   })
-    .then((response) => response.json())
+    .then((response) => {
+      if (!response.ok) throw new Error("Erreur lors de la mise à jour");
+      return response.json();
+    })
     .then(() => {
-      fetchMomentDetail(updatedMoment);
-      dialogEdit.value = true; // Afficher le message de confirmation
+      fetchMoments(); // Rafraîchir la liste après l'édition
+      dialogEdit.value = true; // Afficher confirmation
       showEditMoment.value = false;
     })
     .catch((error) => console.error("Erreur lors de la mise à jour :", error));
 };
+
 
 // Charger le moment au montage
 onMounted(fetchMoments);

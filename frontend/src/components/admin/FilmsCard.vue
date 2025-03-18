@@ -28,6 +28,7 @@ import { defineProps, defineEmits } from "vue";
 const props = defineProps({
   film: Object,
 });
+
 // Emitteur d'événements
 const emit = defineEmits(["delete", "edit"]);
 
