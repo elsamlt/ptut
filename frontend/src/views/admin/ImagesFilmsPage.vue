@@ -14,7 +14,7 @@
         cols="3"
       >
         <ImageCard :index="index" :image="image"
-                   @delete="handlerDelete(selectedImage)"/>
+                   @delete="handlerDelete(image)"/>
       </v-col>
     </v-row>
   </v-container>
@@ -152,15 +152,15 @@ const handleImageAdded = async (newImage) => {
 
   // Envoyer les données de l'image à l'API
   try {
+    console.log('imageData', imageData);
     const response = await fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        id_film: imageData.id_film,
+        idFilm: imageData.idFilm,
         img: imageData.img,
       }),
     });
-
     if (!response.ok) {
       throw new Error("Erreur lors de l'ajout de l'image");
     }
@@ -180,7 +180,7 @@ const handleImageAdded = async (newImage) => {
  * Supprimer une image via API
  */
 function handlerDelete(image) {
-  fetch(`${url}/${image.id}`, { method: "DELETE" })
+  fetch(`${url}/${image.idImage}`, { method: "DELETE" })
     .then((response) => {
       if (response.ok) fetchImages();
       dialogDelete.value = true;
