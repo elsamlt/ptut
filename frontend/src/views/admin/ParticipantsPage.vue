@@ -104,21 +104,27 @@ const fetchPersons = (page = 1) => {
     .then(dataJSON => {
       listPersons.value = dataJSON._embedded?.participants || [];
       totalPages.value = dataJSON.page?.totalPages || 1;
+      console.log(listPersons)
     })
     .catch(error => console.error("Erreur lors de la récupération des participants :", error));
 };
-
 
 function fetchPersonsByFilm(filmId, page = 1) {
   if (filmId === null) {
     fetchPersons(page);
   } else {
-    fetch(`/api/joues/search/findByFilm_IdFilm?idFilm=${filmId}&page=${page - 1}&size=${itemsPerPage}`)
+    fetch(`/api/films/participants?idFilm=${filmId}&page=${page - 1}&size=${itemsPerPage}`)
       .then(response => response.json())
       .then(dataJSON => {
-        listPersons.value = dataJSON._embedded?.joues;
-        //listPersons.value = dataJSON._embedded?.joues.map(j => j.participant) || [];
-        console.log(listPersons)
+        // Convertir l'objet en tableau en ignorant la clé "page"
+        const participantsArray = Object.entries(dataJSON)
+          .filter(([key]) => key !== "page")
+          .map(([_, value]) => value);
+
+        // Extraire uniquement les participants
+        listPersons.value = participantsArray.map(item => item.participant);
+
+        // Récupérer les infos de pagination
         totalPages.value = dataJSON.page?.totalPages || 1;
       })
       .catch(error => console.error("Erreur lors de la récupération des participants :", error));
@@ -254,7 +260,7 @@ onMounted(() => {
 /* Bouton flottant */
 .add-btn {
   position: fixed;
-  bottom: 20px;
+  bottom: 70px;
   right: 20px;
 }
 

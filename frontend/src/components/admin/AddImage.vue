@@ -2,36 +2,32 @@
   <v-container>
     <v-form>
       <v-card class="pa-5">
-        <v-row class="d-flex align-center">
+        <div class="d-flex flex-column align-center">
           <!-- Image -->
           <v-col cols="12" md="2" class="d-flex flex-column align-center">
-            <img v-if="moment.nomImg" :src="`${moment.nomImg}`" height="100" class="mt-2"/>
+            <img v-if="image.img" :src="image.img" height="100" class="mt-2"/>
             <v-row>
               <v-btn class="mt-2" icon="mdi-download" variant="text" @click="triggerFileInput"></v-btn>
               <input type="file" ref="fileInput" style="display: none" @change="handleFileUpload" />
               <v-btn @click="deleteImage" class="mt-2" color="red-lighten-2" icon="mdi-delete" variant="text"></v-btn>
             </v-row>
           </v-col>
-
-          <!-- Form -->
-          <v-col cols="12" md="10">
-            <!-- Titre -->
-            <v-col cols="12">
-              <v-text-field class="text-input" v-model="moment.titre" label="Titre" required></v-text-field>
-            </v-col>
-
-            <!-- Description -->
-            <v-col cols="12">
-              <v-textarea class="text-input" v-model="moment.description" label="Description" auto-grow required></v-textarea>
-            </v-col>
+          <v-col cols="4">
+            <v-select class="text-input"
+              v-model="selectedFilm"
+              :items="films"
+              item-value="idFilm"
+              item-title="titre"
+              density="compact"
+              label="Film"
+            ></v-select>
           </v-col>
-        </v-row>
-
+        </div>
         <!-- Boutons Annuler et Ajouter -->
         <v-row class="mt-4">
           <v-col cols="12" class="d-flex justify-end">
             <v-btn class="mr-2" @click="closeForm">Annuler</v-btn>
-            <v-btn class="btn" @click="submitMoment">Enregistrer</v-btn>
+            <v-btn class="btn" @click="submitImage">Ajouter</v-btn>
           </v-col>
         </v-row>
       </v-card>
@@ -40,32 +36,44 @@
 </template>
 
 <script setup>
-import { ref, defineEmits, defineProps } from "vue";
+import { ref, defineEmits, defineProps, watch } from "vue";
 
-// Récupérer les props
-const props = defineProps({ moment: Object });
-const emit = defineEmits(["edit", "cancel"]);
+const emit = defineEmits(["add", "closeForm"]);
+const props = defineProps({
+  films: Array,
+});
 
-// Cloner l'objet moment pour éviter de modifier directement la prop
-const moment = ref({ ...props.moment });
 const fileInput = ref(null);
+const selectedFilm = ref(null);
 
-// Supprimer l'image
-const deleteImage = () => {
-  moment.value.nomImg = null;
-};
+const image = ref({
+  img: null,
+  id_film: null,
+});
 
-// Fonction de soumission
-const submitMoment = () => {
-  if (moment.value.nomImg == props.moment.nomImg) {
-    moment.value.nomImg = props.moment.nomImg; // photo initiale
-  }
-  emit("edit", moment.value);
+watch(selectedFilm, (newFilm) => {
+  image.value.idFilm = newFilm;
+});
+
+// Soumettre l'image
+const submitImage = () => {
+  emit("add", image.value);
+
+  // Remise à zéro après ajout
+  image.value = {
+    img: null,
+    id_film: "",
+  };
 };
 
 // Annuler et fermer le formulaire
 const closeForm = () => {
-  emit("cancel");
+  emit("closeForm");
+};
+
+// Supprimer l'image
+const deleteImage = () => {
+  image.value.img = null;
 };
 
 // Ouvrir la boîte de dialogue pour sélectionner un fichier
@@ -79,19 +87,24 @@ const triggerFileInput = () => {
 const handleFileUpload = (event) => {
   const file = event.target.files[0];
   if (!file) return;
+
   const reader = new FileReader();
   reader.onload = () => {
-    moment.value.nomImg = reader.result;
+    image.value.img = reader.result; // Mettre à jour la prop affiche avec l'image en base64
   };
   reader.readAsDataURL(file);
 };
+
 </script>
 
 <style scoped>
+
 .btn {
   background-color: var(--color-button);
   color: var(--color-text);
   box-shadow: inset 0 0 5px rgba(255, 255, 255, 0.6);
   margin-right: 10px;
 }
+
 </style>
+
