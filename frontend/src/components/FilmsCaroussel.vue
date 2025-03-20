@@ -1,11 +1,141 @@
-<template>
-
-</template>
-
 <script setup>
+import { ref, onMounted } from 'vue';
+import { Swiper, SwiperSlide } from 'swiper/vue';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import { Navigation } from 'swiper/modules';
 
+const films = ref([]);
+const defaultImage = '/images/default-movie.jpg'; // Image de secours
+
+const fetchFilms = async () => {
+  try {
+    const response = await fetch('/api/films');
+    const data = await response.json();
+    films.value = data._embedded.films;
+  } catch (error) {
+    console.error("Erreur lors du chargement des films :", error);
+  }
+};
+
+const handleFilmClick = (idFilm) => {
+  console.log("Film sélectionné, ID :", idFilm);
+};
+
+onMounted(fetchFilms);
 </script>
 
-<style scoped>
+<template>
+  <div class="films-container">
+    <div class="films-header">
+      <div>
+        <h2>NOS FILMS</h2>
+        <p>Petit texte</p>
+      </div>
+    </div>
 
+    <div class="swiper-container">
+      <Swiper
+        :modules="[Navigation]"
+        :slides-per-view="3"
+        :space-between="30"
+        :navigation="true"
+        class="films-swiper"
+      >
+        <SwiperSlide v-for="film in films" :key="film.idFilm" @click="handleFilmClick(film.idFilm)">
+          <div class="film-card">
+            <img :src="film.affiche ? film.affiche : defaultImage" :alt="film.titre" />
+            <p class="film-year">{{ film.annee }}</p>
+          </div>
+        </SwiperSlide>
+      </Swiper>
+    </div>
+  </div>
+</template>
+
+<style scoped>
+.films-container {
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+}
+
+.films-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+h2 {
+  font-size: 28px;
+  font-weight: bold;
+}
+
+p {
+  font-size: 14px;
+}
+
+.swiper-container {
+  position: relative;
+  margin: 40px;
+}
+
+.films-swiper {
+  width: 100%;
+}
+
+.swiper-slide {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  cursor: pointer;
+}
+
+.film-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.3s ease-in-out;
+  margin-top: 10px;
+  margin-bottom: 5px;
+}
+
+.film-card:hover {
+  transform: scale(1.05);
+}
+
+.film-card img {
+  width: 200px;
+  height: 300px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 2px rgba(0, 0, 0, 0.2);
+}
+
+.film-year {
+  margin-top: 8px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+/* Personnalisation des flèches de navigation */
+:deep(.swiper-button-prev),
+:deep(.swiper-button-next) {
+  background-color: #6f42c1;
+  color: white;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+:deep(.swiper-button-prev)::after,
+:deep(.swiper-button-next)::after {
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+}
 </style>
