@@ -1,3 +1,30 @@
+<template>
+  <div class="films-container">
+    <div class="films-header">
+      <div>
+        <h2>NOS FILMS</h2>
+        <p>Petit texte</p>
+      </div>
+    </div>
+
+    <div class="swiper-container">
+      <Swiper
+        :modules="[Navigation]"
+        :slides-per-view="3"
+        :navigation="true"
+        class="films-swiper"
+      >
+        <SwiperSlide v-for="film in films" :key="film.idFilm" @click="handleFilmClick(film.idFilm)">
+          <div class="film-card">
+            <img :src="film.affiche ? film.affiche : defaultImage" :alt="film.titre" style="object-fit: cover;"/>
+            <p class="film-year">{{ film.annee }}</p>
+          </div>
+        </SwiperSlide>
+      </Swiper>
+    </div>
+  </div>
+</template>
+
 <script setup>
 import { ref, onMounted } from 'vue';
 import { Swiper, SwiperSlide } from 'swiper/vue';
@@ -6,7 +33,7 @@ import 'swiper/css/navigation';
 import { Navigation } from 'swiper/modules';
 
 const films = ref([]);
-const defaultImage = '/images/default-movie.jpg'; // Image de secours
+const defaultImage = '/images/affiche-default.jpg'; // Image de secours
 
 const fetchFilms = async () => {
   try {
@@ -25,34 +52,6 @@ const handleFilmClick = (idFilm) => {
 onMounted(fetchFilms);
 </script>
 
-<template>
-  <div class="films-container">
-    <div class="films-header">
-      <div>
-        <h2>NOS FILMS</h2>
-        <p>Petit texte</p>
-      </div>
-    </div>
-
-    <div class="swiper-container">
-      <Swiper
-        :modules="[Navigation]"
-        :slides-per-view="3"
-        :space-between="30"
-        :navigation="true"
-        class="films-swiper"
-      >
-        <SwiperSlide v-for="film in films" :key="film.idFilm" @click="handleFilmClick(film.idFilm)">
-          <div class="film-card">
-            <img :src="film.affiche ? film.affiche : defaultImage" :alt="film.titre" />
-            <p class="film-year">{{ film.annee }}</p>
-          </div>
-        </SwiperSlide>
-      </Swiper>
-    </div>
-  </div>
-</template>
-
 <style scoped>
 .films-container {
   padding: 40px;
@@ -65,15 +64,6 @@ onMounted(fetchFilms);
   align-items: center;
   justify-content: space-between;
   margin-bottom: 20px;
-}
-
-h2 {
-  font-size: 28px;
-  font-weight: bold;
-}
-
-p {
-  font-size: 14px;
 }
 
 .swiper-container {
@@ -122,8 +112,9 @@ p {
 /* Personnalisation des flèches de navigation */
 :deep(.swiper-button-prev),
 :deep(.swiper-button-next) {
-  background-color: #6f42c1;
-  color: white;
+  background-color: var(--color-button);
+  color: var(--color-text);
+  box-shadow: inset 0 0 5px rgba(255, 255, 255, 0.6);
   border-radius: 50%;
   width: 40px;
   height: 40px;
@@ -136,6 +127,13 @@ p {
 :deep(.swiper-button-next)::after {
   font-size: 16px;
   font-weight: bold;
-  color: white;
+  color: var(--color-text);
+  transition: transform 0.3s ease;
 }
+
+:deep(.swiper-button-prev:hover)::after,
+:deep(.swiper-button-next:hover)::after {
+  transform: scale(0.8);
+}
+
 </style>
