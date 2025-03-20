@@ -1,4 +1,5 @@
 <template>
+  <FilmsCaroussel/>
   <Moment layout="horizontal" />
 </template>
 

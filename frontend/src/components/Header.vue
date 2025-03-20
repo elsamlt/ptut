@@ -71,6 +71,7 @@ const drawer = ref(false);
 
 .btn:hover .icon {
   transform: scale(0.8);
+  transition: transform 0.3s ease;
 }
 
 .custom-app-bar {
