@@ -8,13 +8,8 @@
   <!-- Liste des images -->
   <v-container v-if="!showAddImage">
     <v-row>
-      <v-col
-        v-for="(image, index) in listImages" :key="image.id"
-        class="d-flex child-flex"
-        cols="3"
-      >
-        <ImageCard :index="index" :image="image"
-                   @delete="handlerDelete(image)"/>
+      <v-col v-for="(image, index) in listImages" :key="image.id" class="d-flex child-flex" cols="3">
+        <ImageCard :index="index" :image="image" @delete="handlerDelete(image)"/>
       </v-col>
     </v-row>
   </v-container>

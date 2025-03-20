@@ -1,11 +1,17 @@
 <template>
+  <v-row class="d-flex align-center gap-x-4" v-if="!showEditAnecdote && !showAddAnecdote">
+    <p>Afficher les participants de :</p>
+    <v-col cols="4">
+      <v-select class="select" v-model="selectedFilm" :items="AllOption" item-value="idFilm" item-title="titre" density="compact"></v-select>
+    </v-col>
+  </v-row>
   <!-- Liste des anecdotes -->
   <v-container v-if="!showEditAnecdote && !showAddAnecdote">
     <AnecdoteCard v-for="(anecdote, index) in listAnecdotes" :key="anecdote.id" :index="index" @edit="openEditForm(anecdote)" :anecdote="anecdote"
                @delete="handlerDelete(selectedAnecdote)"/>
   </v-container>
   <v-container v-if="showAddAnecdote">
-    <AddAnecdote @add="handleAnecdoteAdded" @closeForm="showAddAnecdote = false"/>
+    <AddAnecdote @add="handleAnecdoteAdded" @closeForm="showAddAnecdote = false" :films="listFilms"/>
   </v-container>
   <v-container v-if="showEditAnecdote">
     <EditAnecdote :anecdote="selectedAnecdote" @edit="handleAnecdoteEdit" @cancel="showEditAnecdote = false" />
@@ -46,7 +52,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, reactive } from "vue";
+import {ref, onMounted, reactive, computed, watch} from "vue";
 import AnecdoteCard from "@/components/admin/AnecdoteCard.vue";
 import AddAnecdote from "@/components/admin/AddAnecdote.vue";
 import EditAnecdote from "@/components/admin/EditAnecdote.vue";
@@ -62,6 +68,14 @@ const showEditAnecdote = ref(false);
 const showAddAnecdote = ref(false);
 
 const selectedAnecdote = ref(null);
+
+const listFilms = ref([]);
+const selectedFilm = ref(null);
+
+const AllOption = computed(() => [
+  { idFilm: null, titre: 'Tous les films' },  // Option "Tous les films"
+  ...listFilms.value, // Les films récupérés
+]);
 
 const openEditForm = (anecdote) => {
   selectedAnecdote.value = { ...anecdote }; // Cloner pour éviter la modification directe
@@ -80,6 +94,20 @@ function fetchAnecdotes() {
     .catch((error) =>
       console.error("Erreur lors de la récupération des anecdotes :", error),
     );
+}
+
+function fetchAnecdotesByFilm(filmId) {
+  if (filmId === null) {
+    fetchAnecdotes();
+  } else {
+    fetch(`/api/films/${filmId}/anecdotes`)
+      .then(response => response.json())
+      .then(dataJSON => {
+        listAnecdotes.splice(0, listAnecdotes.length, ...dataJSON._embedded.anecdotes);
+        console.log(dataJSON)
+      })
+      .catch(error => console.error("Erreur lors de la récupération des participants :", error));
+  }
 }
 
 /**
@@ -143,8 +171,30 @@ const handleAnecdoteEdit = (updatedAnecdote) => {
     .catch((error) => console.error("Erreur lors de la mise à jour :", error));
 };
 
+/**
+ * Récupérer les films depuis l'API
+ */
+function fetchFilms() {
+  fetch('/api/films')
+    .then((response) => response.json())
+    .then((dataJSON) => {
+      listFilms.value = dataJSON._embedded.films || [];
+    })
+    .catch((error) =>
+      console.error("Erreur lors de la récupération des films :", error),
+    );
+}
+
+// Observer le changement de film sélectionné
+watch(selectedFilm, (newFilmId) => {
+  fetchAnecdotesByFilm(newFilmId);
+});
+
 // Charger les anecdotes au montage
-onMounted(fetchAnecdotes);
+onMounted(() => {
+  fetchFilms();
+  fetchAnecdotesByFilm(null);
+});
 </script>
 
 <style scoped>
