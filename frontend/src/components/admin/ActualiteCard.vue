@@ -10,8 +10,8 @@
           </div>
         </v-card>
         <div>
-          <v-btn class="btn" size="40px">
-            <v-icon class="icon" @click="editActu">mdi-pencil</v-icon>
+          <v-btn class="btn" size="40px" @click="editActu">
+            <v-icon class="icon">mdi-pencil</v-icon>
           </v-btn>
         </div>
       </div>

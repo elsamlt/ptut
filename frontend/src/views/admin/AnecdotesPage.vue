@@ -83,21 +83,6 @@ function fetchAnecdotes() {
 }
 
 /**
- * Sélectionner une anecdote et afficher ses détails
- */
-function fetchAnecdoteDetail(anecdote) {
-  fetch(`${url}/${anecdote.id}`)
-    .then((response) => response.json())
-    .then((dataJSON) => {
-      selectedAnecdote.value = dataJSON;
-      showAddAnecdote.value = false;
-    })
-    .catch((error) =>
-      console.error("Erreur lors de la récupération des anecdotes :", error),
-    );
-}
-
-/**
  * Ajouter une nouvelle anecdote via API
  */
 const handleAnecdoteAdded = (newAnecdote) => {
@@ -151,7 +136,7 @@ const handleAnecdoteEdit = (updatedAnecdote) => {
   })
     .then((response) => response.json())
     .then(() => {
-      fetchAnecdoteDetail(updatedAnecdote);
+      fetchAnecdotes();
       dialogEdit.value = true; // Afficher le message de confirmation
       showEditAnecdote.value = false;
     })

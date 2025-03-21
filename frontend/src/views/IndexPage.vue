@@ -1,5 +1,6 @@
 <template>
-
+  <FilmsCaroussel/>
+  <Moment layout="horizontal" />
 </template>
 
 <script setup>

@@ -5,7 +5,7 @@
         <v-row class="d-flex align-center">
           <!-- Image -->
           <v-col cols="12" md="2" class="d-flex flex-column align-center">
-            <img v-if="moment.nomImg" :src="moment.nomImg" height="100" class="mt-2"/>
+            <img v-if="moment.nomImg" :src="`${moment.nomImg}`" height="100" class="mt-2"/>
             <v-row>
               <v-btn class="mt-2" icon="mdi-download" variant="text" @click="triggerFileInput"></v-btn>
               <input type="file" ref="fileInput" style="display: none" @change="handleFileUpload" />
@@ -31,7 +31,7 @@
         <v-row class="mt-4">
           <v-col cols="12" class="d-flex justify-end">
             <v-btn class="mr-2" @click="closeForm">Annuler</v-btn>
-            <v-btn class="btn" @click="submitMoment">Ajouter</v-btn>
+            <v-btn class="btn" @click="submitMoment">Enregistrer</v-btn>
           </v-col>
         </v-row>
       </v-card>
@@ -45,7 +45,6 @@ import { ref, defineEmits, defineProps } from "vue";
 // Récupérer les props
 const props = defineProps({ moment: Object });
 const emit = defineEmits(["edit", "cancel"]);
-console.log(props.moment)
 
 // Cloner l'objet moment pour éviter de modifier directement la prop
 const moment = ref({ ...props.moment });
@@ -82,7 +81,7 @@ const handleFileUpload = (event) => {
   if (!file) return;
   const reader = new FileReader();
   reader.onload = () => {
-    film.value.photo = reader.result;
+    moment.value.nomImg = reader.result;
   };
   reader.readAsDataURL(file);
 };

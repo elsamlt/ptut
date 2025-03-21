@@ -17,12 +17,12 @@
           <v-col cols="12" md="10">
               <!-- Titre -->
               <v-col cols="12">
-                <v-text-field class="text-input" v-model="title" label="Titre" required></v-text-field>
+                <v-text-field class="text-input" v-model="moment.titre" label="Titre" required></v-text-field>
               </v-col>
 
               <!-- Description -->
               <v-col cols="12">
-                <v-textarea class="text-input" v-model="description" label="Description" auto-grow required></v-textarea>
+                <v-textarea class="text-input" v-model="moment.description" label="Description" auto-grow required></v-textarea>
               </v-col>
           </v-col>
         </v-row>
