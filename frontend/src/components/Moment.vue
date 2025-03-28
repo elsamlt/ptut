@@ -75,7 +75,8 @@ onMounted(fetchMoments);
 }
 
 .titre{
-  margin-left: 40px;
+  padding-top: 20px;
+  margin-left: 20px;
   margin-top: 20px;
 }
 
@@ -83,6 +84,7 @@ img {
   width: 650px;
   height: auto;
   border-radius: 8px;
+  margin-bottom: 40px;
 }
 
 .vertical-layout {
