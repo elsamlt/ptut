@@ -1,6 +1,6 @@
 <template>
   <div :class="['wrapper', { 'horizontal-background': layout === 'horizontal' }]">
-    <h2 class="titre">EN CE MOMENT</h2>
+    <h2 class="titre" :class="titreLayoutClass">EN CE MOMENT</h2>
     <div v-for="(moment, index) in listMoment" :key="moment.id" :class="layoutClass" class="layout">
       <div class="image-container">
         <img :src="`${moment.nomImg}`" alt="Actualité en ce moment" />
@@ -35,6 +35,11 @@ const url = '/api/moments';
 const layoutClass = computed(() => ({
   'horizontal-layout': props.layout === 'horizontal',
   'vertical-layout': props.layout === 'vertical'
+}));
+
+const titreLayoutClass = computed(() => ({
+  'titre-horizontal': props.layout === 'horizontal',
+  'titre-vertical': props.layout === 'vertical'
 }));
 
 /**
@@ -74,9 +79,16 @@ onMounted(fetchMoments);
   gap: 20px;
 }
 
-.titre{
-  margin-left: 40px;
+.titre {
   margin-top: 20px;
+}
+
+.titre-horizontal {
+  margin-left: 40px;
+}
+
+.titre-vertical {
+  margin-left: 0;
 }
 
 img {
@@ -89,7 +101,6 @@ img {
   flex-direction: column;
   background-color: var(--color-background-white);
   color: var(--color-text-dark);
-  width: 20%;
 }
 
 .vertical-layout img{
