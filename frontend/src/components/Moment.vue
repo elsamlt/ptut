@@ -50,7 +50,6 @@ function fetchMoments() {
     .then((response) => response.json())
     .then((dataJSON) => {
       listMoment.splice(0, listMoment.length, ...dataJSON);
-      console.log(listMoment)
     })
     .catch((error) =>
       console.error("Erreur lors de la récupération des moments :", error),
