@@ -64,7 +64,6 @@ const layoutClass = computed(() => ({
   font-size: 22px;
   color: white;
   margin-bottom: 20px;
-  margin-left: 20px;
 }
 
 /* Mises en page */
