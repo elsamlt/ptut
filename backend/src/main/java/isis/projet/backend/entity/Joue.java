@@ -1,5 +1,6 @@
 package isis.projet.backend.entity;
 
+import isis.projet.backend.enums.Groupe;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -17,11 +18,14 @@ public class Joue {
 
     private String role;
 
+    @Enumerated(EnumType.STRING)
+    private Groupe groupe;
+
     @ManyToOne
     @JoinColumn(name = "film_id", nullable = false) // Relier à Film
     private Film film;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "participant_id", nullable = false) // Relier à Participant
     private Participant participant;
 
