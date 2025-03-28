@@ -75,7 +75,7 @@ onMounted(fetchMoments);
 }
 
 .titre{
-  margin-left: 20px;
+  margin-left: 40px;
   margin-top: 20px;
 }
 

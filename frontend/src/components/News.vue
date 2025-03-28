@@ -6,7 +6,6 @@
         <div class="video-wrapper">
           <iframe
             :src="getYouTubeEmbedUrl(news.lien)"
-            frameborder="0"
             allowfullscreen
             class="news-video"
           ></iframe>
@@ -63,11 +62,9 @@ const layoutClass = computed(() => ({
 /* Titre */
 .news-title {
   font-size: 22px;
-  font-weight: bold;
   color: white;
-  text-transform: uppercase;
-  letter-spacing: 2px;
   margin-bottom: 20px;
+  margin-left: 20px;
 }
 
 /* Mises en page */
