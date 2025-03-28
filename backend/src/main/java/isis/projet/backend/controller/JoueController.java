@@ -3,6 +3,7 @@ package isis.projet.backend.controller;
 import isis.projet.backend.entity.Joue;
 import isis.projet.backend.entity.Participant;
 import isis.projet.backend.dao.JoueRepository;
+import isis.projet.backend.enums.Groupe;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -122,5 +123,31 @@ public class JoueController {
         public void setPrenom(String prenom) { this.prenom = prenom; }
         public String getPdp() { return pdp; }
         public void setPdp(String pdp) { this.pdp = pdp; }
+    }
+
+    @GetMapping("/api/groupes/participants/all")
+    public List<JoueDetailDTO> getAllJouesByGroupe(@RequestParam("groupe") String groupeStr) {
+        // Conversion en enum Groupe
+        Groupe groupe = Groupe.valueOf(groupeStr);
+
+        // Récupération des données
+        List<Joue> joues = joueRepository.findJouesByGroupe(groupe);
+
+        // Transformation en DTOs
+        return joues.stream().map(joue -> {
+            JoueDetailDTO dto = new JoueDetailDTO();
+            dto.setIdJoue(joue.getIdJoue().intValue());
+            dto.setRole(joue.getRole());
+
+            Participant p = joue.getParticipant();
+            ParticipantDTO pdto = new ParticipantDTO();
+            pdto.setIdParticipant(p.getIdParticipant());
+            pdto.setNom(p.getNom());
+            pdto.setPrenom(p.getPrenom());
+            pdto.setPdp(p.getPdp());
+
+            dto.setParticipant(pdto);
+            return dto;
+        }).collect(Collectors.toList());
     }
 }
