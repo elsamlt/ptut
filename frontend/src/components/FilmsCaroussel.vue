@@ -33,7 +33,7 @@ import 'swiper/css/navigation';
 import { Navigation } from 'swiper/modules';
 
 const films = ref([]);
-const defaultImage = '/images/affiche-default.jpg'; // Image de secours
+const defaultImage = '/images/affiche-default.jpg';
 
 const fetchFilms = async () => {
   try {
