@@ -1,5 +1,5 @@
 <template>
-  <div class="news-container">
+  <div :class="containerLayoutClass">
     <h2 class="news-title">ACTUALITÉS</h2>
     <div :class="layoutClass">
       <div v-for="news in newsList" :key="news.idActu" class="news-item">
@@ -24,6 +24,11 @@ const props = defineProps({
     default: 'horizontal', // Par défaut, affichage horizontal
   },
 });
+
+const containerLayoutClass = computed(() => ({
+  'horizontal': props.layout === 'horizontal',
+  'vertical': props.layout === 'vertical'
+}));
 
 const newsList = ref([]);
 
@@ -54,16 +59,23 @@ const layoutClass = computed(() => ({
 
 <style scoped>
 /* Conteneur général */
-.news-container {
+.vertical{
+  background: var(--color-background-white);
+}
+
+.horizontal{
   padding: 20px;
-  background: black; /* Fond sombre pour effet high-tech */
+  background: var(--color-background);
 }
 
 /* Titre */
 .news-title {
   font-size: 22px;
-  color: white;
   margin-bottom: 20px;
+}
+
+.horizontal .news-title{
+  color: var(--color-text);
   margin-left: 20px;
 }
 
@@ -95,6 +107,10 @@ const layoutClass = computed(() => ({
   overflow: hidden;
   box-shadow: 0px 0px 15px rgba(111, 66, 193, 0.6); /* Ombre violette */
   transition: box-shadow 0.3s ease-in-out;
+}
+
+.news-vertical .news-video{
+  height: 160px;
 }
 
 .news-video {

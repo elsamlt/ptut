@@ -1,6 +1,6 @@
 <template>
   <div :class="['wrapper', { 'horizontal-background': layout === 'horizontal' }]">
-    <h2 class="titre">EN CE MOMENT</h2>
+    <h2 class="titre" :class="titreLayoutClass">EN CE MOMENT</h2>
     <div v-for="(moment, index) in listMoment" :key="moment.id" :class="layoutClass" class="layout">
       <div class="image-container">
         <img :src="`${moment.nomImg}`" alt="Actualité en ce moment" />
@@ -37,6 +37,11 @@ const layoutClass = computed(() => ({
   'vertical-layout': props.layout === 'vertical'
 }));
 
+const titreLayoutClass = computed(() => ({
+  'titre-horizontal': props.layout === 'horizontal',
+  'titre-vertical': props.layout === 'vertical'
+}));
+
 /**
  * Récupérer les moments depuis l'API
  */
@@ -45,7 +50,6 @@ function fetchMoments() {
     .then((response) => response.json())
     .then((dataJSON) => {
       listMoment.splice(0, listMoment.length, ...dataJSON);
-      console.log(listMoment)
     })
     .catch((error) =>
       console.error("Erreur lors de la récupération des moments :", error),
@@ -74,9 +78,16 @@ onMounted(fetchMoments);
   gap: 20px;
 }
 
-.titre{
-  margin-left: 40px;
+.titre {
   margin-top: 20px;
+}
+
+.titre-horizontal {
+  margin-left: 40px;
+}
+
+.titre-vertical {
+  margin-left: 0;
 }
 
 img {
@@ -89,7 +100,6 @@ img {
   flex-direction: column;
   background-color: var(--color-background-white);
   color: var(--color-text-dark);
-  width: 20%;
 }
 
 .vertical-layout img{
