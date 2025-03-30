@@ -84,6 +84,7 @@ onMounted(fetchMoments);
 
 .titre-horizontal {
   margin-left: 40px;
+  padding-top: 20px;
 }
 
 .titre-vertical {
