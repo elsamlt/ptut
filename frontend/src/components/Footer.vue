@@ -51,6 +51,7 @@ import logo from '@/assets/logo.png';
   bottom: 0;
   left: 0;
   padding: 0;
+  z-index: 10;
 }
 
 .a{

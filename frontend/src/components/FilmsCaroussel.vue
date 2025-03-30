@@ -54,7 +54,7 @@ onMounted(fetchFilms);
 
 <style scoped>
 .films-container {
-  padding: 40px;
+  padding: 20px;
   display: flex;
   flex-direction: column;
 }
@@ -63,12 +63,10 @@ onMounted(fetchFilms);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 20px;
 }
 
 .swiper-container {
   position: relative;
-  margin: 40px;
 }
 
 .films-swiper {
