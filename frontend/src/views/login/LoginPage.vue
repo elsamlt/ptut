@@ -18,13 +18,13 @@
               {{ errorMessage }}
             </v-alert>
             <v-form v-model="valid" @submit.prevent="login">
-              <v-text-field
+              <v-text-field class="text-input"
                 v-model="email"
                 label="Email"
                 :rules="[rules.required, rules.email]"
                 required
               ></v-text-field>
-              <v-text-field
+              <v-text-field class="text-input"
                 v-model="password"
                 label="Mot de passe"
                 :rules="[rules.required]"
