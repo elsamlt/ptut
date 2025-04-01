@@ -37,7 +37,6 @@ public class ImageController {
             List<ImageDTO> imageDTOs = images.stream()  // Transformer chaque Image en ImageDTO
                     .map(image -> {
                         ImageDTO dto = new ImageDTO();
-                        //dto.setIdImage(image.getIdImage());
                         dto.setImg(image.getImg());
                         dto.setId_film(image.getFilm().getIdFilm());  // On suppose que Film est déjà associé à l'image
                         return dto;
