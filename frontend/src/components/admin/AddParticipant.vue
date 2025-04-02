@@ -4,18 +4,12 @@
       <v-card class="pa-5">
           <!-- Image -->
         <div class="d-flex flex-column align-center">
-          <v-col class="d-flex flex-column align-center">
-            <!--<img v-if="person.pdp" src="./Capture.png" height="150"/>-->
-            <!--<img v-if="person.pdp" :src="person.pdp" height="150" class="mt-2"/>-->
-            <!--<v-file-input
-              label="Télécharger une image"
-              accept="image/*"
-              prepend-icon="mdi-camera"
-              @change="previewImage"
-            ></v-file-input>-->
+          <v-col cols="12" md="2" class="d-flex flex-column align-center">
+            <img v-if="person.pdp" :src="person.pdp" height="100" class="mt-2"/>
             <v-row>
-              <v-btn icon="mdi-download" variant="text"></v-btn>
-              <v-btn @click="deleteImage" color="red-lighten-2" icon="mdi-delete" variant="text"></v-btn>
+              <v-btn class="mt-2" icon="mdi-download" variant="text" @click="triggerFileInput"></v-btn>
+              <input type="file" ref="fileInput" style="display: none" @change="handleFileUpload" />
+              <v-btn @click="deleteImage" class="mt-2" color="red-lighten-2" icon="mdi-delete" variant="text"></v-btn>
             </v-row>
           </v-col>
 
@@ -23,26 +17,32 @@
           <v-col cols="12" md="10">
             <v-row>
               <v-col cols="6">
-                <v-text-field label="Nom" v-model="person.prenom" required></v-text-field>
+                <v-text-field class="text-input" label="Nom" v-model="person.prenom" required></v-text-field>
               </v-col>
               <v-col cols="6">
-                <v-text-field label="Prénom" v-model="person.nom" required></v-text-field>
+                <v-text-field class="text-input" label="Prénom" v-model="person.nom" required></v-text-field>
               </v-col>
-              <v-col cols="6">
-                <v-text-field label="Role" v-model="person.genre" required></v-text-field>
+              <v-col cols="4">
+                <v-select class="select text-input" v-model="selectedFilm" :items="films" item-title="titre" item-value="idFilm" :item-props="itemProps" label="Film" density="compact"></v-select>
               </v-col>
-              <v-col cols="6">
-                <v-select class="select" v-model="selected" :item-props="itemProps" :items="items" label="Film"></v-select>
+              <v-col cols="4">
+                <v-text-field class="text-input" label="Role" v-model="person.genre" required density="compact"></v-text-field>
+              </v-col>
+              <v-col cols="4">
+                <v-select class="select text-input" v-model="selectedGroupe" :item-title="'label'" :item-value="'value'" :items="groupes" label="Groupe" density="compact"></v-select>
               </v-col>
 
               <v-col>
               <!-- Liste dynamique des rôles -->
               <v-row v-for="(role, index) in roles" :key="index" class="align-center">
-                <v-col cols="6">
-                  <v-text-field label="Role" v-model="role.name" required></v-text-field>
+                <v-col cols="4">
+                  <v-select class="select text-input" v-model="selectedFilm" :items="films" item-title="titre" item-value="idFilm" :item-props="itemProps" label="Film" density="compact"></v-select>
                 </v-col>
-                <v-col cols="5">
-                  <v-select v-model="role.film" :items="items" label="Film"></v-select>
+                <v-col cols="4">
+                  <v-text-field class="text-input" label="Role" v-model="person.genre" required density="compact"></v-text-field>
+                </v-col>
+                <v-col cols="3">
+                  <v-select class="select text-input" v-model="selectedGroupe" :item-title="'label'" :item-value="'value'" :items="groupes" label="Groupe" density="compact"></v-select>
                 </v-col>
                 <v-col>
                   <v-btn icon="mdi-delete" color="red" variant="text" @click="removeRole(index)"></v-btn>
@@ -77,11 +77,24 @@
 <script setup>
 import { ref, defineProps, defineEmits } from "vue";
 
+const props = defineProps({
+  films: Array,
+});
+
 const emit = defineEmits(["eventAdd", "closeForm"]);
 
 const photo = ref(null);
-const roles = ref([]); // Tableau dynamique des rôles
-const items = ref(["Film 1", "Film 2", "Film 3"]); // Films disponibles
+const roles = ref([]);
+const selectedFilm = ref(null);
+const selectedGroupe = ref(null);
+const fileInput = ref(null);
+const groupes = ref([
+  { label: "Acteur", value: "Acteur" },
+  { label: "Équipe de tournage", value: "EquipeDeTournage" },
+  { label: "Post-production", value: "PostProduction" },
+]);
+
+const errorMessage = ref("");
 
 // Ajouter une ligne de rôle
 const addRole = () => {
@@ -98,6 +111,13 @@ const person = ref({
   prenom: "",
   pdp: photo,
 });
+
+// Ouvrir la boîte de dialogue pour sélectionner un fichier
+const triggerFileInput = () => {
+  if (fileInput.value) {
+    fileInput.value.click();
+  }
+};
 
 // Soumettre le participant
 const submitPerson = () => {
@@ -117,21 +137,27 @@ const closeForm = () => {
 };
 
 const deleteImage = () => {
-  photo.value = null;
-  person.value.affiche = null;
+  person.value.pdp = null;
+  errorMessage.value = "";
 };
 
+// Gestion de l'upload d'image
 const handleFileUpload = (event) => {
   const file = event.target.files[0];
-  if (!file) return; // Si l'utilisateur annule la sélection du fichier, on ne fait rien
-  // FileReader est un objet JavaScript permettant de lire le contenu d'un fichier
-  // de manière asynchrone.
+  if (!file) return;
+
+  if (file.name.length > 15) {
+    errorMessage.value = "Le nom du fichier est trop long.";
+    return;
+  }
+
+  errorMessage.value = "";
+
   const reader = new FileReader();
   reader.onload = () => {
-    // definir le traitement asynchrone du contenu du fichier
-    photo.value = reader.result; // --> convertit le contenu du fichier en base64
+    person.value.affiche = reader.result; // Mettre à jour la prop affiche avec l'image en base64
   };
-  reader.readAsDataURL(file); // lance la lecture du fichier et donc la conversion en base64
+  reader.readAsDataURL(file);
 };
 </script>
 

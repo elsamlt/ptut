@@ -10,7 +10,6 @@
       <v-col>
         <span class="text-h6">{{ person.nom }}</span>
         <span class="text-h6">{{ person.prenom }}</span>
-        <p>Role</p>
       </v-col>
       <v-col cols="auto">
         <v-btn class="btn" size="40px" @click="deletePerson">

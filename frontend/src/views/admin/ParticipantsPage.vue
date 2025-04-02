@@ -6,7 +6,7 @@
         <v-select class="select" v-model="selectedFilm" :items="AllOption" item-value="idFilm" item-title="titre" density="compact"></v-select>
       </v-col>
     </v-row>
-    <v-col cols="3">
+    <v-col cols="3" style="display: none">
       <v-text-field
         v-model="searchQuery"
         label="Rechercher un participant..."
@@ -27,7 +27,7 @@
     </v-row>
   </v-container>
   <v-container v-if="showAddPerson">
-    <AddParticipant @add="handlePersonAdded" @closeForm="showAddPerson = false"/>
+    <AddParticipant :films="listFilms" @add="handlePersonAdded" @closeForm="showAddPerson = false"/>
   </v-container>
   <v-container v-if="showEditPerson">
     <EditParticipant :person="selectedPerson" @edit="handlePersonEdit" @cancel="showEditPerson = false" />
@@ -104,7 +104,6 @@ const fetchPersons = (page = 1) => {
     .then(dataJSON => {
       listPersons.value = dataJSON._embedded?.participants || [];
       totalPages.value = dataJSON.page?.totalPages || 1;
-      console.log(listPersons)
     })
     .catch(error => console.error("Erreur lors de la récupération des participants :", error));
 };
