@@ -25,18 +25,22 @@
       </div>
     </section>
 
-    <section class="section project">
-      <img src="@/assets/film.jpeg" alt="The Hospital" class="section-image left" />
-      <div class="text-content">
-        <h2>Le projet "The Hospital"</h2>
-        <h3>La genèse du projet</h3>
-        <p>
-          Le projet est né de Monsieur O’Neil. Il souhaitait améliorer le niveau d’anglais de ses élèves de manière ludique et immersive. Depuis 2021, les élèves ont exploré des approches innovantes pour permettre aux participants de progresser en anglais à travers des mises en situation inspirées du monde réel.
-        </p>
-        <h3>Une approche basée sur des situations concrètes</h3>
-        <p>
-          Dès la 3ᵉ année, les participants apprennent à s’exprimer en anglais à travers des scénarios pratiques. En s’appuyant sur des films et des sketches humoristiques, ils enrichissent leur vocabulaire et leur fluidité tout en s’amusant. Cette méthode encourage un apprentissage naturel et interactif.
-        </p>
+    <div class="section">
+      <section class="project">
+        <img src="@/assets/film.jpeg" alt="The Hospital" class="section-image left" />
+        <div class="text-content">
+          <h2>Le projet "The Hospital"</h2>
+          <h3>La genèse du projet</h3>
+          <p>
+            Le projet est né de Monsieur O’Neil. Il souhaitait améliorer le niveau d’anglais de ses élèves de manière ludique et immersive. Depuis 2021, les élèves ont exploré des approches innovantes pour permettre aux participants de progresser en anglais à travers des mises en situation inspirées du monde réel.
+          </p>
+          <h3>Une approche basée sur des situations concrètes</h3>
+          <p>
+            Dès la 3ᵉ année, les participants apprennent à s’exprimer en anglais à travers des scénarios pratiques. En s’appuyant sur des films et des sketches humoristiques, ils enrichissent leur vocabulaire et leur fluidité tout en s’amusant. Cette méthode encourage un apprentissage naturel et interactif.
+          </p>
+        </div>
+      </section>
+      <section>
         <h3>Les débuts du projet CHL</h3>
         <p>
           Le projet a débuté modestement avec la création d’un premier sketch intitulé "The Hospital" en 2021, développé par une petite équipe de l’ENSAV et d’ISIS. Ce projet pilote a permis de poser les bases et de tester notre concept. Un making-of de cette première édition est disponible pour revivre l’expérience !
@@ -50,27 +54,29 @@
           En 2024, nous avons perfectionné notre approche : les étudiants s’impliquent encore davantage en écrivant eux-mêmes les dialogues et en s’inspirant d’anecdotes véridiques. Cette année encore, les participants continuent de développer leur expression orale, tout en se préparant à la prochaine édition avec des idées de speech déjà en cours pour 2025.
           Notre projet n’est pas seulement un outil pédagogique, c’est aussi une aventure humaine et artistique qui montre que l’apprentissage peut être à la fois efficace et amusant. Nous avons hâte de partager cette expérience avec encore plus d’étudiants dans les années à venir !
         </p>
-      </div>
-    </section>
+      </section>
+    </div>
 
-    <section class="section film">
-      <div class="text-content">
-        <h2>Le Film</h2>
-        <p>
-          La création d’un film suit un processus assez long. Tout commence au second semestre de la 4ᵉ année, où les étudiants conçoivent et écrivent des sketches humoristiques en anglais.
-        </p>
-        <p>
-          Une fois finalisés, ces sketches font l’objet de répétitions encadrées avant d’être présentés aux élèves de l’école ENSAV lors de leur 5ᵉ année. Une journée entière est dédiée au tournage, permettant aux participants de mettre en scène leurs idées.
-        </p>
-        <p>
-          La phase de postproduction, prise en charge par les étudiants de l’ENSAV, inclut le montage, les effets spéciaux, les sous-titres et la finition technique.
-        </p>
-        <p>
-          Enfin, le film est diffusé aux deux écoles à la fin de ce semestre, offrant un clap de fin à leurs études au sein d’ISIS.
-        </p>
-      </div>
-      <img src="@/assets/cinema.jpg" alt="Film" class="section-image right" />
-    </section>
+    <div class="section">
+      <section class="project">
+        <div class="text-content">
+          <h2>Le Film</h2>
+          <p>
+            La création d’un film suit un processus assez long. Tout commence au second semestre de la 4ᵉ année, où les étudiants conçoivent et écrivent des sketches humoristiques en anglais.
+          </p>
+          <p>
+            Une fois finalisés, ces sketches font l’objet de répétitions encadrées avant d’être présentés aux élèves de l’école ENSAV lors de leur 5ᵉ année. Une journée entière est dédiée au tournage, permettant aux participants de mettre en scène leurs idées.
+          </p>
+        </div>
+        <img src="@/assets/cinema.jpg" alt="Film" class="section-image right" />
+      </section>
+      <p>
+        La phase de postproduction, prise en charge par les étudiants de l’ENSAV, inclut le montage, les effets spéciaux, les sous-titres et la finition technique.
+      </p>
+      <p>
+        Enfin, le film est diffusé aux deux écoles à la fin de ce semestre, offrant un clap de fin à leurs études au sein d’ISIS.
+      </p>
+    </div>
   </div>
 </template>
 
@@ -88,13 +94,17 @@
 }
 
 .section {
-  display: flex;
   align-items: center;
   gap: 20px;
   padding: 20px;
   border-radius: 10px;
-  background: #f9f9f9;
+  background: var(--color-background-white);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.project{
+  display: flex;
+  gap: 25px;
 }
 
 .text-content {
@@ -102,8 +112,8 @@
 }
 
 .section-image {
-  width: 300px;
-  height: auto;
+  width: auto;
+  height: 350px;
   max-width: none;
   border-radius: 10px;
 }
@@ -117,17 +127,22 @@
 }
 
 .section-image.right {
-  height: auto;
-  width: 400px;
+  height: 280px;
+  width: auto;
 }
 
 h2 {
-  color: #2c3e50;
+  color: var(--color-text-dark);
   margin-bottom: 15px;
 }
 
 h3 {
-  color: #34495e;
+  color: var(--color-text-dark);
   margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+p{
+  margin-bottom: 20px;
 }
 </style>
