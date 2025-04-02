@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-row>
-      <v-col cols="9">
+      <v-col cols="9" style="margin-bottom: 50px">
         <h1>TOUS LES FILMS</h1>
         <p>Découvrez une sélection de films captivants où humour, originalité et imagination se rencontrent. Chaque histoire vous transporte dans un monde à part, que ce soit au sein d’une école de médecine pas comme les autres, dans un futur proche intriguant ou au cœur d’aventures surprenantes.</p>
         <FilmsCard v-for="(film, index) in listFilms" :key="film.id" :index="index" :film="film"/>

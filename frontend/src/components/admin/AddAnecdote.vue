@@ -10,7 +10,7 @@
             <v-select class="text-input" v-model="selectedFilm" :items="films" item-value="idFilm" item-title="titre" label="Film"></v-select>
           </v-col>
           <v-col cols="12" md="10">
-            <v-select class="text-input" label="Participant" :disabled="!selectedFilm" v-model="selectedPerson" :items="personsArray" ></v-select>
+            <v-select class="text-input" label="Participant" :disabled="!selectedFilm" v-model="selectedPerson" :items="personsArray" item-value="value"></v-select>
           </v-col>
         </v-row>
       </v-container>
@@ -38,31 +38,40 @@ const props = defineProps({
 const selectedFilm = ref(null);
 const selectedPerson = ref(null);
 const listPersons = ref([]);
+const personsArray = ref([]);
 
 const anecdote = ref({
-  id_film:'',
-  id_participant: '',
+  idFilm:'',
+  idParticipant: '',
   description: '',
+});
+
+watch(selectedFilm, (newFilm) => {
+  anecdote.value.idFilm = newFilm;
+});
+
+watch(selectedPerson, (newAnecdote) => {
+  anecdote.value.idParticipant = newAnecdote;
 });
 
 function fetchPersonsByFilm(filmId) {
   fetch(`/api/films/participants?idFilm=${filmId}`)
     .then(response => response.json())
     .then(dataJSON => {
-      //listPersons.value = dataJSON;
-      const personsArray = Object.keys(dataJSON)
+      personsArray.value = Object.keys(dataJSON)
         .filter(key => !isNaN(key)) // Garde uniquement les clés numériques
         .map(key => ({
-          idParticipant: dataJSON[key].participant.idParticipant,
-          nom: `${dataJSON[key].participant.nom} ${dataJSON[key].participant.prenom}`,
+          value: dataJSON[key].participant.idParticipant,  // Correspond à la valeur sélectionnée
+          title: `${dataJSON[key].participant.nom} ${dataJSON[key].participant.prenom}`,  // Texte affiché
         }));
-      console.log(personsArray)
+      console.log(personsArray.value);
     })
     .catch(error => console.error("Erreur lors de la récupération des participants :", error));
 }
 
 // Soumettre l'anecdote
 const submitAnecdote = () => {
+  console.log(anecdote.value)
   emit("add", anecdote.value);
 
   // Remise à zéro après ajout

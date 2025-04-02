@@ -12,6 +12,12 @@
               <v-btn @click="deleteImage" class="mt-2" color="red-lighten-2" icon="mdi-delete" variant="text"></v-btn>
             </v-row>
           </v-col>
+          <!-- Affichage de l'erreur -->
+          <v-col cols="12">
+            <v-alert v-if="errorMessage" type="error" class="mt-2">
+              {{ errorMessage }}
+            </v-alert>
+          </v-col>
           <v-col cols="4">
             <v-select class="text-input"
               v-model="selectedFilm"
@@ -38,6 +44,8 @@
 <script setup>
 import { ref, defineEmits, defineProps, watch } from "vue";
 
+const errorMessage = ref("");
+
 const emit = defineEmits(["add", "closeForm"]);
 const props = defineProps({
   films: Array,
@@ -52,7 +60,7 @@ const image = ref({
 });
 
 watch(selectedFilm, (newFilm) => {
-  image.value.idFilm = newFilm;
+  image.value.id_film = newFilm;
 });
 
 // Soumettre l'image
@@ -87,6 +95,13 @@ const triggerFileInput = () => {
 const handleFileUpload = (event) => {
   const file = event.target.files[0];
   if (!file) return;
+
+  if (file.name.length > 15) {
+    errorMessage.value = "Le nom du fichier est trop long.";
+    return;
+  }
+
+  errorMessage.value = "";
 
   const reader = new FileReader();
   reader.onload = () => {

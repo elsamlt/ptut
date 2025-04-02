@@ -7,7 +7,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class AuthService {
@@ -17,6 +19,8 @@ public class AuthService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    private Set<String> invalidatedTokens = new HashSet<>();
 
     public Admin authenticate(String email, String password) {
         Optional<Admin> optionalAdmin = adminRepository.findByEmail(email);
@@ -38,4 +42,9 @@ public class AuthService {
 
         return null; // Authentification échouée
     }
+
+    public void invalidateToken(String token) {
+        invalidatedTokens.add(token);
+    }
+
 }

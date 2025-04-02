@@ -15,6 +15,12 @@
 
           <!-- Form -->
           <v-col cols="12" md="10">
+            <!-- Affichage de l'erreur -->
+            <v-col cols="12">
+              <v-alert v-if="errorMessage" type="error" class="mt-2">
+                {{ errorMessage }}
+              </v-alert>
+            </v-col>
             <v-row>
               <v-col cols="12" md="6">
                 <v-text-field class="text-input" label="Titre" v-model="film.titre" required></v-text-field>
@@ -60,6 +66,7 @@ import { ref, defineEmits } from "vue";
 
 const emit = defineEmits(["add", "closeForm"]);
 const fileInput = ref(null);
+const errorMessage = ref("");
 
 const film = ref({
   titre: "",
@@ -97,6 +104,7 @@ const closeForm = () => {
 // Supprimer l'image
 const deleteImage = () => {
   film.value.affiche = null;
+  errorMessage.value = "";
 };
 
 // Ouvrir la boîte de dialogue pour sélectionner un fichier
@@ -110,6 +118,13 @@ const triggerFileInput = () => {
 const handleFileUpload = (event) => {
   const file = event.target.files[0];
   if (!file) return;
+
+  if (file.name.length > 15) {
+    errorMessage.value = "Le nom du fichier est trop long.";
+    return;
+  }
+
+  errorMessage.value = "";
 
   const reader = new FileReader();
   reader.onload = () => {

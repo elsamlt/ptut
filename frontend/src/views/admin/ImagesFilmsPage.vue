@@ -85,7 +85,7 @@ function fetchImages() {
   fetch(url)
     .then((response) => response.json())
     .then((dataJSON) => {
-      listImages.splice(0, listImages.length, ...dataJSON._embedded.images);
+      listImages.splice(0, listImages.length, ...dataJSON);
     })
     .catch((error) =>
       console.error("Erreur lors de la récupération des images :", error),
@@ -138,6 +138,7 @@ const handleImageAdded = async (newImage) => {
       const fileUrl = fileUrlMatch ? fileUrlMatch[0] : '';
 
       // Remplacer le base64 par le chemin de l'image
+      console.log(imageData)
       imageData.img = fileUrl;
     } catch (error) {
       console.error("Erreur lors de l'upload de l'image :", error);
@@ -152,7 +153,7 @@ const handleImageAdded = async (newImage) => {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        idFilm: imageData.idFilm,
+        id_film: Number(imageData.id_film),
         img: imageData.img,
       }),
     });
