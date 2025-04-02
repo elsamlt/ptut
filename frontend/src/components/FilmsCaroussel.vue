@@ -31,9 +31,11 @@ import { Swiper, SwiperSlide } from 'swiper/vue';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import { Navigation } from 'swiper/modules';
+import {useRouter} from "vue-router";
 
 const films = ref([]);
 const defaultImage = '/images/affiche-default.jpg';
+const router = useRouter();
 
 const fetchFilms = async () => {
   try {
@@ -46,7 +48,7 @@ const fetchFilms = async () => {
 };
 
 const handleFilmClick = (idFilm) => {
-  console.log("Film sélectionné, ID :", idFilm);
+  router.push(`/films/${idFilm}`);
 };
 
 onMounted(fetchFilms);

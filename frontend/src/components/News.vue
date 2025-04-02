@@ -1,3 +1,4 @@
+
 <template>
   <div :class="containerLayoutClass">
     <h2 class="news-title">ACTUALITÉS</h2>

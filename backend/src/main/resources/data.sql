@@ -2,8 +2,8 @@ INSERT INTO Films (titre, synopsis, genre, annee, duree, affiche, url_film, urlB
 VALUES
     ('Sketch FIE4 Promo 2022', 'Un sketch réalisé par la promo FIE4 2022', 'Comédie', 2021, '15min08', NULL, '', NULL),
     ('The Hospital 1', 'Premier volet de The Hospital', 'Comédie', 2022, '13min54', NULL, '', NULL),
-    ('The Hospital 3', 'Troisième volet de The Hospital', 'Comédie', 2023, '14min28', '/images/thehospital3.jpg', '', NULL),
-    ('The Hospital 4', 'Quatrième volet de The Hospital', 'Comédie', 2024, '15min08', '/images/thehospital4.jpg','', NULL);
+    ('The Hospital 3', 'Troisième volet de The Hospital', 'Comédie', 2023, '14min28', '/images/thehospital3.jpg', 'https://www.youtube.com/watch?v=VnQgzH-UTtw', NULL),
+    ('The Hospital 4', 'Quatrième volet de The Hospital', 'Comédie', 2024, '15min08', '/images/thehospital4.jpg','https://www.youtube.com/watch?v=Pi0mE6bBwxw', NULL);
 
 INSERT INTO Participants (nom, prenom, pdp) VALUES
                                                 ('DUPUY', 'Emma', NULL),
@@ -192,10 +192,10 @@ INSERT INTO joue (FILM_ID, PARTICIPANT_ID, ROLE, GROUPE) VALUES
                                                              (3, 30, 'Color Calibration', 'PostProduction'),
                                                              (3, 48, 'Film Poster and Credits', 'PostProduction'),
                                                              (3, 28, 'Visual Effects Supervisor', 'PostProduction'),
-                                                             (4, 58, 'IT', 'Acteur'),
+                                                             (4, 58, 'IT', 'EquipeDeTournage'),
                                                              (4, 59, 'Director', 'EquipeDeTournage'),
-                                                             (4, 60, 'IT Geek', 'Acteur'),
-                                                             (4, 61, 'Carer', 'Acteur'),
+                                                             (4, 60, 'IT Geek', 'EquipeDeTournage'),
+                                                             (4, 61, 'Carer', 'EquipeDeTournage'),
                                                              (4, 62, 'Mrs Jude', 'Acteur'),
                                                              (4, 63, 'Ambulance Driver', 'Acteur'),
                                                              (4, 64, 'Mrs Brand', 'Acteur'),

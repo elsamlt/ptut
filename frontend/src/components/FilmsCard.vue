@@ -20,15 +20,17 @@
 
 <script setup>
 import {defineProps} from "vue";
+import { useRouter } from "vue-router";
 
 const props = defineProps({
   film: Object,
 });
 
 const defaultImage = '/images/affiche-default.jpg';
+const router = useRouter();
 
 const handleFilmClick = (idFilm) => {
-  console.log("Film sélectionné, ID :", idFilm);
+  router.push(`/films/${idFilm}`);
 };
 
 </script>
