@@ -2,7 +2,7 @@
   <v-container>
     <v-form>
       <v-card class="pa-5">
-          <!-- Image -->
+        <!-- Image -->
         <div class="d-flex flex-column align-center">
           <v-col cols="12" md="2" class="d-flex flex-column align-center">
             <img v-if="person.pdp" :src="person.pdp" height="100" class="mt-2"/>
@@ -11,6 +11,12 @@
               <input type="file" ref="fileInput" style="display: none" @change="handleFileUpload" />
               <v-btn @click="deleteImage" class="mt-2" color="red-lighten-2" icon="mdi-delete" variant="text"></v-btn>
             </v-row>
+          </v-col>
+          <!-- Affichage de l'erreur -->
+          <v-col cols="10">
+            <v-alert v-if="errorMessage" type="error" class="mt-2">
+              {{ errorMessage }}
+            </v-alert>
           </v-col>
 
           <!-- Form -->
@@ -22,41 +28,55 @@
               <v-col cols="6">
                 <v-text-field class="text-input" label="Prénom" v-model="person.nom" required></v-text-field>
               </v-col>
-              <v-col cols="4">
-                <v-select class="select text-input" v-model="selectedFilm" :items="films" item-title="titre" item-value="idFilm" :item-props="itemProps" label="Film" density="compact"></v-select>
-              </v-col>
-              <v-col cols="4">
-                <v-text-field class="text-input" label="Role" v-model="person.genre" required density="compact"></v-text-field>
-              </v-col>
-              <v-col cols="4">
-                <v-select class="select text-input" v-model="selectedGroupe" :item-title="'label'" :item-value="'value'" :items="groupes" label="Groupe" density="compact"></v-select>
-              </v-col>
 
               <v-col>
-              <!-- Liste dynamique des rôles -->
-              <v-row v-for="(role, index) in roles" :key="index" class="align-center">
-                <v-col cols="4">
-                  <v-select class="select text-input" v-model="selectedFilm" :items="films" item-title="titre" item-value="idFilm" :item-props="itemProps" label="Film" density="compact"></v-select>
-                </v-col>
-                <v-col cols="4">
-                  <v-text-field class="text-input" label="Role" v-model="person.genre" required density="compact"></v-text-field>
-                </v-col>
-                <v-col cols="3">
-                  <v-select class="select text-input" v-model="selectedGroupe" :item-title="'label'" :item-value="'value'" :items="groupes" label="Groupe" density="compact"></v-select>
-                </v-col>
-                <v-col>
-                  <v-btn icon="mdi-delete" color="red" variant="text" @click="removeRole(index)"></v-btn>
-                </v-col>
-              </v-row>
+                <!-- Liste dynamique des rôles -->
+                <v-row v-for="(role, index) in roles" :key="index" class="align-center">
+                  <v-col cols="4">
+                    <v-select
+                      class="select text-input"
+                      v-model="role.id_film"
+                      :items="films"
+                      item-title="titre"
+                      item-value="idFilm"
+                      label="Film"
+                      density="compact"
+                    ></v-select>
+                  </v-col>
+                  <v-col cols="4">
+                    <v-text-field
+                      class="text-input"
+                      label="Role"
+                      v-model="role.role"
+                      required
+                      density="compact"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="3">
+                    <v-select
+                      class="select text-input"
+                      v-model="role.groupe"
+                      :item-title="'label'"
+                      :item-value="'value'"
+                      :items="groupes"
+                      label="Groupe"
+                      density="compact"
+                    ></v-select>
+                  </v-col>
+                  <v-col>
+                    <v-btn icon="mdi-delete" color="red" variant="text" @click="removeRole(index)"></v-btn>
+                  </v-col>
+                </v-row>
 
-              <!-- Bouton Ajouter un rôle -->
-              <v-row class="mt-2">
-                <v-col cols="12" class="d-flex justify-center">
-                  <v-btn class="btn" @click="addRole">
-                    <v-icon left>mdi-plus</v-icon> Ajouter un rôle
-                  </v-btn>
-                </v-col>
-              </v-row>
+
+                <!-- Bouton Ajouter un rôle -->
+                <v-row class="mt-2">
+                  <v-col cols="12" class="d-flex justify-center">
+                    <v-btn class="btn" @click="addRole">
+                      <v-icon left>mdi-plus</v-icon> Ajouter un rôle
+                    </v-btn>
+                  </v-col>
+                </v-row>
               </v-col>
             </v-row>
           </v-col>
@@ -98,7 +118,11 @@ const errorMessage = ref("");
 
 // Ajouter une ligne de rôle
 const addRole = () => {
-  roles.value.push({ name: "", person: null });
+  roles.value.push({
+    id_film: null,
+    role: "",
+    groupe: null,
+  });
 };
 
 // Supprimer une ligne de rôle
@@ -128,6 +152,7 @@ const submitPerson = () => {
     nom: "",
     prenom: "",
     pdp: null,
+    roles: roles.value,
   };
 };
 
@@ -155,7 +180,7 @@ const handleFileUpload = (event) => {
 
   const reader = new FileReader();
   reader.onload = () => {
-    person.value.affiche = reader.result; // Mettre à jour la prop affiche avec l'image en base64
+    person.value.pdp = reader.result; // Mettre à jour la prop affiche avec l'image en base64
   };
   reader.readAsDataURL(file);
 };

@@ -176,27 +176,89 @@ async function getParticipantId(url) {
 /**
  * Ajouter un nouveau participant via API
  */
-const handlePersonAdded = (newPerson) => {
+const handlePersonAdded = async (newPerson) => {
+  let personData = { ...newPerson };
+
+  // Vérifier si l'image est en base64
+  if (newPerson.pdp && newPerson.pdp.startsWith("data:")) {
+    try {
+      // Convertir le base64 en blob
+      const response = await fetch(newPerson.pdp);
+      const blob = await response.blob();
+      const file = new File([blob], "profile.jpg", { type: "image/jpeg" });
+
+      // Créer un FormData pour l'upload
+      const formData = new FormData();
+      formData.append("file", file);
+
+      // Envoyer l'image au serveur
+      const uploadResponse = await fetch("/api/files/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!uploadResponse.ok) {
+        throw new Error("Erreur lors de l'upload de l'image");
+      }
+
+      // Récupérer l'URL de l'image après l'upload
+      const uploadData = await uploadResponse.text();
+      const fileUrlMatch = uploadData.match(/\/img\/[^"'}]+/);
+      const fileUrl = fileUrlMatch ? fileUrlMatch[0] : "";
+
+      // Remplacer le base64 par l'URL de l'image
+      personData.pdp = fileUrl;
+    } catch (error) {
+      console.error("Erreur lors de l'upload de l'image :", error);
+      return;
+    }
+  }
+
+  // Ajouter le participant à un film via l'API
+  try {
+    const response = await fetch(`/api/joues`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        role: personData.role,
+        groupe: personData.groupe,
+        id_film: personData.id_film,
+        id_participant: personData.id_participant,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Erreur lors de l'ajout du participant");
+    }
+  } catch (error) {
+    console.error("Erreur lors de l'ajout du participant :", error);
+  }
+
   // Ajouter le participant via l'API
-  fetch(url, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      nom: newPerson.nom,
-      prenom: newPerson.prenom,
-      pdp: newPerson.pdp,
-    }),
-  })
-    .then((response) => response.json())
-    .then(() => {
-      fetchPersons(); // Rafraîchir la liste après l'ajout
-      // Afficher la popup de confirmation
-      dialogAdd.value = true;
-      showAddPerson.value = false;
-    })
-    .catch((error) =>
-      console.error("Erreur lors de l'ajout du participant :", error),
-    );
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        nom: personData.nom,
+        prenom: personData.prenom,
+        pdp: personData.pdp, // Maintenant l'URL de l'image
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Erreur lors de l'ajout du participant");
+    }
+
+    // Rafraîchir la liste des participants après l'ajout
+    await fetchPersons();
+
+    // Afficher la popup de confirmation
+    dialogAdd.value = true;
+    showAddPerson.value = false;
+  } catch (error) {
+    console.error("Erreur lors de l'ajout du participant :", error);
+  }
 };
 
 /**
