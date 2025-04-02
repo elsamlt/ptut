@@ -69,6 +69,7 @@ onMounted(fetchMoments);
 .horizontal-background{
   background-color: var(--color-background);
   color: var(--color-text);
+  padding-bottom: 50px;
 }
 
 .layout{

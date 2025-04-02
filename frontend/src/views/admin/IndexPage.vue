@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container" style="margin-bottom: 30px">
     <!-- Barre de navigation latérale -->
       <v-list class="navigation-drawer" dense>
         <v-list-item
