@@ -43,7 +43,7 @@ const fetchCommentaires = (page = 1, size = 4) => {
   fetch(`${url}?page=${page - 1}&size=${size}`)  // L'API commence les pages à 0
     .then(response => response.json())
     .then(dataJSON => {
-      listCommentaires.value = dataJSON._embedded?.commentaires || [];
+      listCommentaires.value = dataJSON || [];
     })
     .catch(error => console.error("Erreur lors de la récupération des commentaires :", error));
 };
