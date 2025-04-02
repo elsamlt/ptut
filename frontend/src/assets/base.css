@@ -56,22 +56,6 @@
   --font-text-title-weight: var(--be-vietnam-medium-weight);
 }
 
-/* Pour s'adapter au mode sombre de l'utilisateur
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-background: var(--vt-c-black);
-    --color-background-soft: var(--vt-c-black-soft);
-    --color-background-mute: var(--vt-c-black-mute);
-
-    --color-border: var(--vt-c-divider-dark-2);
-    --color-border-hover: var(--vt-c-divider-dark-1);
-
-    --color-heading: var(--vt-c-text-dark-1);
-    --color-text: var(--vt-c-text-dark-2);
-  }
-}
-*/
-
 *,
 *::before,
 *::after {
@@ -80,20 +64,6 @@
   font-weight: normal;
 }
 
-/*body {
-  min-height: 100vh;
-  color: var(--color-text);
-  background: var(--color-background);
-  transition:
-    color 0.5s,
-    background-color 0.5s;
-  line-height: 1.6;
-  font-family: "Bebas Neue", serif;
-  font-weight: var(--font-heading-weight);
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}*/
 body {
   color: var(--color-text);
   background: var(--color-background);

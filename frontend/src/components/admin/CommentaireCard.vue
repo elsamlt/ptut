@@ -38,7 +38,11 @@ const deleteCommentaire = () => {
  */
 // Fonction pour récupérer le film associé au commentaire
 const fetchFilm = () => {
-  fetch(`${props.com._links.film.href}`)
+  const urlToFetch = props.com?._links?.film?.href
+    ? props.com._links.film.href
+    : `/api/films/${props.com.id_film}`;
+
+  fetch(urlToFetch)
     .then((response) => response.json())
     .then((dataJSON) => {
       film.value = dataJSON; // On stocke le film dans `film`
