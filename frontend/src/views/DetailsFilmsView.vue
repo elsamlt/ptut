@@ -191,7 +191,7 @@ import 'swiper/css/navigation'
 import { Navigation } from 'swiper/modules'
 
 const API_FILM_URL = '/api/films'
-const API_GROUPES_URL = '/api/groupes/participants/all'
+const API_GROUPES_URL = '/api/joues/groupes/participants/all'
 const defaultAvatar = '/images/avatar.jpg';
 const defaultImage = '/images/affiche-default.jpg';
 

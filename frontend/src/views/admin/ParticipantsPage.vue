@@ -112,11 +112,11 @@ function fetchPersonsByFilm(filmId, page = 1) {
   if (filmId === null) {
     fetchPersons(page);
   } else {
-    fetch(`/api/films/participants?idFilm=${filmId}&page=${page - 1}&size=${itemsPerPage}`)
+    fetch(`/api/joues/films/participants?idFilm=${filmId}&page=${page - 1}&size=${itemsPerPage}`)
       .then(response => response.json())
       .then(dataJSON => {
         // Convertir l'objet en tableau en ignorant la clé "page"
-        const participantsArray = Object.entries(dataJSON)
+        const participantsArray = Object.entries(dataJSON.joues)
           .filter(([key]) => key !== "page")
           .map(([_, value]) => value);
 
@@ -214,29 +214,9 @@ const handlePersonAdded = async (newPerson) => {
     }
   }
 
-  // Ajouter le participant à un film via l'API
+  // 1. Ajouter le participant via l'API
   try {
-    const response = await fetch(`/api/joues`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        role: personData.role,
-        groupe: personData.groupe,
-        id_film: personData.id_film,
-        id_participant: personData.id_participant,
-      }),
-    });
-
-    if (!response.ok) {
-      throw new Error("Erreur lors de l'ajout du participant");
-    }
-  } catch (error) {
-    console.error("Erreur lors de l'ajout du participant :", error);
-  }
-
-  // Ajouter le participant via l'API
-  try {
-    const response = await fetch(url, {
+    const responseParticipant = await fetch("/api/participants", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -246,8 +226,27 @@ const handlePersonAdded = async (newPerson) => {
       }),
     });
 
-    if (!response.ok) {
+    if (!responseParticipant.ok) {
       throw new Error("Erreur lors de l'ajout du participant");
+    }
+
+    const participant = await responseParticipant.json(); // Récupère les détails du participant nouvellement créé
+    console.log(participant)
+console.log(personData.roles)
+    // 2. Ajouter le participant au film via l'API /api/joues
+    const responseJoue = await fetch("/api/joues", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        role: personData.roles[0].role,  // Assigner le rôle du participant
+        groupe: personData.roles[0].groupe,  // Assigner le groupe du participant
+        film_id: 1,  // Assigner le film par son ID
+        participant_id: participant.idParticipant, // L'ID du participant créé
+      }),
+    });
+
+    if (!responseJoue.ok) {
+      throw new Error("Erreur lors de l'ajout du participant au film");
     }
 
     // Rafraîchir la liste des participants après l'ajout
@@ -257,9 +256,21 @@ const handlePersonAdded = async (newPerson) => {
     dialogAdd.value = true;
     showAddPerson.value = false;
   } catch (error) {
-    console.error("Erreur lors de l'ajout du participant :", error);
+    console.error("Erreur lors de l'ajout du participant ou de la relation avec le film :", error);
   }
 };
+
+// Fonction pour générer un nouvel ID en incrémentant le dernier ID
+const generateId = async () => {
+  const participants = await fetchPersons();
+
+  // Trouver le dernier ID (en supposant que l'ID est un nombre)
+  const lastId = Math.max(...participants.map(p => p.id_participant));
+
+  // Incrémenter de 1 pour générer le nouvel ID
+  return lastId + 1;
+};
+
 
 /**
  * Supprimer un participant via API

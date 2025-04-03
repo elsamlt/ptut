@@ -134,6 +134,7 @@ const person = ref({
   nom: "",
   prenom: "",
   pdp: photo,
+  roles: roles.value,
 });
 
 // Ouvrir la boîte de dialogue pour sélectionner un fichier
