@@ -214,7 +214,7 @@ const handlePersonAdded = async (newPerson) => {
     }
   }
 
-  // 1. Ajouter le participant via l'API
+  // Ajouter le participant via l'API
   try {
     const responseParticipant = await fetch("/api/participants", {
       method: "POST",
@@ -231,23 +231,22 @@ const handlePersonAdded = async (newPerson) => {
     }
 
     const participant = await responseParticipant.json(); // Récupère les détails du participant nouvellement créé
-    console.log(participant)
-console.log(personData.roles)
-    // 2. Ajouter le participant au film via l'API /api/joues
-    const responseJoue = await fetch("/api/joues", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        role: personData.roles[0].role,  // Assigner le rôle du participant
-        groupe: personData.roles[0].groupe,  // Assigner le groupe du participant
-        film_id: 1,  // Assigner le film par son ID
-        participant_id: participant.idParticipant, // L'ID du participant créé
-      }),
-    });
 
-    if (!responseJoue.ok) {
-      throw new Error("Erreur lors de l'ajout du participant au film");
-    }
+    // Ajouter le participant au film avec un rôle et un groupe via l'API /api/joues
+    await Promise.all(
+      personData.roles.map((roleData) =>
+        fetch("/api/joues", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            role: roleData.role,
+            groupe: roleData.groupe,
+            film_id: roleData.id_film,
+            participant_id: participant.idParticipant,
+          }),
+        })
+      )
+    );
 
     // Rafraîchir la liste des participants après l'ajout
     await fetchPersons();
