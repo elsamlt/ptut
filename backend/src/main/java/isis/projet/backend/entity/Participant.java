@@ -19,7 +19,7 @@ public class Participant {
     private String prenom;
     private String pdp;
 
-    @OneToMany(mappedBy = "participant")
+    @OneToMany(mappedBy = "participant", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Joue> filmsJoues;
 
     // Getters et setters

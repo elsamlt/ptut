@@ -16,7 +16,7 @@
     </v-col>
   </v-row>
   <v-container v-if="!showEditPerson && !showAddPerson">
-    <ParticipantsCard v-for="(person, index) in listPersons" :key="person.id" :person="person" :index="index" @edit="openEditForm(person)" @delete="handlerDelete(person)"/>
+    <ParticipantsCard v-for="(person, index) in listPersons" :key="person.idParticipant" :person="person" :index="index" @edit="openEditForm(person)" @delete="handlerDelete(person)"/>
     <!-- Pagination controls -->
     <v-row justify="center" class="mt-4">
       <v-pagination
@@ -275,7 +275,7 @@ const generateId = async () => {
  * Supprimer un participant via API
  */
 function handlerDelete(person) {
-  fetch(`${url}/${person.id}`, { method: "DELETE" })
+  fetch(`${url}/${person.idParticipant}`, { method: "DELETE" })
     .then((response) => {
       if (response.ok) fetchPersons();
       dialogDelete.value = true;
