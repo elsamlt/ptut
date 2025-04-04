@@ -103,10 +103,7 @@ const props = defineProps({
 
 const emit = defineEmits(["eventAdd", "closeForm"]);
 
-const photo = ref(null);
 const roles = ref([]);
-const selectedFilm = ref(null);
-const selectedGroupe = ref(null);
 const fileInput = ref(null);
 const groupes = ref([
   { label: "Acteur", value: "Acteur" },
@@ -133,7 +130,7 @@ const removeRole = (index) => {
 const person = ref({
   nom: "",
   prenom: "",
-  pdp: photo,
+  pdp: null,
   roles: roles.value,
 });
 
