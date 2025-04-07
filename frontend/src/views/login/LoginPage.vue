@@ -18,13 +18,13 @@
               {{ errorMessage }}
             </v-alert>
             <v-form v-model="valid" @submit.prevent="login">
-              <v-text-field
+              <v-text-field class="text-input"
                 v-model="email"
                 label="Email"
                 :rules="[rules.required, rules.email]"
                 required
               ></v-text-field>
-              <v-text-field
+              <v-text-field class="text-input"
                 v-model="password"
                 label="Mot de passe"
                 :rules="[rules.required]"
@@ -34,10 +34,9 @@
               <v-btn
                 :disabled="!valid"
                 :loading="loading"
-                color="primary"
                 type="submit"
                 block
-                class="mt-4"
+                class="mt-4 btn"
               >
                 Se connecter
               </v-btn>
@@ -84,8 +83,13 @@ const login = async () => {
     });
 
     if (!response.ok) {
-      const errorData = await response.json(); // Essaye de récupérer un message d'erreur
-      throw new Error(errorData.message || "Identifiants incorrects ou problème serveur");
+      const errorText = await response.text(); // Récupère la réponse en texte brut
+      try {
+        const errorData = JSON.parse(errorText); // Essaie de parser en JSON
+        throw new Error(errorData.message || "Identifiants incorrects");
+      } catch {
+        throw new Error(errorText || "Identifiants incorrects");
+      }
     }
 
     const data = await response.json();
@@ -116,3 +120,12 @@ const login = async () => {
 };
 
 </script>
+
+<style scoped>
+.btn {
+  background-color: var(--color-button);
+  color: var(--color-text);
+  box-shadow: inset 0 0 5px rgba(255, 255, 255, 0.6);
+  margin-right: 10px;
+}
+</style>

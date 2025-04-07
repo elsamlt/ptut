@@ -13,7 +13,7 @@
     <FilmsCaroussel />
 
     <!-- Section En Ce Moment -->
-    <Moment layout="horizontal" />
+    <Moment layout="horizontal"/>
   </div>
 </template>
 

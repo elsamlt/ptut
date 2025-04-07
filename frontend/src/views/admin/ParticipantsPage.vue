@@ -6,7 +6,7 @@
         <v-select class="select" v-model="selectedFilm" :items="AllOption" item-value="idFilm" item-title="titre" density="compact"></v-select>
       </v-col>
     </v-row>
-    <v-col cols="3">
+    <v-col cols="3" style="display: none">
       <v-text-field
         v-model="searchQuery"
         label="Rechercher un participant..."
@@ -16,7 +16,7 @@
     </v-col>
   </v-row>
   <v-container v-if="!showEditPerson && !showAddPerson">
-    <ParticipantsCard v-for="(person, index) in listPersons" :key="person.id" :person="person" :index="index" @edit="openEditForm(person)" @delete="handlerDelete(person)"/>
+    <ParticipantsCard v-for="(person, index) in listPersons" :key="person.idParticipant" :person="person" :index="index" @edit="openEditForm(person)" @delete="handlerDelete(person)"/>
     <!-- Pagination controls -->
     <v-row justify="center" class="mt-4">
       <v-pagination
@@ -27,7 +27,7 @@
     </v-row>
   </v-container>
   <v-container v-if="showAddPerson">
-    <AddParticipant @add="handlePersonAdded" @closeForm="showAddPerson = false"/>
+    <AddParticipant :films="listFilms" @add="handlePersonAdded" @closeForm="showAddPerson = false"/>
   </v-container>
   <v-container v-if="showEditPerson">
     <EditParticipant :person="selectedPerson" @edit="handlePersonEdit" @cancel="showEditPerson = false" />
@@ -104,7 +104,6 @@ const fetchPersons = (page = 1) => {
     .then(dataJSON => {
       listPersons.value = dataJSON._embedded?.participants || [];
       totalPages.value = dataJSON.page?.totalPages || 1;
-      console.log(listPersons)
     })
     .catch(error => console.error("Erreur lors de la récupération des participants :", error));
 };
@@ -113,11 +112,11 @@ function fetchPersonsByFilm(filmId, page = 1) {
   if (filmId === null) {
     fetchPersons(page);
   } else {
-    fetch(`/api/films/participants?idFilm=${filmId}&page=${page - 1}&size=${itemsPerPage}`)
+    fetch(`/api/joues/films/participants?idFilm=${filmId}&page=${page - 1}&size=${itemsPerPage}`)
       .then(response => response.json())
       .then(dataJSON => {
         // Convertir l'objet en tableau en ignorant la clé "page"
-        const participantsArray = Object.entries(dataJSON)
+        const participantsArray = Object.entries(dataJSON.joues)
           .filter(([key]) => key !== "page")
           .map(([_, value]) => value);
 
@@ -177,34 +176,94 @@ async function getParticipantId(url) {
 /**
  * Ajouter un nouveau participant via API
  */
-const handlePersonAdded = (newPerson) => {
+const handlePersonAdded = async (newPerson) => {
+  let personData = { ...newPerson };
+
+  // Vérifier si l'image est en base64
+  if (newPerson.pdp && newPerson.pdp.startsWith("data:")) {
+    try {
+      // Convertir le base64 en blob
+      const response = await fetch(newPerson.pdp);
+      const blob = await response.blob();
+      const file = new File([blob], "profile.jpg", { type: "image/jpeg" });
+
+      // Créer un FormData pour l'upload
+      const formData = new FormData();
+      formData.append("file", file);
+
+      // Envoyer l'image au serveur
+      const uploadResponse = await fetch("/api/files/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!uploadResponse.ok) {
+        throw new Error("Erreur lors de l'upload de l'image");
+      }
+
+      // Récupérer l'URL de l'image après l'upload
+      const uploadData = await uploadResponse.text();
+      const fileUrlMatch = uploadData.match(/\/img\/[^"'}]+/);
+      const fileUrl = fileUrlMatch ? fileUrlMatch[0] : "";
+
+      // Remplacer le base64 par l'URL de l'image
+      personData.pdp = fileUrl;
+    } catch (error) {
+      console.error("Erreur lors de l'upload de l'image :", error);
+      return;
+    }
+  }
+
   // Ajouter le participant via l'API
-  fetch(url, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      nom: newPerson.nom,
-      prenom: newPerson.prenom,
-      pdp: newPerson.pdp,
-    }),
-  })
-    .then((response) => response.json())
-    .then(() => {
-      fetchPersons(); // Rafraîchir la liste après l'ajout
-      // Afficher la popup de confirmation
-      dialogAdd.value = true;
-      showAddPerson.value = false;
-    })
-    .catch((error) =>
-      console.error("Erreur lors de l'ajout du participant :", error),
+  try {
+    const responseParticipant = await fetch("/api/participants", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        nom: personData.nom,
+        prenom: personData.prenom,
+        pdp: personData.pdp, // Maintenant l'URL de l'image
+      }),
+    });
+
+    if (!responseParticipant.ok) {
+      throw new Error("Erreur lors de l'ajout du participant");
+    }
+
+    const participant = await responseParticipant.json(); // Récupère les détails du participant nouvellement créé
+
+    // Ajouter le participant au film avec un rôle et un groupe via l'API /api/joues
+    await Promise.all(
+      personData.roles.map((roleData) =>
+        fetch("/api/joues", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            role: roleData.role,
+            groupe: roleData.groupe,
+            film_id: roleData.id_film,
+            participant_id: participant.idParticipant,
+          }),
+        })
+      )
     );
+
+    // Rafraîchir la liste des participants après l'ajout
+    await fetchPersons();
+
+    // Afficher la popup de confirmation
+    dialogAdd.value = true;
+    showAddPerson.value = false;
+  } catch (error) {
+    console.error("Erreur lors de l'ajout du participant ou de la relation avec le film :", error);
+  }
 };
 
 /**
  * Supprimer un participant via API
  */
 function handlerDelete(person) {
-  fetch(`${url}/${person.id}`, { method: "DELETE" })
+  fetch(`${url}/${person.idParticipant}`, { method: "DELETE" })
     .then((response) => {
       if (response.ok) fetchPersons();
       dialogDelete.value = true;
@@ -216,37 +275,87 @@ function handlerDelete(person) {
 /**
  * Modifier un participant comme faite via API
  */
-const handlePersonEdit = (updatedPerson) => {
-  fetch(`${url}`, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      nom: updatedPerson.nom,
-      prenom: updatedPerson.prenom,
-      pdp: updatedPerson.pdp,
-    }),
-  })
-    .then((response) => response.json())
-    .then(() => {
-      fetchPersonDetail(updatedPerson);
-      dialogEdit.value = true; // Afficher le message de confirmation
-      showEditPerson.value = false;
-    })
-    .catch((error) => console.error("Erreur lors de la mise à jour :", error));
-};
+const handlePersonEdit = async (updatedPerson) => {
+  let personData = { ...updatedPerson };
 
-// Observer le changement de film sélectionné
-watch(selectedFilm, (newFilmId) => {
-  fetchPersonsByFilm(newFilmId);
-});
+  // 1. Si image en base64 → upload
+  if (personData.pdp && personData.pdp.startsWith("data:")) {
+    try {
+      const response = await fetch(personData.pdp);
+      const blob = await response.blob();
+      const file = new File([blob], "profile.jpg", { type: "image/jpeg" });
 
-watch(currentPage, (newPage) => {
-  if (selectedFilm.value === null) {
-    fetchPersons(newPage);
-  } else {
-    fetchPersonsByFilm(selectedFilm.value, newPage);
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const uploadResponse = await fetch("/api/files/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!uploadResponse.ok) throw new Error("Erreur upload image");
+
+      const uploadData = await uploadResponse.text();
+      const fileUrlMatch = uploadData.match(/\/img\/[^"'}]+/);
+      const fileUrl = fileUrlMatch ? fileUrlMatch[0] : "";
+      personData.pdp = fileUrl;
+    } catch (error) {
+      console.error("Erreur upload image :", error);
+      return;
+    }
   }
-});
+
+  // 2. Mise à jour des infos du participant
+  try {
+    const updateResponse = await fetch(`/api/participants/${personData.idParticipant}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        nom: personData.nom,
+        prenom: personData.prenom,
+        pdp: personData.pdp,
+      }),
+    });
+
+    if (!updateResponse.ok) throw new Error("Erreur update participant");
+
+    // 3. Supprimer les anciens rôles (si nécessaire)
+    const rolesResponse = await fetch(`/api/participants/${personData.idParticipant}/filmsJoues`);
+    const rolesData = await rolesResponse.json();
+    const oldRoles = rolesData._embedded?.joues || [];
+console.log(personData.roles)
+    await Promise.all(
+      oldRoles.map((r) =>
+        fetch(`/api/joues?filmId=${personData.roles.id_film}&participantId=${personData.idParticipant}`, {
+          method: "DELETE",
+        })
+      )
+    );
+
+    // 4. Recréer les rôles
+    await Promise.all(
+      personData.roles.map((roleData) =>
+        fetch("/api/joues", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            role: roleData.role,
+            groupe: roleData.groupe,
+            film_id: roleData.id_film,
+            participant_id: personData.idParticipant,
+          }),
+        })
+      )
+    );
+
+    // 5. Rafraîchir et confirmation
+    await fetchPersons();
+    dialogEdit.value = true;
+    showEditPerson.value = false;
+  } catch (error) {
+    console.error("Erreur dans handlePersonEdit :", error);
+  }
+};
 
 // Charger les participants au montage
 // Charger les films au montage

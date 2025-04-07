@@ -10,7 +10,6 @@
       <v-col>
         <span class="text-h6">{{ person.nom }}</span>
         <span class="text-h6">{{ person.prenom }}</span>
-        <p>Role</p>
       </v-col>
       <v-col cols="auto">
         <v-btn class="btn" size="40px" @click="deletePerson">
@@ -31,19 +30,16 @@ import { defineProps, defineEmits } from "vue";
 // Emitteur d'événements
 const emit = defineEmits(["delete", "edit"]);
 
-const items = ["Tous les films", "User 2", "User 3"]; // Liste des options
-const selected = ref(items[0]); // Définit "User 1" comme valeur par défaut
-
 const props = defineProps({
   person: Object,
 });
 
 const deletePerson = () => {
-  emit("delete", props.film.id);
+  emit("delete", props.person);
 };
 
 const editPerson = () => {
-  emit("edit", props.film); // Envoie le médicament au parent
+  emit("edit", props.person); // Envoie le médicament au parent
 };
 </script>
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container" style="margin-bottom: 30px">
     <!-- Barre de navigation latérale -->
       <v-list class="navigation-drawer" dense>
         <v-list-item
@@ -12,6 +12,17 @@
             <v-icon>{{ item.icon }}</v-icon>
           </template>
           <v-list-item-title>{{ item.label }}</v-list-item-title>
+        </v-list-item>
+
+        <!-- Espaceur pour pousser le bouton en bas -->
+        <v-spacer></v-spacer>
+
+        <!-- Bouton de déconnexion -->
+        <v-list-item @click="logout" class="logout-item">
+          <template v-slot:prepend>
+            <v-icon color="red">mdi-logout</v-icon>
+          </template>
+          <v-list-item-title class="logout-text">Se Déconnecter</v-list-item-title>
         </v-list-item>
       </v-list>
 
@@ -75,6 +86,46 @@ const currentTitle = computed(() => {
   const item = items.value.find(item => item.link.includes(currentRoute));
   return item ? item.label : "";
 });
+
+function logout() {
+  // Récupérer le token JWT depuis le localStorage ou sessionStorage
+  const token = localStorage.getItem('jwtToken'); // ou sessionStorage.getItem('jwtToken')
+
+  // Définir les headers avec le token d'authentification
+  const headers = {
+    'Authorization': `Bearer ${token}`,
+    'Content-Type': 'application/json'
+  };
+
+  // Appeler l'API de déconnexion
+  return fetch('/api/logout', {
+    method: 'POST',
+    headers: headers
+  })
+    .then(response => {
+      if (response.ok) {
+        // Si la déconnexion réussit, supprimer le token du stockage
+        localStorage.removeItem('token'); // ou sessionStorage.removeItem('jwtToken')
+
+        // Supprimer également toutes les autres données utilisateur si nécessaire
+        localStorage.removeItem('user');
+        // ... autres données à supprimer
+
+        // Rediriger vers la page de connexion ou la page d'accueil
+        window.location.href = '/'; // ou une autre page
+
+        return true;
+      } else {
+        // Gérer les erreurs
+        console.error('Erreur lors de la déconnexion');
+        return false;
+      }
+    })
+    .catch(error => {
+      console.error('Erreur réseau:', error);
+      return false;
+    });
+}
 </script>
 
 <style scoped>
@@ -109,5 +160,17 @@ const currentTitle = computed(() => {
   border: none; /* Supprime la bordure par défaut */
   height: auto; /* Fait toute la hauteur de l'écran */
   min-height: 100vh;
+}
+
+  /* Style pour le bouton de déconnexion */
+.logout-item {
+  position: absolute;
+  bottom: 20px;
+  width: 100%;
+  transition: background-color 0.3s;
+}
+
+.logout-item:hover {
+  background-color: rgba(255, 0, 0, 0.2);
 }
 </style>

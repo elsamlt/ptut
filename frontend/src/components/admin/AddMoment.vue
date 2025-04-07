@@ -15,6 +15,12 @@
 
           <!-- Form -->
           <v-col cols="12" md="10">
+              <!-- Affichage de l'erreur -->
+              <v-col cols="12">
+                <v-alert v-if="errorMessage" type="error" class="mt-2">
+                  {{ errorMessage }}
+                </v-alert>
+              </v-col>
               <!-- Titre -->
               <v-col cols="12">
                 <v-text-field class="text-input" v-model="moment.titre" label="Titre" required></v-text-field>
@@ -43,6 +49,7 @@
 import { ref, defineEmits } from "vue";
 
 const emit = defineEmits(["add", "closeForm"]);
+const errorMessage = ref("");
 
 const moment = ref({
   titre: "",
@@ -73,6 +80,13 @@ const triggerFileInput = () => {
 const handleFileUpload = (event) => {
   const file = event.target.files[0];
   if (!file) return;
+
+  if (file.name.length > 15) {
+    errorMessage.value = "Le nom du fichier est trop long.";
+    return;
+  }
+
+  errorMessage.value = "";
 
   const reader = new FileReader();
   reader.onload = () => {

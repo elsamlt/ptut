@@ -20,4 +20,7 @@ public interface JoueRepository extends JpaRepository<Joue, JoueId> {
 
     @Query("SELECT j FROM Joue j WHERE j.groupe = :groupe")
     List<Joue> findJouesByGroupe(@Param("groupe") Groupe groupe);
+
+    @Query("SELECT j FROM Joue j WHERE j.film.idFilm = :filmId AND j.participant.idParticipant = :participantId")
+    List<Joue> findJouesByFilmIdAndParticipantId(@Param("filmId") int filmId, @Param("participantId") int participantId);
 }

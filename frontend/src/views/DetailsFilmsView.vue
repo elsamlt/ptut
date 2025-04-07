@@ -27,8 +27,23 @@
           <!-- Acteurs en carrousel -->
           <div v-if="acteurs.length" class="caroussel-container">
             <h2>Acteurs</h2>
-            <div class="swiper-wrapper">
+            <div class="swiper-wrapper d-flex flex-wrap justify-center" style="margin-top: 10px">
+              <div v-if="acteurs.length < 5" class="d-flex justify-center flex-wrap" style="gap: 150px">
+                <div v-for="item in acteurs" :key="`${item.participant.nom}-${item.participant.prenom}`" class="participant-card text-center">
+                  <div>
+                    <img v-if="item.participant.pdp" :src="item.participant.pdp" alt="Photo de profil du participant" style="width: 100px; height: 100px; border-radius: 50px; object-fit: cover;"/>
+                    <img v-else :src="defaultAvatar" alt="Avatar" style="width: 100px; border-radius: 50px"/>
+                  </div>
+                  <div>
+                    <p class="participant-name">{{ item.participant.nom }} {{ item.participant.prenom }}</p>
+                    <p class="role">{{ item.role }}</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Mode Swiper si 5 éléments ou plus -->
               <Swiper
+                v-else
                 :modules="[Navigation]"
                 :slides-per-view="4"
                 :spaceBetween="15"
@@ -38,7 +53,7 @@
                 <SwiperSlide v-for="item in acteurs" :key="`${item.participant.nom}-${item.participant.prenom}`">
                   <div class="participant-card d-flex flex-column justify-center text-center">
                     <div>
-                      <img v-if="item.participant.pdp" :src="item.participant.pdp" alt="Photo de profil du participant"/>
+                      <img v-if="item.participant.pdp" :src="item.participant.pdp" alt="Photo de profil du participant" style="width: 100px; height: 100px; border-radius: 50px; object-fit: cover;"/>
                       <img v-else :src="defaultAvatar" alt="Avatar" style="width: 100px; border-radius: 50px"/>
                     </div>
                     <div>
@@ -54,8 +69,24 @@
           <!-- Équipe de tournage en carrousel -->
           <div v-if="equipeTournage.length" class="caroussel-container">
             <h2>Équipe de tournage</h2>
-            <div class="swiper-wrapper">
+            <div class="swiper-wrapper d-flex flex-wrap justify-center" style="margin-top: 10px">
+              <!-- Mode Liste si moins de 5 éléments -->
+              <div v-if="equipeTournage.length < 5" class="d-flex justify-center flex-wrap" style="gap: 150px">
+                <div v-for="item in equipeTournage" :key="`${item.participant.nom}-${item.participant.prenom}`" class="participant-card text-center">
+                  <div>
+                    <img v-if="item.participant.pdp" :src="item.participant.pdp" alt="Photo de profil du participant" style="width: 100px; height: 100px; border-radius: 50px; object-fit: cover;"/>
+                    <img v-else :src="defaultAvatar" alt="Avatar" style="width: 100px; border-radius: 50px"/>
+                  </div>
+                  <div>
+                    <p class="participant-name">{{ item.participant.nom }} {{ item.participant.prenom }}</p>
+                    <p class="role">{{ item.role }}</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Mode Swiper si 5 éléments ou plus -->
               <Swiper
+                v-else
                 :modules="[Navigation]"
                 :slides-per-view="4"
                 :spaceBetween="15"
@@ -65,8 +96,8 @@
                 <SwiperSlide v-for="item in equipeTournage" :key="`${item.participant.nom}-${item.participant.prenom}`">
                   <div class="participant-card d-flex flex-column justify-center text-center">
                     <div>
-                      <img v-if="item.participant.pdp" :src="item.participant.pdp"  alt="Photo de profil du participant" style="width: 100px; border-radius: 50px"/>
-                      <img v-else :src="defaultAvatar"  alt="Avatar" style="width: 100px; border-radius: 50px"/>
+                      <img v-if="item.participant.pdp" :src="item.participant.pdp" alt="Photo de profil du participant" style="width: 100px; height: 100px; border-radius: 50px; object-fit: cover;"/>
+                      <img v-else :src="defaultAvatar" alt="Avatar" style="width: 100px; border-radius: 50px"/>
                     </div>
                     <div>
                       <p class="participant-name">{{ item.participant.nom }} {{ item.participant.prenom }}</p>
@@ -81,8 +112,22 @@
           <!-- PostProduction en carrousel -->
           <div v-if="postProductions.length" class="caroussel-container">
             <h2>Post Production</h2>
-            <div class="swiper-wrapper">
+            <div class="swiper-wrapper d-flex flex-wrap justify-center" style="margin-top: 10px">
+              <div v-if="postProductions.length < 5" class="d-flex justify-center flex-wrap" style="gap: 150px">
+                <div v-for="item in postProductions" :key="`${item.participant.nom}-${item.participant.prenom}`" class="participant-card text-center">
+                  <div>
+                    <img v-if="item.participant.pdp" :src="item.participant.pdp" alt="Photo de profil du participant" style="width: 100px; height: 100px; border-radius: 50px"/>
+                    <img v-else :src="defaultAvatar" alt="Avatar" style="width: 100px; border-radius: 50px"/>
+                  </div>
+                  <div>
+                    <p class="participant-name">{{ item.participant.nom }} {{ item.participant.prenom }}</p>
+                    <p class="role">{{ item.role }}</p>
+                  </div>
+                </div>
+              </div>
+
               <Swiper
+                v-else
                 :modules="[Navigation]"
                 :slides-per-view="4"
                 :spaceBetween="15"
@@ -92,8 +137,8 @@
                 <SwiperSlide v-for="item in postProductions" :key="`${item.participant.nom}-${item.participant.prenom}`">
                   <div class="participant-card d-flex flex-column justify-center text-center">
                     <div>
-                      <img v-if="item.participant.pdp" :src="item.participant.pdp"  alt="Photo de profil du participant"/>
-                      <img v-else :src="defaultAvatar"  alt="Avatar" style="width: 100px; border-radius: 50px"/>
+                      <img v-if="item.participant.pdp" :src="item.participant.pdp" alt="Photo de profil du participant" style="width: 100px; height: 100px; border-radius: 50px"/>
+                      <img v-else :src="defaultAvatar" alt="Avatar" style="width: 100px; border-radius: 50px"/>
                     </div>
                     <div>
                       <p class="participant-name">{{ item.participant.nom }} {{ item.participant.prenom }}</p>
@@ -111,7 +156,7 @@
             <v-card v-for="anecdote in anecdotes" :key="anecdote.idAnecdote" class="anecdote-card">
               <v-row align="center">
                 <v-col cols="3">
-                  <img v-if="anecdote.participant && anecdote.participant.pdp" :src="anecdote.participant.pdp" class="anecdote-image" alt="Photo du participant" style="width: 100px; border-radius: 50px">
+                  <img v-if="anecdote.participant && anecdote.participant.pdp" :src="anecdote.participant.pdp" class="anecdote-image" alt="Photo du participant" style="width: 100px; height: 100px; border-radius: 50px">
                   <img v-else :src="defaultAvatar" alt="Avatar" style="width: 100px; border-radius: 50px"/>
                 </v-col>
                 <v-col>
@@ -191,7 +236,7 @@ import 'swiper/css/navigation'
 import { Navigation } from 'swiper/modules'
 
 const API_FILM_URL = '/api/films'
-const API_GROUPES_URL = '/api/groupes/participants/all'
+const API_GROUPES_URL = '/api/joues/groupes/participants/all'
 const defaultAvatar = '/images/avatar.jpg';
 const defaultImage = '/images/affiche-default.jpg';
 

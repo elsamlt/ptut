@@ -89,7 +89,7 @@ function fetchAnecdotes() {
   fetch(url)
     .then((response) => response.json())
     .then((dataJSON) => {
-      listAnecdotes.splice(0, listAnecdotes.length, ...dataJSON._embedded.anecdotes);
+      listAnecdotes.splice(0, listAnecdotes.length, ...dataJSON);
     })
     .catch((error) =>
       console.error("Erreur lors de la récupération des anecdotes :", error),
@@ -104,7 +104,6 @@ function fetchAnecdotesByFilm(filmId) {
       .then(response => response.json())
       .then(dataJSON => {
         listAnecdotes.splice(0, listAnecdotes.length, ...dataJSON._embedded.anecdotes);
-        console.log(dataJSON)
       })
       .catch(error => console.error("Erreur lors de la récupération des participants :", error));
   }
