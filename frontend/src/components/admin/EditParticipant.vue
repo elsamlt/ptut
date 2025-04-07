@@ -86,7 +86,7 @@
         <v-row class="mt-4">
           <v-col cols="12" class="d-flex justify-end">
             <v-btn class="mr-2" @click="closeForm">Annuler</v-btn>
-            <v-btn class="btn" @click="submitPerson">Ajouter</v-btn>
+            <v-btn class="btn" @click="submitPerson">Enregistrer</v-btn>
           </v-col>
         </v-row>
       </v-card>
@@ -113,10 +113,6 @@ const groupes = ref([
 
 const errorMessage = ref("");
 
-
-// Cloner l'objet person pour éviter de modifier directement la prop
-//const person = ref({ ...props.person });
-
 // Fonction de soumission
 const submitPerson = () => {
   if (person.value.pdp == props.person.pdp) {
@@ -124,7 +120,7 @@ const submitPerson = () => {
   }
   emit("edit", {
     ...person.value,
-    roles: roles.value, // <- important
+    roles: roles.value,
   });
 };
 
@@ -138,9 +134,32 @@ const addRole = () => {
 };
 
 // Supprimer une ligne de rôle
-const removeRole = (index) => {
+/*const removeRole = (index) => {
   roles.value.splice(index, 1);
+};*/
+// Supprimer une ligne de rôle
+const removeRole = async (index) => {
+  try {
+    // Récupérer l'objet rôle à supprimer
+    const roleToRemove = roles.value[index];
+
+    // Envoi de la requête DELETE au backend
+    const response = await fetch(`/api/joues?filmId=${roleToRemove.id_film}&participantId=${person.value.idParticipant}`, {
+      method: "DELETE",
+    });
+
+    // Vérifier si la requête a réussi
+    if (!response.ok) {
+      throw new Error("Erreur lors de la suppression du rôle");
+    }
+
+    // Supprimer localement le rôle de la liste
+    roles.value.splice(index, 1);
+  } catch (error) {
+    console.error("Erreur lors de la suppression du rôle :", error);
+  }
 };
+
 
 // Annuler et fermer le formulaire
 const closeForm = () => {

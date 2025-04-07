@@ -259,18 +259,6 @@ const handlePersonAdded = async (newPerson) => {
   }
 };
 
-// Fonction pour générer un nouvel ID en incrémentant le dernier ID
-const generateId = async () => {
-  const participants = await fetchPersons();
-
-  // Trouver le dernier ID (en supposant que l'ID est un nombre)
-  const lastId = Math.max(...participants.map(p => p.id_participant));
-
-  // Incrémenter de 1 pour générer le nouvel ID
-  return lastId + 1;
-};
-
-
 /**
  * Supprimer un participant via API
  */
@@ -287,37 +275,87 @@ function handlerDelete(person) {
 /**
  * Modifier un participant comme faite via API
  */
-const handlePersonEdit = (updatedPerson) => {
-  fetch(`${url}`, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      nom: updatedPerson.nom,
-      prenom: updatedPerson.prenom,
-      pdp: updatedPerson.pdp,
-    }),
-  })
-    .then((response) => response.json())
-    .then(() => {
-      fetchPersonDetail(updatedPerson);
-      dialogEdit.value = true; // Afficher le message de confirmation
-      showEditPerson.value = false;
-    })
-    .catch((error) => console.error("Erreur lors de la mise à jour :", error));
-};
+const handlePersonEdit = async (updatedPerson) => {
+  let personData = { ...updatedPerson };
 
-// Observer le changement de film sélectionné
-watch(selectedFilm, (newFilmId) => {
-  fetchPersonsByFilm(newFilmId);
-});
+  // 1. Si image en base64 → upload
+  if (personData.pdp && personData.pdp.startsWith("data:")) {
+    try {
+      const response = await fetch(personData.pdp);
+      const blob = await response.blob();
+      const file = new File([blob], "profile.jpg", { type: "image/jpeg" });
 
-watch(currentPage, (newPage) => {
-  if (selectedFilm.value === null) {
-    fetchPersons(newPage);
-  } else {
-    fetchPersonsByFilm(selectedFilm.value, newPage);
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const uploadResponse = await fetch("/api/files/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!uploadResponse.ok) throw new Error("Erreur upload image");
+
+      const uploadData = await uploadResponse.text();
+      const fileUrlMatch = uploadData.match(/\/img\/[^"'}]+/);
+      const fileUrl = fileUrlMatch ? fileUrlMatch[0] : "";
+      personData.pdp = fileUrl;
+    } catch (error) {
+      console.error("Erreur upload image :", error);
+      return;
+    }
   }
-});
+
+  // 2. Mise à jour des infos du participant
+  try {
+    const updateResponse = await fetch(`/api/participants/${personData.idParticipant}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        nom: personData.nom,
+        prenom: personData.prenom,
+        pdp: personData.pdp,
+      }),
+    });
+
+    if (!updateResponse.ok) throw new Error("Erreur update participant");
+
+    // 3. Supprimer les anciens rôles (si nécessaire)
+    const rolesResponse = await fetch(`/api/participants/${personData.idParticipant}/filmsJoues`);
+    const rolesData = await rolesResponse.json();
+    const oldRoles = rolesData._embedded?.joues || [];
+console.log(personData.roles)
+    await Promise.all(
+      oldRoles.map((r) =>
+        fetch(`/api/joues?filmId=${personData.roles.id_film}&participantId=${personData.idParticipant}`, {
+          method: "DELETE",
+        })
+      )
+    );
+
+    // 4. Recréer les rôles
+    await Promise.all(
+      personData.roles.map((roleData) =>
+        fetch("/api/joues", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            role: roleData.role,
+            groupe: roleData.groupe,
+            film_id: roleData.id_film,
+            participant_id: personData.idParticipant,
+          }),
+        })
+      )
+    );
+
+    // 5. Rafraîchir et confirmation
+    await fetchPersons();
+    dialogEdit.value = true;
+    showEditPerson.value = false;
+  } catch (error) {
+    console.error("Erreur dans handlePersonEdit :", error);
+  }
+};
 
 // Charger les participants au montage
 // Charger les films au montage
