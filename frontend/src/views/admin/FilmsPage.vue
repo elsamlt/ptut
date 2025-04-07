@@ -1,22 +1,62 @@
 <template>
   <!-- Liste des films -->
   <v-container v-if="!showEditFilm && !showAddFilm">
-    <FilmsCard v-for="(film, index) in listFilms" :key="film.id" :index="index" @edit="openEditForm(film)" :film="film"
-               @delete="handlerDelete(film)"/>
+    <FilmsCard
+      v-for="(film, index) in listFilms"
+      :key="film.id"
+      :index="index"
+      @edit="openEditForm(film)"
+      :film="film"
+      @delete="handlerDelete(film)"
+    />
   </v-container>
+
+  <!-- Graphiques des participants -->
+  <v-container v-if="listFilms.length > 0">
+    <v-row>
+      <!-- Participants par Film -->
+      <v-col cols="12" md="6">
+        <ApexCharts
+          type="bar"
+          :options="chartOptions"
+          :series="chartData"
+          height="350"
+        />
+      </v-col>
+
+      <!-- Participants par Groupe -->
+      <v-col cols="12" md="6">
+        <ApexCharts
+          type="donut"
+          :options="groupChartOptions"
+          :series="groupChartData"
+          height="350"
+        />
+      </v-col>
+    </v-row>
+  </v-container>
+
+
+  <!-- Ajout / édition -->
   <v-container v-if="showAddFilm">
-    <AddFilm @add="handleFilmAdded" @closeForm="showAddFilm = false"/>
+    <AddFilm @add="handleFilmAdded" @closeForm="showAddFilm = false" />
   </v-container>
+
   <v-container v-if="showEditFilm">
     <EditFilm :film="selectedFilm" @edit="handleFilmEdit" @cancel="showEditFilm = false" />
   </v-container>
 
-  <!-- Bouton flottant pour ajouter un film -->
-  <v-btn v-if="!showAddFilm && !showEditFilm" class="btn add-btn" size="40px" @click="showAddFilm = true; selectedFilm = null;">
+  <!-- Bouton flottant -->
+  <v-btn
+    v-if="!showAddFilm && !showEditFilm"
+    class="btn add-btn"
+    size="40px"
+    @click="showAddFilm = true; selectedFilm = null;"
+  >
     <v-icon class="icon">mdi-plus</v-icon>
   </v-btn>
 
-  <!-- Dialog de confirmation -->
+  <!-- Dialogs -->
   <v-dialog v-model="dialogAdd" max-width="400px">
     <v-card>
       <v-card-text> Le film a été ajouté avec succès ! </v-card-text>
@@ -46,183 +86,199 @@
 </template>
 
 <script setup>
-  import FilmsCard from "@/components/admin/FilmsCard.vue";
-  import EditFilm from "@/components/admin/EditFilm.vue";
-  import AddFilm from "@/components/admin/AddFilm.vue";
+import FilmsCard from "@/components/admin/FilmsCard.vue";
+import EditFilm from "@/components/admin/EditFilm.vue";
+import AddFilm from "@/components/admin/AddFilm.vue";
+import { ref, onMounted, reactive } from "vue";
+import ApexCharts from "vue3-apexcharts";
 
-  import { ref, onMounted, reactive } from "vue";
+const url = "/api/films";
+const listFilms = reactive([]);
+const chartData = ref([]);
+const chartOptions = ref({
+  chart: { id: "films-participants", toolbar: { show: false } },
+  title: { text: "Nombre de Participants par Film", align: "center" },
+  xaxis: { categories: [] },
+  yaxis: { title: { text: "Participants" } },
+  colors: ['var(--color-primary)'],
+});
 
-  const url = "/api/films";
-  const listFilms = reactive([]);
+const groupChartData = ref([]);
+const groupChartOptions = ref({
+  chart: {
+    id: "group-participants-chart",
+  },
+  labels: [], // Groupes (Acteur, Réalisateur, etc.)
+  title: {
+    text: "Participants par Groupe",
+    align: "center"
+  },
+  legend: {
+    position: 'bottom'
+  },
+  colors: ['var(--color-primary-dark)', 'var(--color-primary)', 'var(--color-secondary)', 'var(--color-accent)'],
+});
 
-  const dialogAdd = ref(false);
-  const dialogDelete = ref(false);
-  const dialogEdit = ref(false);
 
-  const showEditFilm = ref(false);
-  const showAddFilm = ref(false);
+const dialogAdd = ref(false);
+const dialogDelete = ref(false);
+const dialogEdit = ref(false);
+const showEditFilm = ref(false);
+const showAddFilm = ref(false);
+const selectedFilm = ref(null);
 
-  const selectedFilm = ref(null);
+const openEditForm = (film) => {
+  selectedFilm.value = { ...film };
+  showEditFilm.value = true;
+};
 
-  const openEditForm = (film) => {
-    selectedFilm.value = { ...film }; // Cloner pour éviter la modification directe
-    showEditFilm.value = true;
-  };
+function fetchFilms() {
+  fetch(url)
+    .then((response) => response.json())
+    .then((dataJSON) => {
+      listFilms.splice(0, listFilms.length, ...dataJSON._embedded.films);
+      updateChartData();
+      updateGroupChartData();
+    })
+    .catch((error) => console.error("Erreur récupération films :", error));
+}
 
-  /**
-   * Récupérer les films depuis l'API
-   */
-  function fetchFilms() {
-    fetch(url)
-      .then((response) => response.json())
-      .then((dataJSON) => {
-        listFilms.splice(0, listFilms.length, ...dataJSON._embedded.films);
-      })
-      .catch((error) =>
-        console.error("Erreur lors de la récupération des films :", error),
-      );
+async function updateChartData() {
+  const categories = [];
+  const seriesData = [];
+
+  for (const film of listFilms) {
+    try {
+      const res = await fetch(`/api/films/participants?idFilm=${film.idFilm}`);
+      const dataJSON = await res.json();
+      const count = dataJSON.page?.totalElements || 0;
+      categories.push(film.titre);
+      seriesData.push(count);
+    } catch (err) {
+      console.error(`Erreur participants film ${film.titre} :`, err);
+    }
   }
 
-  /**
-   * Ajouter un nouveau film via API
-   */
-  const handleFilmAdded = async (newFilm) => {
-    let filmData = { ...newFilm };
+  chartData.value = [
+    {
+      name: "Participants",
+      data: seriesData,
+    },
+  ];
 
-    // Vérifier si l'affiche est un Data URL (base64)
-    if (newFilm.affiche && newFilm.affiche.startsWith('data:')) {
-      // Convertir le base64 en blob
-      const response = await fetch(newFilm.affiche);
-      const blob = await response.blob();
-      const file = new File([blob], "image.jpg", { type: "image/jpeg" });
+  chartOptions.value = {
+    ...chartOptions.value,
+    xaxis: {
+      ...chartOptions.value.xaxis,
+      categories: [...categories],
+    }
+  }
+}
 
-      // Créer un FormData pour l'upload
-      const formData = new FormData();
-      formData.append('file', file);
+async function updateGroupChartData() {
+  try {
+    const res = await fetch("/api/joues?page=0&size=107");
+    const dataJSON = await res.json();
 
-      try {
-        // Uploader l'image au serveur
-        const uploadResponse = await fetch('/api/files/upload', {
-          method: 'POST',
-          body: formData
-        });
+    const groupCountMap = new Map();
 
-        if (!uploadResponse.ok) {
-          throw new Error("Erreur lors de l'upload de l'image");
-        }
-
-        const uploadData = await uploadResponse.text();
-
-        // Au lieu de simplement faire un substring depuis l'index de '/img/'
-        // Utilisez une expression régulière pour extraire uniquement le chemin de l'image
-        const fileUrlMatch = uploadData.match(/\/img\/[^"'}]+/);
-        const fileUrl = fileUrlMatch ? fileUrlMatch[0] : '';
-
-        // Remplacer le base64 par le chemin de l'image
-        filmData.affiche = fileUrl;
-      } catch (error) {
-        console.error("Erreur lors de l'upload de l'image :", error);
-        return;
-      }
+    for (const joue of dataJSON._embedded.joues) {
+      const groupe = joue.groupe || "Inconnu";
+      groupCountMap.set(groupe, (groupCountMap.get(groupe) || 0) + 1);
     }
 
-    // Maintenant, ajouter le film avec le chemin de l'image
-    fetch(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(filmData),
-    })
-      .then((response) => response.json())
-      .then(() => {
-        fetchFilms(); // Rafraîchir la liste après l'ajout
-        // Afficher la popup de confirmation
-        dialogAdd.value = true;
-        showAddFilm.value = false;
-      })
-      .catch((error) =>
-        console.error("Erreur lors de l'ajout du film :", error),
-      );
-  };
+    groupChartOptions.value = {
+      ...groupChartOptions.value,
+      labels: [...groupCountMap.keys()],
+    };
 
+    groupChartData.value = [...groupCountMap.values()];
+  } catch (err) {
+    console.error("Erreur lors de la récupération des groupes :", err);
+  }
+}
 
-  /**
-   * Supprimer un film via API
-   */
-  function handlerDelete(film) {
-    fetch(`${url}/${film.idFilm}`, { method: "DELETE" })
-      .then((response) => {
-        if (response.ok) fetchFilms();
-        dialogDelete.value = true;
-        selectedFilm.value = null;
-      })
-      .catch((error) => console.error("Erreur lors de la suppression :", error));
+const handleFilmAdded = async (newFilm) => {
+  let filmData = { ...newFilm };
+  if (newFilm.affiche?.startsWith('data:')) {
+    const res = await fetch(newFilm.affiche);
+    const blob = await res.blob();
+    const file = new File([blob], "image.jpg", { type: "image/jpeg" });
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const uploadRes = await fetch('/api/files/upload', { method: 'POST', body: formData });
+      const uploadData = await uploadRes.text();
+      const fileUrlMatch = uploadData.match(/\/img\/[^"'}]+/);
+      filmData.affiche = fileUrlMatch ? fileUrlMatch[0] : '';
+    } catch (err) {
+      console.error("Erreur upload image :", err);
+      return;
+    }
   }
 
-  /**
-   * Modifier un film comme fait via API
-   */
-  const handleFilmEdit = async (updatedFilm) => {
-    let filmData = { ...updatedFilm };
-
-    // Vérifier si l'affiche est un Data URL (base64)
-    if (updatedFilm.affiche && updatedFilm.affiche.startsWith("data:")) {
-      // Convertir le base64 en Blob
-      const response = await fetch(updatedFilm.affiche);
-      const blob = await response.blob();
-      const file = new File([blob], "image.jpg", { type: "image/jpeg" });
-
-      // Créer un FormData pour l'upload
-      const formData = new FormData();
-      formData.append("file", file);
-
-      try {
-        // Uploader l'image
-        const uploadResponse = await fetch("/api/files/upload", {
-          method: "POST",
-          body: formData,
-        });
-
-        if (!uploadResponse.ok) {
-          throw new Error("Erreur lors de l'upload de l'image");
-        }
-
-        const uploadData = await uploadResponse.text();
-        const fileUrlMatch = uploadData.match(/\/img\/[^"'}]+/);
-        const fileUrl = fileUrlMatch ? fileUrlMatch[0] : "";
-
-        // Remplacer l'affiche base64 par l'URL obtenue
-        filmData.affiche = fileUrl;
-      } catch (error) {
-        console.error("Erreur lors de l'upload de l'image :", error);
-        return;
-      }
-    }
-
-    // Envoyer la requête de mise à jour
-    fetch(`${url}/${updatedFilm.idFilm}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(filmData),
+  fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(filmData),
+  })
+    .then((res) => res.json())
+    .then(() => {
+      fetchFilms();
+      dialogAdd.value = true;
+      showAddFilm.value = false;
     })
-      .then((response) => {
-        if (!response.ok) throw new Error("Erreur lors de la mise à jour");
-        return response.json();
-      })
-      .then(() => {
-        fetchFilms(); // Rafraîchir la liste après l'édition
-        dialogEdit.value = true; // Afficher confirmation
-        showEditFilm.value = false;
-      })
-      .catch((error) => console.error("Erreur lors de la mise à jour :", error));
-  };
+    .catch((err) => console.error("Erreur ajout film :", err));
+};
 
-  // Charger les films au montage
-  onMounted(fetchFilms);
+function handlerDelete(film) {
+  fetch(`${url}/${film.idFilm}`, { method: "DELETE" })
+    .then((response) => {
+      if (response.ok) fetchFilms();
+      dialogDelete.value = true;
+    })
+    .catch((err) => console.error("Erreur suppression :", err));
+}
+
+const handleFilmEdit = async (updatedFilm) => {
+  let filmData = { ...updatedFilm };
+  if (updatedFilm.affiche?.startsWith("data:")) {
+    const res = await fetch(updatedFilm.affiche);
+    const blob = await res.blob();
+    const file = new File([blob], "image.jpg", { type: "image/jpeg" });
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const uploadRes = await fetch("/api/files/upload", { method: "POST", body: formData });
+      const uploadData = await uploadRes.text();
+      const fileUrlMatch = uploadData.match(/\/img\/[^"'}]+/);
+      filmData.affiche = fileUrlMatch ? fileUrlMatch[0] : "";
+    } catch (err) {
+      console.error("Erreur upload image :", err);
+      return;
+    }
+  }
+
+  fetch(`${url}/${updatedFilm.idFilm}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(filmData),
+  })
+    .then((res) => res.json())
+    .then(() => {
+      fetchFilms();
+      dialogEdit.value = true;
+      showEditFilm.value = false;
+    })
+    .catch((err) => console.error("Erreur mise à jour film :", err));
+};
+
+onMounted(fetchFilms);
 </script>
 
 <style scoped>
-
-/* Bouton flottant */
 .add-btn {
   position: fixed;
   bottom: 70px;
