@@ -116,7 +116,7 @@ const groupChartOptions = ref({
   legend: {
     position: 'bottom'
   },
-  colors: ['#2e2765', '#5c4f96', '#885c9c', '#dd7167'],
+  colors: ['var(--color-primary-dark)', 'var(--color-primary)', 'var(--color-secondary)', 'var(--color-accent)'],
 });
 
 
