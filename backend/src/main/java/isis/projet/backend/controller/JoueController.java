@@ -60,6 +60,30 @@ public class JoueController {
         return response;
     }
 
+    @GetMapping
+    public Map<String, Object> getAllJouesPaginated(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Joue> jouesPage = joueRepository.findAll(pageable);
+
+        List<JoueDetailDTO> jouesDTO = jouesPage.getContent().stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("joues", jouesDTO);
+        response.put("page", Map.of(
+                "size", jouesPage.getSize(),
+                "totalElements", jouesPage.getTotalElements(),
+                "totalPages", jouesPage.getTotalPages(),
+                "number", jouesPage.getNumber()
+        ));
+
+        return response;
+    }
+
     @GetMapping("/films/participants/all")
     public List<JoueDetailDTO> getAllJouesByFilm(@RequestParam("idFilm") int idFilm) {
         List<Joue> joues = joueRepository.findJouesByFilmId(idFilm);

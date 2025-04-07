@@ -149,7 +149,7 @@ async function updateChartData() {
 
   for (const film of listFilms) {
     try {
-      const res = await fetch(`/api/films/participants?idFilm=${film.idFilm}`);
+      const res = await fetch(`/api/joues/films/participants?idFilm=${film.idFilm}`);
       const dataJSON = await res.json();
       const count = dataJSON.page?.totalElements || 0;
       categories.push(film.titre);
@@ -182,7 +182,7 @@ async function updateGroupChartData() {
 
     const groupCountMap = new Map();
 
-    for (const joue of dataJSON._embedded.joues) {
+    for (const joue of dataJSON.joues) {
       const groupe = joue.groupe || "Inconnu";
       groupCountMap.set(groupe, (groupCountMap.get(groupe) || 0) + 1);
     }
