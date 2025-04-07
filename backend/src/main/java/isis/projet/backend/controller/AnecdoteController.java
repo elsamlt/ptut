@@ -28,7 +28,7 @@ public class AnecdoteController {
     @Autowired
     private ParticipantRepository participantRepository;
 
-    @GetMapping("/anecdotes")
+    @GetMapping
     public ResponseEntity<List<AnecdoteDTO>> getAllAnecdotes() {
         try {
             // Récupérer toutes les anecdotes depuis le repository
@@ -39,6 +39,7 @@ public class AnecdoteController {
                     .map(anecdote -> {
                         AnecdoteDTO dto = new AnecdoteDTO();
                         dto.setDescription(anecdote.getDescription());
+                        dto.setIdAnecdote(anecdote.getIdAnecdote());
                         dto.setId_film(anecdote.getFilm().getIdFilm());  // Récupérer l'ID du film lié à l'anecdote
                         dto.setId_participant(anecdote.getParticipant().getIdParticipant());  // Récupérer l'ID du participant
                         return dto;
