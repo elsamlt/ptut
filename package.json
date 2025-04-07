@@ -1,5 +1,7 @@
 {
   "dependencies": {
-    "swiper": "^11.2.5"
+    "apexcharts": "^4.5.0",
+    "swiper": "^11.2.5",
+    "vue3-apexcharts": "^1.8.0"
   }
 }
