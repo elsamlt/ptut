@@ -37,6 +37,7 @@ public class CommentaireController {
                     .map(commentaire -> {
                         CommentaireDTO dto = new CommentaireDTO();
                         dto.setDescription(commentaire.getDescription());
+                        dto.setIdCommentaire(commentaire.getIdCommentaire());
                         dto.setId_film(commentaire.getFilm().getIdFilm());
                         return dto;
                     })

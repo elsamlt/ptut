@@ -8,4 +8,5 @@ import lombok.Setter;
 public class CommentaireDTO {
     private String description;
     private int id_film;
+    private int idCommentaire;
 }
