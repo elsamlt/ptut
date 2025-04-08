@@ -144,23 +144,8 @@ function fetchFilms() {
     );
 }
 
-/**
- * Sélectionner un participant et afficher ses détails
- */
-function fetchPersonDetail(person) {
-  fetch(`${url}/${person.id}`)
-    .then((response) => response.json())
-    .then((dataJSON) => {
-      selectedPerson.value = dataJSON;
-      showAddPerson.value = false;
-    })
-    .catch((error) =>
-      console.error("Erreur lors de la récupération des participants :", error),
-    );
-}
-
 // Fonction pour récupérer l'ID du participant à partir du lien
-async function getParticipantId(url) {
+/*async function getParticipantId(url) {
   try {
     // Faire la requête pour récupérer les données du participant
     const response = await fetch(url);
@@ -171,7 +156,7 @@ async function getParticipantId(url) {
   } catch (error) {
     console.error('Erreur lors de la récupération de l\'ID du participant:', error);
   }
-}
+}*/
 
 /**
  * Ajouter un nouveau participant via API
@@ -356,6 +341,19 @@ console.log(personData.roles)
     console.error("Erreur dans handlePersonEdit :", error);
   }
 };
+
+watch(currentPage, (newPage) => {
+  if (selectedFilm.value === null) {
+    fetchPersons(newPage);
+  } else {
+    fetchPersonsByFilm(selectedFilm.value, newPage);
+  }
+});
+
+watch(selectedFilm, () => {
+  currentPage.value = 1;
+  fetchPersonsByFilm(selectedFilm.value, 1);
+});
 
 // Charger les participants au montage
 // Charger les films au montage
