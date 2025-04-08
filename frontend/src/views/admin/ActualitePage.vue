@@ -75,21 +75,6 @@ function fetchActu() {
 }
 
 /**
- * Sélectionner une actualité et afficher ses détails
- */
-function fetchActuDetail(actu) {
-  fetch(`${url}/${actu.id}`)
-    .then((response) => response.json())
-    .then((dataJSON) => {
-      selectedActu.value = dataJSON;
-      showAddActu.value = false;
-    })
-    .catch((error) =>
-      console.error("Erreur lors de la récupération des actualités :", error),
-    );
-}
-
-/**
  * Ajouter une nouvelle actualité via API
  */
 const handleActuAdded = (newActu) => {

@@ -8,7 +8,7 @@
   <!-- Liste des anecdotes -->
   <v-container v-if="!showEditAnecdote && !showAddAnecdote">
     <AnecdoteCard v-for="(anecdote, index) in listAnecdotes" :key="anecdote.id" :index="index" @edit="openEditForm(anecdote)" :anecdote="anecdote"
-               @delete="handlerDelete(selectedAnecdote)"/>
+               @delete="handlerDelete(anecdote)"/>
   </v-container>
   <v-container v-if="showAddAnecdote">
     <AddAnecdote @add="handleAnecdoteAdded" @closeForm="showAddAnecdote = false" :films="listFilms"/>
@@ -118,12 +118,11 @@ const handleAnecdoteAdded = (newAnecdote) => {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      id_film:newAnecdote.id_film,
-      id_participant: newAnecdote.id_participant,
+      id_film:newAnecdote.idFilm,
+      id_participant: newAnecdote.idParticipant,
       description: newAnecdote.description,
     }),
   })
-    .then((response) => response.json())
     .then(() => {
       fetchAnecdotes(); // Rafraîchir la liste après l'ajout
       // Afficher la popup de confirmation
@@ -139,7 +138,7 @@ const handleAnecdoteAdded = (newAnecdote) => {
  * Supprimer une anecdote via API
  */
 function handlerDelete(anecdote) {
-  fetch(`${url}/${anecdote.id}`, { method: "DELETE" })
+  fetch(`${url}/${anecdote.idAnecdote}`, { method: "DELETE" })
     .then((response) => {
       if (response.ok) fetchAnecdotes();
       dialogDelete.value = true;
