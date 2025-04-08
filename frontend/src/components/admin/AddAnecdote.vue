@@ -37,7 +37,6 @@ const props = defineProps({
 
 const selectedFilm = ref(null);
 const selectedPerson = ref(null);
-const listPersons = ref([]);
 const personsArray = ref([]);
 
 const anecdote = ref({

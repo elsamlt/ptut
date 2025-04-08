@@ -144,20 +144,6 @@ function fetchFilms() {
     );
 }
 
-// Fonction pour récupérer l'ID du participant à partir du lien
-/*async function getParticipantId(url) {
-  try {
-    // Faire la requête pour récupérer les données du participant
-    const response = await fetch(url);
-    const participantData = await response.json();
-
-    // Retourner l'ID du participant
-    return participantData.idParticipant;
-  } catch (error) {
-    console.error('Erreur lors de la récupération de l\'ID du participant:', error);
-  }
-}*/
-
 /**
  * Ajouter un nouveau participant via API
  */
@@ -308,7 +294,6 @@ const handlePersonEdit = async (updatedPerson) => {
     const rolesResponse = await fetch(`/api/participants/${personData.idParticipant}/filmsJoues`);
     const rolesData = await rolesResponse.json();
     const oldRoles = rolesData._embedded?.joues || [];
-console.log(personData.roles)
     await Promise.all(
       oldRoles.map((r) =>
         fetch(`/api/joues?filmId=${personData.roles.id_film}&participantId=${personData.idParticipant}`, {

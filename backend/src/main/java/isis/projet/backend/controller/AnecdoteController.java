@@ -82,4 +82,34 @@ public class AnecdoteController {
             return ResponseEntity.badRequest().body("Erreur lors de l'ajout de l'anecdote: " + e.getMessage());
         }
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateAnecdote(@PathVariable("id") int id, @RequestBody AnecdoteDTO anecdoteDTO) {
+        try {
+            // Vérifier si l'anecdote existe
+            Anecdote existingAnecdote = anecdoteRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Anecdote avec l'ID " + id + " non trouvée"));
+
+            // Mettre à jour les propriétés
+            existingAnecdote.setDescription(anecdoteDTO.getDescription());
+
+            // Récupérer le film et le participant par leurs IDs
+            Film film = filmRepository.findById(anecdoteDTO.getId_film())
+                    .orElseThrow(() -> new RuntimeException("Film non trouvé"));
+
+            Participant participant = participantRepository.findById(anecdoteDTO.getId_participant())
+                    .orElseThrow(() -> new RuntimeException("Participant non trouvé"));
+
+            // Assigner les objets récupérés
+            existingAnecdote.setFilm(film);
+            existingAnecdote.setParticipant(participant);
+
+            // Sauvegarder l'anecdote mise à jour
+            Anecdote updatedAnecdote = anecdoteRepository.save(existingAnecdote);
+
+            return ResponseEntity.ok(updatedAnecdote);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Erreur lors de la mise à jour de l'anecdote: " + e.getMessage());
+        }
+    }
 }

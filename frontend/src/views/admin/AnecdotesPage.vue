@@ -14,7 +14,7 @@
     <AddAnecdote @add="handleAnecdoteAdded" @closeForm="showAddAnecdote = false" :films="listFilms"/>
   </v-container>
   <v-container v-if="showEditAnecdote">
-    <EditAnecdote :anecdote="selectedAnecdote" @edit="handleAnecdoteEdit" @cancel="showEditAnecdote = false" />
+    <EditAnecdote :anecdote="selectedAnecdote" @edit="handleAnecdoteEdit" @cancel="showEditAnecdote = false" :films="listFilms"/>
   </v-container>
 
   <!-- Bouton flottant pour ajouter une anecdote -->
@@ -151,7 +151,7 @@ function handlerDelete(anecdote) {
  * Modifier une anecdote comme faite via API
  */
 const handleAnecdoteEdit = (updatedAnecdote) => {
-  fetch(`${url}`, {
+  fetch(`${url}/${updatedAnecdote.idAnecdote}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -160,7 +160,6 @@ const handleAnecdoteEdit = (updatedAnecdote) => {
       description: updatedAnecdote.description,
     }),
   })
-    .then((response) => response.json())
     .then(() => {
       fetchAnecdotes();
       dialogEdit.value = true; // Afficher le message de confirmation
