@@ -12,7 +12,7 @@
   </v-container>
 
   <!-- Graphiques des participants -->
-  <v-container v-if="listFilms.length > 0">
+  <v-container v-if="listFilms.length > 0 && !showEditFilm && !showAddFilm">
     <v-row>
       <!-- Participants par Film -->
       <v-col cols="12" md="6">
