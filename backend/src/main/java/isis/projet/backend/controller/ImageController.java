@@ -38,6 +38,7 @@ public class ImageController {
                     .map(image -> {
                         ImageDTO dto = new ImageDTO();
                         dto.setImg(image.getImg());
+                        dto.setIdImage(image.getIdImage());
                         dto.setId_film(image.getFilm().getIdFilm());  // On suppose que Film est déjà associé à l'image
                         return dto;
                     })
