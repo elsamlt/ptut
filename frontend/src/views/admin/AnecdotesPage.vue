@@ -8,13 +8,13 @@
   <!-- Liste des anecdotes -->
   <v-container v-if="!showEditAnecdote && !showAddAnecdote">
     <AnecdoteCard v-for="(anecdote, index) in listAnecdotes" :key="anecdote.id" :index="index" @edit="openEditForm(anecdote)" :anecdote="anecdote"
-               @delete="handlerDelete(selectedAnecdote)"/>
+               @delete="handlerDelete(anecdote)"/>
   </v-container>
   <v-container v-if="showAddAnecdote">
     <AddAnecdote @add="handleAnecdoteAdded" @closeForm="showAddAnecdote = false" :films="listFilms"/>
   </v-container>
   <v-container v-if="showEditAnecdote">
-    <EditAnecdote :anecdote="selectedAnecdote" @edit="handleAnecdoteEdit" @cancel="showEditAnecdote = false" />
+    <EditAnecdote :anecdote="selectedAnecdote" @edit="handleAnecdoteEdit" @cancel="showEditAnecdote = false" :films="listFilms"/>
   </v-container>
 
   <!-- Bouton flottant pour ajouter une anecdote -->
@@ -118,12 +118,11 @@ const handleAnecdoteAdded = (newAnecdote) => {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      id_film:newAnecdote.id_film,
-      id_participant: newAnecdote.id_participant,
+      id_film:newAnecdote.idFilm,
+      id_participant: newAnecdote.idParticipant,
       description: newAnecdote.description,
     }),
   })
-    .then((response) => response.json())
     .then(() => {
       fetchAnecdotes(); // Rafraîchir la liste après l'ajout
       // Afficher la popup de confirmation
@@ -139,7 +138,7 @@ const handleAnecdoteAdded = (newAnecdote) => {
  * Supprimer une anecdote via API
  */
 function handlerDelete(anecdote) {
-  fetch(`${url}/${anecdote.id}`, { method: "DELETE" })
+  fetch(`${url}/${anecdote.idAnecdote}`, { method: "DELETE" })
     .then((response) => {
       if (response.ok) fetchAnecdotes();
       dialogDelete.value = true;
@@ -152,7 +151,7 @@ function handlerDelete(anecdote) {
  * Modifier une anecdote comme faite via API
  */
 const handleAnecdoteEdit = (updatedAnecdote) => {
-  fetch(`${url}`, {
+  fetch(`${url}/${updatedAnecdote.idAnecdote}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -161,7 +160,6 @@ const handleAnecdoteEdit = (updatedAnecdote) => {
       description: updatedAnecdote.description,
     }),
   })
-    .then((response) => response.json())
     .then(() => {
       fetchAnecdotes();
       dialogEdit.value = true; // Afficher le message de confirmation

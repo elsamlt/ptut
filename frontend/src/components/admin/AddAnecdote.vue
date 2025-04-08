@@ -37,7 +37,6 @@ const props = defineProps({
 
 const selectedFilm = ref(null);
 const selectedPerson = ref(null);
-const listPersons = ref([]);
 const personsArray = ref([]);
 
 const anecdote = ref({
@@ -55,23 +54,19 @@ watch(selectedPerson, (newAnecdote) => {
 });
 
 function fetchPersonsByFilm(filmId) {
-  fetch(`/api/films/participants?idFilm=${filmId}`)
+  fetch(`/api/joues/films/participants?idFilm=${filmId}`)
     .then(response => response.json())
     .then(dataJSON => {
-      personsArray.value = Object.keys(dataJSON)
-        .filter(key => !isNaN(key)) // Garde uniquement les clés numériques
-        .map(key => ({
-          value: dataJSON[key].participant.idParticipant,  // Correspond à la valeur sélectionnée
-          title: `${dataJSON[key].participant.nom} ${dataJSON[key].participant.prenom}`,  // Texte affiché
-        }));
-      console.log(personsArray.value);
+      personsArray.value = dataJSON.joues.map(joue => ({
+        value: joue.participant.idParticipant,
+        title: `${joue.participant.nom} ${joue.participant.prenom}`,
+      }));
     })
     .catch(error => console.error("Erreur lors de la récupération des participants :", error));
 }
 
 // Soumettre l'anecdote
 const submitAnecdote = () => {
-  console.log(anecdote.value)
   emit("add", anecdote.value);
 
   // Remise à zéro après ajout
@@ -90,8 +85,6 @@ const closeForm = () => {
 watch(selectedFilm, (newFilmId) => {
   fetchPersonsByFilm(newFilmId);
   selectedPerson.value = null;
-  console.log(newFilmId)
-  console.log(listPersons)
 });
 
 </script>

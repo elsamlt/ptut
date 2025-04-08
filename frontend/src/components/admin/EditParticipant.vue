@@ -134,11 +134,11 @@ const addRole = () => {
 };
 
 // Supprimer une ligne de rôle
-/*const removeRole = (index) => {
+const removeRole = (index) => {
   roles.value.splice(index, 1);
-};*/
+};
 // Supprimer une ligne de rôle
-const removeRole = async (index) => {
+/*const removeRole = async (index) => {
   try {
     // Récupérer l'objet rôle à supprimer
     const roleToRemove = roles.value[index];
@@ -158,7 +158,7 @@ const removeRole = async (index) => {
   } catch (error) {
     console.error("Erreur lors de la suppression du rôle :", error);
   }
-};
+};*/
 
 
 // Annuler et fermer le formulaire
