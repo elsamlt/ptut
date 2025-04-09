@@ -7,8 +7,14 @@
   </v-row>
   <!-- Liste des anecdotes -->
   <v-container v-if="!showEditAnecdote && !showAddAnecdote">
-    <AnecdoteCard v-for="(anecdote, index) in listAnecdotes" :key="anecdote.id" :index="index" @edit="openEditForm(anecdote)" :anecdote="anecdote"
-               @delete="handlerDelete(anecdote)"/>
+    <AnecdoteCard
+      v-for="(anecdote, index) in listAnecdotes"
+      :key="anecdote.idAnecdote"
+      :index="index"
+      @edit="openEditForm(anecdote)"
+      :anecdote="anecdote"
+      @delete="handlerDelete(anecdote)"
+    />
   </v-container>
   <v-container v-if="showAddAnecdote">
     <AddAnecdote @add="handleAnecdoteAdded" @closeForm="showAddAnecdote = false" :films="listFilms"/>

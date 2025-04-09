@@ -231,8 +231,6 @@ INSERT INTO joue (FILM_ID, PARTICIPANT_ID, ROLE, GROUPE) VALUES
                                                              (4, 75, 'Making of', 'PostProduction');
 
 INSERT INTO Anecdotes (description, id_film, id_participant) VALUES
-                                                                          ('Une scène a été tournée en une seule prise.', 1, 1),
-                                                                          ('Les acteurs ont improvisé certaines répliques.', 2, 2),
                                                                           ('Je me suis viandé dans un vase quand j''ai été figurant lors du tournage de la séquence 10 (la séquence d''apocalypse dans l''hôpital). Je me suis partiellement cassé l''ongle à cause de ça x)', 4, 85),
                                                                           ('Après le tournage, nous nous sommes rendus compte que des fichiers/rushs ont tout bonnement disparu (au moins deux tiers d''une des deux caméras). On était dégoûtés.. ça représentait des heures de tournages qui s''étaient envolés.', 4, 58),
                                                                           ('Le tournage s''est vraiment bien passé, nous avons tout bouclé en une journée et nous n''avons pas arrêté haha. ', 4, 58);
