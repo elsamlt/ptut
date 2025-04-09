@@ -22,5 +22,8 @@ public class Participant {
     @OneToMany(mappedBy = "participant", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Joue> filmsJoues;
 
+    @OneToMany(mappedBy = "participant", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Anecdote> anecdotes;
+
     // Getters et setters
 }
