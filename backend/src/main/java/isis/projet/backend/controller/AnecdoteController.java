@@ -112,4 +112,21 @@ public class AnecdoteController {
             return ResponseEntity.badRequest().body("Erreur lors de la mise à jour de l'anecdote: " + e.getMessage());
         }
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteAnecdote(@PathVariable("id") int id) {
+        try {
+            // Vérifier si l'anecdote existe
+            if (!anecdoteRepository.existsById(id)) {
+                return ResponseEntity.notFound().build();
+            }
+
+            // Supprimer l'anecdote
+            anecdoteRepository.deleteById(id);
+
+            return ResponseEntity.ok("Anecdote supprimée avec succès");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Erreur lors de la suppression de l'anecdote: " + e.getMessage());
+        }
+    }
 }

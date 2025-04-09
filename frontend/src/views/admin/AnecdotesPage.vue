@@ -140,7 +140,7 @@ const handleAnecdoteAdded = (newAnecdote) => {
 function handlerDelete(anecdote) {
   fetch(`${url}/${anecdote.idAnecdote}`, { method: "DELETE" })
     .then((response) => {
-      if (response.ok) fetchAnecdotes();
+      fetchAnecdotes();
       dialogDelete.value = true;
       selectedAnecdote.value = null;
     })
